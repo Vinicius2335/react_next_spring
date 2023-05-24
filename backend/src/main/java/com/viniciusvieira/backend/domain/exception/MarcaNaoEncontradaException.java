@@ -7,12 +7,15 @@ import java.io.Serial;
 
 // NOTE depois de criar o exceptionHandler, excluir o ResponseStatus
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class MarcaNaoEncontradoException extends RuntimeException{
+public class MarcaNaoEncontradaException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = -1950817890244937679L;
 
-    public MarcaNaoEncontradoException(String message) {
+    public MarcaNaoEncontradaException() {
+    }
+
+    public MarcaNaoEncontradaException(String message) {
         super(message);
     }
 }

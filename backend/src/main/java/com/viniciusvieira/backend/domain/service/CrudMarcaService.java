@@ -1,6 +1,6 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradoException;
+import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Marca;
 import com.viniciusvieira.backend.domain.repository.MarcaRepository;
 import jakarta.transaction.Transactional;
@@ -22,7 +22,7 @@ public class CrudMarcaService implements ICrud<Marca, Long> {
     @Override
     public Marca buscarPeloId(Long id) {
         return marcaRepository.findById(id)
-                .orElseThrow(() -> new MarcaNaoEncontradoException("Marca não cadastrada"));
+                .orElseThrow(() -> new MarcaNaoEncontradaException("Marca não cadastrada"));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CrudMarcaService implements ICrud<Marca, Long> {
     public Marca alterar(Long id, Marca marca) {
         Marca marcaParaAtualizar = buscarPeloId(id);
         marcaParaAtualizar.setNome(marca.getNome());
-        return marcaParaAtualizar;
+        return marcaRepository.save(marcaParaAtualizar);
     }
 
     @Override

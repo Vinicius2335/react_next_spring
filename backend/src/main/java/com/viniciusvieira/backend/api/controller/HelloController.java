@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/api")
 public class HelloController {
     // TODO criar controller para Marca e Estado
+    // TODO testes depois de implementar dto + validation
 
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){

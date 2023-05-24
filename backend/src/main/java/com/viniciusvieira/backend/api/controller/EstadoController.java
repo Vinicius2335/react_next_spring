@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/estado")
+@RequestMapping("/api/estados")
 public class EstadoController {
     private final CrudEstadoService crudEstadoService;
 

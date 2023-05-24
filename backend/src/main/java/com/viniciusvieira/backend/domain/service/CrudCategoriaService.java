@@ -36,7 +36,7 @@ public class CrudCategoriaService implements ICrud<Categoria, Long>{
     public Categoria alterar(Long id, Categoria categoria) {
         Categoria categoriaParaAlterar = buscarPeloId(id);
         categoriaParaAlterar.setNome(categoria.getNome());
-        return categoriaParaAlterar;
+        return categoriaRepository.saveAndFlush(categoriaParaAlterar);
     }
 
     @Override

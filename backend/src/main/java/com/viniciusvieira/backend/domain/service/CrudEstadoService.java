@@ -37,7 +37,7 @@ public class CrudEstadoService implements ICrud<Estado, Long> {
         Estado estadoParaAtualizar = buscarPeloId(id);
         estadoParaAtualizar.setNome(estado.getNome());
         estadoParaAtualizar.setSigla(estado.getSigla());
-        return estadoParaAtualizar;
+        return estadoRepository.saveAndFlush(estadoParaAtualizar);
     }
 
     @Override
