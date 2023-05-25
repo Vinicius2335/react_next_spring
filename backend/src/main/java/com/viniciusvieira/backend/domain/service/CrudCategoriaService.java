@@ -28,7 +28,7 @@ public class CrudCategoriaService implements ICrud<Categoria, Long>{
     @Override
     @Transactional
     public Categoria inserir(Categoria categoria) {
-        return categoriaRepository.save(categoria);
+        return categoriaRepository.saveAndFlush(categoria);
     }
 
     @Override

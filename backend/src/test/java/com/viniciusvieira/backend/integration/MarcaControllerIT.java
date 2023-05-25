@@ -26,7 +26,7 @@ import static org.springframework.http.HttpMethod.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
-@DisplayName("Teste Integrção para MarcaController")
+@DisplayName("Teste Integração para MarcaController")
 class MarcaControllerIT {
     @Autowired
     private TestRestTemplate testRestTemplate;

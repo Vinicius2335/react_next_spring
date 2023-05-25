@@ -11,6 +11,9 @@ public class EstadoNaoEncontradoException extends RuntimeException{
     @Serial
     private static final long serialVersionUID = 167274577825665771L;
 
+    public EstadoNaoEncontradoException() {
+    }
+
     public EstadoNaoEncontradoException(String message) {
         super(message);
     }
