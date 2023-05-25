@@ -15,8 +15,8 @@ import java.time.OffsetDateTime;
 @Builder
 @Data
 @Entity
-@Table(name = "marca")
-public class Marca {
+@Table(name = "cidade")
+public class Cidade {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,5 +30,10 @@ public class Marca {
 
     @UpdateTimestamp
     @Column(nullable = false)
-    private OffsetDateTime dataAtualizacao;
+    private OffsetDateTime dataAlteracao;
+
+    // 1 estado possui * cidades
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "estado_id", nullable = false)
+    private Estado estado;
 }

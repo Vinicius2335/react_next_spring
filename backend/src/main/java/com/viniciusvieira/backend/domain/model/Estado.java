@@ -22,12 +22,16 @@ public class Estado {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
     private String sigla;
 
     @CreationTimestamp
+    @Column(nullable = false)
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
+    @Column(nullable = false)
     private OffsetDateTime dataAtualizacao;
 }
