@@ -68,7 +68,7 @@ class CategoriaRepositoryTest {
     @DisplayName("saveAndFlush Update existing categoria when successful")
     void saveAndFlush_UpdateExistingCategoria_WhenSuccessful(){
         Categoria novaCategoriaInserida = inserirNovaCategoriaNoBanco();
-        Categoria categoriaParaAtualizar = CategoriaCreator.mockCategoriaToUpdate(novaCategoriaInserida.getDataCriacao());
+        Categoria categoriaParaAtualizar = CategoriaCreator.mockValidCategoriaToUpdated(novaCategoriaInserida.getDataCriacao());
 
         Categoria categoriaAtualizada = categoriaRepository.saveAndFlush(categoriaParaAtualizar);
         Categoria categoriaEncontrada = categoriaRepository.findById(categoriaAtualizada.getId()).get();

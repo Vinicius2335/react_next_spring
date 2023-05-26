@@ -83,7 +83,7 @@ class CategoriaControllerIT {
     @DisplayName("alterar Return StatusCode 200 and categoria changed when successful")
     void alterar_ReturnStatusCode200AndChangedCategoria_WhenSuccessful() {
         Categoria novaCategoria = inserirNovaCategoriaNoBanco();
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaToUpdate(novaCategoria.getDataCriacao());
+        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(novaCategoria.getDataCriacao());
 
         ResponseEntity<Categoria> response = testRestTemplate.exchange(
                 URL + "/1",
@@ -104,7 +104,7 @@ class CategoriaControllerIT {
     @DisplayName("alterar Return statusCode 404 When categoria not found")
     void alterar_ReturnStatusCode404_WhenCategoriaNotFound() {
         Categoria novaCategoria = inserirNovaCategoriaNoBanco();
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaToUpdate(novaCategoria.getDataCriacao());
+        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(novaCategoria.getDataCriacao());
 
         ResponseEntity<CategoriaNaoEncontradoException> response = testRestTemplate.exchange(
                 URL + "/99",

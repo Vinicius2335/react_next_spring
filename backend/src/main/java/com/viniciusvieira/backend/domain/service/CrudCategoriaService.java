@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.api.mapper.CategoriaMapper;
+import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
 import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Categoria;
 import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
@@ -11,35 +14,36 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class CrudCategoriaService implements ICrud<Categoria, Long>{
+public class CrudCategoriaService {
     private final CategoriaRepository categoriaRepository;
+    private final CategoriaMapper categoriaMapper;
 
-    @Override
     public List<Categoria> buscarTodos() {
         return categoriaRepository.findAll();
     }
 
-    @Override
     public Categoria buscarPeloId(Long id) {
         return categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoriaNaoEncontradoException("Categoria não cadastrada"));
     }
 
-    @Override
     @Transactional
-    public Categoria inserir(Categoria categoria) {
-        return categoriaRepository.saveAndFlush(categoria);
+    public CategoriaResponse inserir(CategoriaRequest categoriaRequest) {
+        Categoria categoriaParaInserir = categoriaMapper.toDomainCategoria(categoriaRequest);
+        Categoria categoriaInserida = categoriaRepository.saveAndFlush(categoriaParaInserir);
+        return categoriaMapper.toCategoriaResponse(categoriaInserida);
     }
 
-    @Override
     @Transactional
-    public Categoria alterar(Long id, Categoria categoria) {
-        Categoria categoriaParaAlterar = buscarPeloId(id);
-        categoriaParaAlterar.setNome(categoria.getNome());
-        return categoriaRepository.saveAndFlush(categoriaParaAlterar);
+    public CategoriaResponse alterar(Long id, CategoriaRequest categoriaRequest) {
+        Categoria categoriaEncontrada = buscarPeloId(id);
+        Categoria categoriaParaAlterar = categoriaMapper.toDomainCategoria(categoriaRequest);
+        categoriaParaAlterar.setId(categoriaEncontrada.getId());
+
+        Categoria categoriaAlterada = categoriaRepository.saveAndFlush(categoriaParaAlterar);
+        return categoriaMapper.toCategoriaResponse(categoriaAlterada);
     }
 
-    @Override
     @Transactional
     public void excluir(Long id) {
         Categoria categoriaParaExcluir = buscarPeloId(id);

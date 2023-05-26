@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.api.mapper.MarcaMapper;
+import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
 import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Marca;
 import com.viniciusvieira.backend.domain.repository.MarcaRepository;
@@ -11,35 +14,36 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class CrudMarcaService implements ICrud<Marca, Long> {
+public class CrudMarcaService  {
     private final MarcaRepository marcaRepository;
+    private final MarcaMapper marcaMapper;
 
-    @Override
     public List<Marca> buscarTodos() {
         return marcaRepository.findAll();
     }
 
-    @Override
     public Marca buscarPeloId(Long id) {
         return marcaRepository.findById(id)
                 .orElseThrow(() -> new MarcaNaoEncontradaException("Marca não cadastrada"));
     }
 
-    @Override
     @Transactional
-    public Marca inserir(Marca marca) {
-        return marcaRepository.saveAndFlush(marca);
+    public MarcaResponse inserir(MarcaRequest marcaRequest) {
+        Marca marcaParaInserir = marcaMapper.toDomainMarca(marcaRequest);
+        Marca marcaInserida = marcaRepository.saveAndFlush(marcaParaInserir);
+        return marcaMapper.toMarcaResponse(marcaInserida);
     }
 
-    @Override
     @Transactional
-    public Marca alterar(Long id, Marca marca) {
-        Marca marcaParaAtualizar = buscarPeloId(id);
-        marcaParaAtualizar.setNome(marca.getNome());
-        return marcaRepository.save(marcaParaAtualizar);
+    public MarcaResponse alterar(Long id, MarcaRequest marcaRequest) {
+        Marca marcaEncontrada = buscarPeloId(id);
+        Marca marcaParaAlterar = marcaMapper.toDomainMarca(marcaRequest);
+        marcaParaAlterar.setId(marcaEncontrada.getId());
+
+        Marca marcaAlterada = marcaRepository.save(marcaParaAlterar);
+        return marcaMapper.toMarcaResponse(marcaAlterada);
     }
 
-    @Override
     @Transactional
     public void excluir(Long id) {
         Marca marcaParaExcluir = buscarPeloId(id);

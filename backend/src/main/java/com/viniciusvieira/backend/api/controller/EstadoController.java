@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.api.controller;
 
+import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.domain.service.CrudEstadoService;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +23,17 @@ public class EstadoController {
     }
 
     @PostMapping
-    public ResponseEntity<Estado> inserir(@RequestBody Estado estado){
+    public ResponseEntity<EstadoResponse> inserir(@RequestBody EstadoRequest estadoRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(crudEstadoService.inserir(estado));
+                .body(crudEstadoService.inserir(estadoRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Estado> alterar(@PathVariable Long id, @RequestBody Estado estado){
+    public ResponseEntity<EstadoResponse> alterar(@PathVariable Long id, @RequestBody EstadoRequest estadoRequest){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(crudEstadoService.alterar(id, estado));
+                .body(crudEstadoService.alterar(id, estadoRequest));
     }
 
     @DeleteMapping("/{id}")

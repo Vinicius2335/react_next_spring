@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.api.controller;
 
+import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
 import com.viniciusvieira.backend.domain.model.Categoria;
 import com.viniciusvieira.backend.domain.service.CrudCategoriaService;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +28,15 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> inserir(@RequestBody Categoria categoria){
+    public ResponseEntity<CategoriaResponse> inserir(@RequestBody CategoriaRequest categoriaRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(crudCategoriaService.inserir(categoria));
+                .body(crudCategoriaService.inserir(categoriaRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> alterar(@PathVariable Long id, @RequestBody Categoria categoria){
-        return ResponseEntity.ok(crudCategoriaService.alterar(id, categoria));
+    public ResponseEntity<CategoriaResponse> alterar(@PathVariable Long id, @RequestBody CategoriaRequest categoriaRequest){
+        return ResponseEntity.ok(crudCategoriaService.alterar(id, categoriaRequest));
     }
 
     @DeleteMapping("/{id}")

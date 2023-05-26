@@ -96,7 +96,7 @@ class CrudCategoriaServiceTest {
     @Test
     @DisplayName("alterar Update categoria when successful")
     void alterar_UpdateCategoria_WhenSuccessul() {
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaToUpdate(expectedCategoria.getDataCriacao());
+        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(expectedCategoria.getDataCriacao());
         Categoria categoriaAlterada = crudCategoriaService.alterar(1L, categoriaParaAlterar);
         categoriaAlterada.setDataAtualizacao(categoriaParaAlterar.getDataAtualizacao());
 
@@ -111,7 +111,7 @@ class CrudCategoriaServiceTest {
     void alterar_ThrowsCategoriaNaoEncontradoException_WhenCategoriaNotFound() {
         BDDMockito.when(mockCategoriaRespository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaToUpdate(expectedCategoria.getDataCriacao());
+        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(expectedCategoria.getDataCriacao());
 
         assertThrows(CategoriaNaoEncontradoException.class, () -> crudCategoriaService.alterar(99L, categoriaParaAlterar));
     }

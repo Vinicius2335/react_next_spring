@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.api.mapper.EstadoMapper;
+import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.domain.repository.EstadoRepository;
@@ -11,38 +14,38 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class CrudEstadoService implements ICrud<Estado, Long> {
+public class CrudEstadoService {
     private final EstadoRepository estadoRepository;
+    private final EstadoMapper estadoMapper;
 
-    @Override
-    public List<Estado> buscarTodos(){
+    public List<Estado> buscarTodos() {
         return estadoRepository.findAll();
     }
 
-    @Override
-    public Estado buscarPeloId(Long id){
+    public Estado buscarPeloId(Long id) {
         return estadoRepository.findById(id)
                 .orElseThrow(() -> new EstadoNaoEncontradoException("Estado não cadastrado"));
     }
 
-    @Override
     @Transactional
-    public Estado inserir(Estado estado){
-        return estadoRepository.saveAndFlush(estado);
+    public EstadoResponse inserir(EstadoRequest estadoRequest) {
+        Estado estadoParaInserir = estadoMapper.toDomainEstado(estadoRequest);
+        Estado estadoInserido = estadoRepository.saveAndFlush(estadoParaInserir);
+        return estadoMapper.toEstadoResponse(estadoInserido);
     }
 
-    @Override
     @Transactional
-    public Estado alterar(Long id, Estado estado){
-        Estado estadoParaAtualizar = buscarPeloId(id);
-        estadoParaAtualizar.setNome(estado.getNome());
-        estadoParaAtualizar.setSigla(estado.getSigla());
-        return estadoRepository.saveAndFlush(estadoParaAtualizar);
+    public EstadoResponse alterar(Long id, EstadoRequest estadoRequest) {
+        Estado estadoEncontrado = buscarPeloId(id);
+        Estado estadoParaAlterar = estadoMapper.toDomainEstado(estadoRequest);
+        estadoParaAlterar.setId(estadoEncontrado.getId());
+
+        Estado estadoAlterado = estadoRepository.saveAndFlush(estadoParaAlterar);
+        return estadoMapper.toEstadoResponse(estadoAlterado);
     }
 
-    @Override
     @Transactional
-    public void excluir(Long id){
+    public void excluir(Long id) {
         Estado estado = buscarPeloId(id);
         estadoRepository.delete(estado);
     }

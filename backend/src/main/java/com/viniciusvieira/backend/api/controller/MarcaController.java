@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.api.controller;
 
+import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
 import com.viniciusvieira.backend.domain.model.Marca;
 import com.viniciusvieira.backend.domain.service.CrudMarcaService;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +28,15 @@ public class MarcaController {
     }
 
     @PostMapping
-    public ResponseEntity<Marca> inserir(@RequestBody Marca marca){
+    public ResponseEntity<MarcaResponse> inserir(@RequestBody MarcaRequest marcaRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(crudMarcaService.inserir(marca));
+                .body(crudMarcaService.inserir(marcaRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Marca> alterar(@PathVariable Long id, @RequestBody Marca marca){
-        return ResponseEntity.ok(crudMarcaService.alterar(id, marca));
+    public ResponseEntity<MarcaResponse> alterar(@PathVariable Long id, @RequestBody MarcaRequest marcaRequest){
+        return ResponseEntity.ok(crudMarcaService.alterar(id, marcaRequest));
     }
 
     @DeleteMapping("/{id}")
