@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.api.controller;
 
+import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
 import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Marca;
 import com.viniciusvieira.backend.domain.service.CrudMarcaService;
@@ -30,9 +32,10 @@ class MarcaControllerTest {
     @Mock
     private CrudMarcaService mockCrudMarcaService;
 
-    private final Marca expectedMarca = MarcaCreator.mockValidMarca();
-    private final List<Marca> expectedListMarcas = List.of(expectedMarca);
-    private final Marca expectedMarcaToUpdate = MarcaCreator.mockMarcaToUpdate(expectedMarca.getDataCriacao());
+    private final Marca validMarca = MarcaCreator.mockMarca();
+    private final MarcaResponse expectedMarca = MarcaCreator.mockMarcaResponse();
+    private final List<Marca> expectedListMarcas = List.of(validMarca);
+    private final MarcaResponse expectedMarcaUpdated = MarcaCreator.mockMarcaResponseUpdate();
 
     @BeforeEach
     void setUp() {
@@ -40,13 +43,13 @@ class MarcaControllerTest {
         BDDMockito.when(mockCrudMarcaService.buscarTodos()).thenReturn(expectedListMarcas);
 
         // buscarPeloId
-        BDDMockito.when(mockCrudMarcaService.buscarPeloId(anyLong())).thenReturn(expectedMarca);
+        BDDMockito.when(mockCrudMarcaService.buscarPeloId(anyLong())).thenReturn(validMarca);
 
         // inserir
-        BDDMockito.when(mockCrudMarcaService.inserir(any(Marca.class))).thenReturn(expectedMarca);
+        BDDMockito.when(mockCrudMarcaService.inserir(any(MarcaRequest.class))).thenReturn(expectedMarca);
 
         // alterar
-        BDDMockito.when(mockCrudMarcaService.alterar(anyLong(), any(Marca.class))).thenReturn(expectedMarcaToUpdate);
+        BDDMockito.when(mockCrudMarcaService.alterar(anyLong(), any(MarcaRequest.class))).thenReturn(expectedMarcaUpdated);
 
         // excluir
         BDDMockito.doNothing().when(mockCrudMarcaService).excluir(anyLong());
@@ -72,7 +75,7 @@ class MarcaControllerTest {
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(expectedMarca, response.getBody())
+                () -> assertEquals(validMarca, response.getBody())
         );
     }
 
@@ -87,36 +90,34 @@ class MarcaControllerTest {
     @Test
     @DisplayName("inserir Insert new marca When successful")
     void inserir_InsertNewMarca_WhenSuccessful() {
-        Marca marcaParaSalvar = MarcaCreator.mockValidMarca();
-        ResponseEntity<Marca> response = marcaController.inserir(marcaParaSalvar);
+        MarcaRequest marcaParaSalvar = MarcaCreator.mockMarcaRequestToSave();
+        ResponseEntity<MarcaResponse> response = marcaController.inserir(marcaParaSalvar);
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.CREATED, response.getStatusCode()),
-                () -> assertEquals(expectedMarca.getId(), response.getBody().getId()),
-                () -> assertEquals(expectedMarca.getNome(), response.getBody().getNome())
+                () -> assertEquals(validMarca.getNome(), response.getBody().getNome())
         );
     }
 
     @Test
     @DisplayName("alterar Update marca when successful")
     void alterar_UpdateMarca_WhenSuccessul() {
-        Marca marcaParaAlterar = MarcaCreator.mockMarcaToUpdate(expectedMarca.getDataCriacao());
-        ResponseEntity<Marca> response = marcaController.alterar(1L, marcaParaAlterar);
+        MarcaRequest marcaParaAlterar = MarcaCreator.mockMarcaRequestToUpdate();
+        ResponseEntity<MarcaResponse> response = marcaController.alterar(1L, marcaParaAlterar);
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(marcaParaAlterar.getId(), response.getBody().getId()),
-                () -> assertEquals(marcaParaAlterar.getNome(), response.getBody().getNome())
+                () -> assertEquals(expectedMarcaUpdated.getNome(), response.getBody().getNome())
         );
     }
 
     @Test
     @DisplayName("alterar Throws MarcaNaoEncontradaException When marca not found")
     void alterar_ThrowsMarcaNaoEncontradaException_WhenMarcaNotFound() {
-        BDDMockito.when(mockCrudMarcaService.alterar(anyLong(), any(Marca.class))).thenThrow(new MarcaNaoEncontradaException());
-        Marca marcaParaAlterar = MarcaCreator.mockMarcaToUpdate(expectedMarca.getDataCriacao());
+        BDDMockito.when(mockCrudMarcaService.alterar(anyLong(), any(MarcaRequest.class))).thenThrow(new MarcaNaoEncontradaException());
+        MarcaRequest marcaParaAlterar = MarcaCreator.mockMarcaRequestToUpdate();
 
         assertThrows(MarcaNaoEncontradaException.class, () -> marcaController.alterar(99L, marcaParaAlterar));
     }

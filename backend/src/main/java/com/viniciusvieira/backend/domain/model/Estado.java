@@ -28,10 +28,8 @@ public class Estado {
     private String sigla;
 
     @CreationTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataAtualizacao;
 }

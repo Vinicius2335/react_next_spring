@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.integration;
 
+import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
 import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Marca;
 import com.viniciusvieira.backend.domain.repository.MarcaRepository;
@@ -36,7 +38,7 @@ class MarcaControllerIT {
     private static final String URL = "/api/marcas";
 
     private Marca inserirNovaMarcaNoBanco() {
-        Marca novaMarca = MarcaCreator.mockValidMarca();
+        Marca novaMarca = MarcaCreator.mockMarca();
         return marcaRepository.saveAndFlush(novaMarca);
     }
 
@@ -95,42 +97,76 @@ class MarcaControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new marca When successful")
-    void inserir_InsertNewMarca_WhenSuccessful() {
-        Marca novaMarca = MarcaCreator.mockValidMarca();
-        ResponseEntity<Marca> response = testRestTemplate.exchange(
+    @DisplayName("inserir Return statusCode 202 and new marcaResponse When successful")
+    void inserir_ReturnStatusCode202AndMarcaResponse_WhenSuccessful() {
+        MarcaRequest novaMarca = MarcaCreator.mockMarcaRequestToSave();
+        ResponseEntity<MarcaResponse> response = testRestTemplate.exchange(
                 URL,
                 POST,
                 new HttpEntity<>(novaMarca),
-                Marca.class
+                MarcaResponse.class
         );
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.CREATED, response.getStatusCode()),
-                () -> assertEquals(novaMarca.getId(), response.getBody().getId()),
                 () -> assertEquals(novaMarca.getNome(), response.getBody().getNome())
         );
     }
 
     @Test
-    @DisplayName("alterar Return StatusCode 200 and marca changed when successful")
-    void alterar_ReturnStatusCode200AndChangedMarca_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 400 When marca have invalid fields")
+    void inserir_ReturnStatusCode400_WhenMarcaHaveInvalidFields() {
+        MarcaRequest novaMarca = MarcaCreator.mockInvalidMarcaRequestToSave();
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL,
+                POST,
+                new HttpEntity<>(novaMarca),
+                Object.class
+        );
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("alterar Return StatusCode 200 and changed marcaResponse when successful")
+    void alterar_ReturnStatusCode200AndChangedMarcaResponse_WhenSuccessful() {
         Marca novaMarca = inserirNovaMarcaNoBanco();
         Marca marcaParaAlterar = MarcaCreator.mockMarcaToUpdate(novaMarca.getDataCriacao());
 
-        ResponseEntity<Marca> response = testRestTemplate.exchange(
+        ResponseEntity<MarcaResponse> response = testRestTemplate.exchange(
                 URL + "/1",
                 PUT,
                 new HttpEntity<>(marcaParaAlterar),
-                Marca.class
+                MarcaResponse.class
         );
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(marcaParaAlterar.getId(), response.getBody().getId()),
                 () -> assertEquals(marcaParaAlterar.getNome(), response.getBody().getNome())
+        );
+    }
+
+    @Test
+    @DisplayName("alterar Return StatusCode 400 when marca have invalid fields")
+    void alterar_ReturnStatusCode400_WhenMarcaHaveInvalidFields() {
+        inserirNovaMarcaNoBanco();
+        MarcaRequest marcaParaAlterar = MarcaCreator.mockInvalidMarcaRequestToSave();
+
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL + "/1",
+                PUT,
+                new HttpEntity<>(marcaParaAlterar),
+                Object.class
+        );
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode())
         );
     }
 

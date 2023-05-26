@@ -19,16 +19,16 @@ class EstadoRepositoryTest {
     @Autowired
     private EstadoRepository estadoRepository;
 
-    private final Estado expectedEstado = EstadoCreator.mockValidEstado();
+    private final Estado expectedEstado = EstadoCreator.mockEstado();
 
     public Estado inserirNovaEstadoNoBanco(){
-        return estadoRepository.saveAndFlush(EstadoCreator.mockValidEstado());
+        return estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
     }
 
     @Test
     @DisplayName("saveAndFlush Insert new estado when Successful")
     void saveAndFlush_InsertNewEstado_WhenSuccessful(){
-        Estado estadoSaved = estadoRepository.saveAndFlush(EstadoCreator.mockValidEstado());
+        Estado estadoSaved = estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
 
         // Não pode comparar a classe inteira pq a data criaçao/alteração será diferente
         assertAll(

@@ -4,6 +4,7 @@ import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequ
 import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
 import com.viniciusvieira.backend.domain.model.Categoria;
 import com.viniciusvieira.backend.domain.service.CrudCategoriaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,14 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaResponse> inserir(@RequestBody CategoriaRequest categoriaRequest){
+    public ResponseEntity<CategoriaResponse> inserir(@RequestBody @Valid CategoriaRequest categoriaRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(crudCategoriaService.inserir(categoriaRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaResponse> alterar(@PathVariable Long id, @RequestBody CategoriaRequest categoriaRequest){
+    public ResponseEntity<CategoriaResponse> alterar(@PathVariable Long id, @RequestBody @Valid CategoriaRequest categoriaRequest){
         return ResponseEntity.ok(crudCategoriaService.alterar(id, categoriaRequest));
     }
 

@@ -19,16 +19,16 @@ class CategoriaRepositoryTest {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    private final Categoria expectedCategoria = CategoriaCreator.mockValidCategoria();
+    private final Categoria expectedCategoria = CategoriaCreator.mockCategoria();
 
     public Categoria inserirNovaCategoriaNoBanco(){
-        return categoriaRepository.saveAndFlush(CategoriaCreator.mockValidCategoria());
+        return categoriaRepository.saveAndFlush(CategoriaCreator.mockCategoria());
     }
 
     @Test
     @DisplayName("saveAndFlush Insert new categoria when Successful")
     void saveAndFlush_InsertNewCategoria_WhenSuccessful(){
-        Categoria categoriaSaved = categoriaRepository.saveAndFlush(CategoriaCreator.mockValidCategoria());
+        Categoria categoriaSaved = categoriaRepository.saveAndFlush(CategoriaCreator.mockCategoria());
 
         // Não pode comparar a classe inteira pq a data criaçao/alteração será diferente
         assertAll(
@@ -68,7 +68,7 @@ class CategoriaRepositoryTest {
     @DisplayName("saveAndFlush Update existing categoria when successful")
     void saveAndFlush_UpdateExistingCategoria_WhenSuccessful(){
         Categoria novaCategoriaInserida = inserirNovaCategoriaNoBanco();
-        Categoria categoriaParaAtualizar = CategoriaCreator.mockValidCategoriaToUpdated(novaCategoriaInserida.getDataCriacao());
+        Categoria categoriaParaAtualizar = CategoriaCreator.mockCategoriaToUpdated(novaCategoriaInserida.getDataCriacao());
 
         Categoria categoriaAtualizada = categoriaRepository.saveAndFlush(categoriaParaAtualizar);
         Categoria categoriaEncontrada = categoriaRepository.findById(categoriaAtualizada.getId()).get();

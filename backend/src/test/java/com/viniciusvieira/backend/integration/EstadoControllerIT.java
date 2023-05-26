@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.integration;
 
+import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.domain.repository.EstadoRepository;
@@ -34,7 +36,7 @@ class EstadoControllerIT {
     private static final String URL = "/api/estados";
 
     private Estado inserirNovaEstadoNoBanco() {
-        Estado novaEstado = EstadoCreator.mockValidEstado();
+        Estado novaEstado = EstadoCreator.mockEstado();
         return estadoRepository.saveAndFlush(novaEstado);
     }
 
@@ -62,44 +64,78 @@ class EstadoControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new estado When successful")
-    void inserir_InsertNewEstado_WhenSuccessful() {
-        Estado novaEstado = EstadoCreator.mockValidEstado();
-        ResponseEntity<Estado> response = testRestTemplate.exchange(
+    @DisplayName("inserir Return statusCode 202 and new estadoResponse When successful")
+    void inserir_ReturnStatusCode202AndEstadoResponse_WhenSuccessful() {
+        EstadoRequest novaEstado = EstadoCreator.mockEstadoRequestToSave();
+        ResponseEntity<EstadoResponse> response = testRestTemplate.exchange(
                 URL,
                 POST,
                 new HttpEntity<>(novaEstado),
-                Estado.class
+                EstadoResponse.class
         );
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.CREATED, response.getStatusCode()),
-                () -> assertEquals(novaEstado.getId(), response.getBody().getId()),
                 () -> assertEquals(novaEstado.getNome(), response.getBody().getNome()),
                 () -> assertEquals(novaEstado.getSigla(), response.getBody().getSigla())
         );
     }
 
     @Test
-    @DisplayName("alterar Return StatusCode 200 and estado changed when successful")
-    void alterar_ReturnStatusCode200AndChangedEstado_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 400 When estado have invalid fields")
+    void inserir_ReturnStatusCode400_WhenEstadoHaveInvalidFields() {
+        EstadoRequest novaEstado = EstadoCreator.mockInvalidEstadoRequest();
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL,
+                POST,
+                new HttpEntity<>(novaEstado),
+                Object.class
+        );
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("alterar Return StatusCode 200 and estadoResponse changed When successful")
+    void alterar_ReturnStatusCode200AndChangedEstadoResponse_WhenSuccessful() {
         Estado novaEstado = inserirNovaEstadoNoBanco();
         Estado estadoParaAlterar = EstadoCreator.mockEstadoToUpdate(novaEstado.getDataCriacao());
 
-        ResponseEntity<Estado> response = testRestTemplate.exchange(
+        ResponseEntity<EstadoResponse> response = testRestTemplate.exchange(
                 URL + "/1",
                 PUT,
                 new HttpEntity<>(estadoParaAlterar),
-                Estado.class
+                EstadoResponse.class
         );
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(estadoParaAlterar.getId(), response.getBody().getId()),
                 () -> assertEquals(estadoParaAlterar.getNome(), response.getBody().getNome()),
                 () -> assertEquals(estadoParaAlterar.getSigla(), response.getBody().getSigla())
+        );
+    }
+
+    @Test
+    @DisplayName("alterar Return StatusCode 400 When estado have invalid fields")
+    void alterar_ReturnStatusCode400_WhenEstadoHaveInvalidFields() {
+        inserirNovaEstadoNoBanco();
+        EstadoRequest estadoParaAlterar = EstadoCreator.mockInvalidEstadoRequest();
+
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL + "/1",
+                PUT,
+                new HttpEntity<>(estadoParaAlterar),
+                Object.class
+        );
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode())
         );
     }
 

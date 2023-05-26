@@ -40,7 +40,7 @@ public class CrudMarcaService  {
         Marca marcaParaAlterar = marcaMapper.toDomainMarca(marcaRequest);
         marcaParaAlterar.setId(marcaEncontrada.getId());
 
-        Marca marcaAlterada = marcaRepository.save(marcaParaAlterar);
+        Marca marcaAlterada = marcaRepository.saveAndFlush(marcaParaAlterar);
         return marcaMapper.toMarcaResponse(marcaAlterada);
     }
 

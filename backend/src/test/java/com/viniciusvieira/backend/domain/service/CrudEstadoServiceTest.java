@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.api.mapper.EstadoMapper;
+import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.domain.repository.EstadoRepository;
@@ -28,9 +31,13 @@ class CrudEstadoServiceTest {
 
     @Mock
     private EstadoRepository mockEstadoRespository;
+    @Mock
+    private EstadoMapper mockEstadoMapper;
 
-    private final Estado expectedEstado = EstadoCreator.mockValidEstado();
-    private final List<Estado> expectedListEstado = List.of(expectedEstado);
+    private final Estado validEstado = EstadoCreator.mockEstado();
+    private final EstadoResponse expectedEstado = EstadoCreator.mockEstadoResponse();
+    private final EstadoResponse expectedEstadoUpdated = EstadoCreator.mockEstadoResponseUpdate();
+    private final List<Estado> expectedListEstado = List.of(validEstado);
 
     @BeforeEach
     void setUp() {
@@ -38,13 +45,19 @@ class CrudEstadoServiceTest {
         BDDMockito.when(mockEstadoRespository.findAll()).thenReturn(expectedListEstado);
 
         // findById
-        BDDMockito.when(mockEstadoRespository.findById(anyLong())).thenReturn(Optional.of(expectedEstado));
+        BDDMockito.when(mockEstadoRespository.findById(anyLong())).thenReturn(Optional.of(validEstado));
 
         // saveAndFlush
-        BDDMockito.when(mockEstadoRespository.saveAndFlush(any(Estado.class))).thenReturn(expectedEstado);
+        BDDMockito.when(mockEstadoRespository.saveAndFlush(any(Estado.class))).thenReturn(validEstado);
 
         // delete
         BDDMockito.doNothing().when(mockEstadoRespository).delete(any(Estado.class));
+
+        // EstadoMapper - toDomainEstado
+        BDDMockito.when(mockEstadoMapper.toDomainEstado(any(EstadoRequest.class))).thenReturn(validEstado);
+
+        // toEstadoResponse
+        BDDMockito.when(mockEstadoMapper.toEstadoResponse(any(Estado.class))).thenReturn(expectedEstado);
     }
 
     @Test
@@ -57,7 +70,7 @@ class CrudEstadoServiceTest {
                 () -> assertNotNull(estados),
                 () -> assertFalse(estados.isEmpty()),
                 () -> assertEquals(1, estados.size()),
-                () -> assertTrue(estados.contains(expectedEstado))
+                () -> assertTrue(estados.contains(validEstado))
         );
     }
 
@@ -68,7 +81,7 @@ class CrudEstadoServiceTest {
 
         assertAll(
                 () -> assertNotNull(estado),
-                () -> assertEquals(expectedEstado, estado)
+                () -> assertEquals(validEstado, estado)
         );
     }
 
@@ -83,25 +96,30 @@ class CrudEstadoServiceTest {
     @Test
     @DisplayName("inserir Insert new estado When successful")
     void inserir_InsertNewEstado_WhenSuccessful() {
-        Estado estadoParaInserir = EstadoCreator.mockValidEstado();
-        Estado estadoInserida = crudEstadoService.inserir(estadoParaInserir);
+        EstadoRequest estadoParaInserir = EstadoCreator.mockEstadoRequestToSave();
+        EstadoResponse estadoInserida = crudEstadoService.inserir(estadoParaInserir);
 
         assertAll(
                 () -> assertNotNull(estadoInserida),
-                () -> assertEquals(expectedEstado, estadoInserida)
+                () -> assertEquals(expectedEstado.getNome(), estadoInserida.getNome()),
+                () -> assertEquals(expectedEstado.getSigla(), estadoInserida.getSigla())
         );
     }
 
     @Test
     @DisplayName("alterar Update estado when successful")
     void alterar_UpdateEstado_WhenSuccessul() {
-        Estado estadoParaAlterar = EstadoCreator.mockEstadoToUpdate(expectedEstado.getDataCriacao());
-        Estado estadoAlterada = crudEstadoService.alterar(1L, estadoParaAlterar);
-        estadoAlterada.setDataAtualizacao(estadoParaAlterar.getDataAtualizacao());
+        Estado update = EstadoCreator.mockEstadoToUpdate(validEstado.getDataCriacao());
+        BDDMockito.when(mockEstadoRespository.saveAndFlush(any(Estado.class))).thenReturn(update);
+        BDDMockito.when(mockEstadoMapper.toEstadoResponse(any(Estado.class))).thenReturn(expectedEstadoUpdated);
+
+        EstadoRequest estadoParaAlterar = EstadoCreator.mockEstadoRequestToUpdate();
+        EstadoResponse estadoAlterada = crudEstadoService.alterar(1L, estadoParaAlterar);
 
         assertAll(
                 () -> assertNotNull(estadoAlterada),
-                () -> assertEquals(estadoParaAlterar, estadoAlterada)
+                () -> assertEquals(expectedEstadoUpdated.getNome(), estadoAlterada.getNome()),
+                () -> assertEquals(expectedEstadoUpdated.getSigla(), estadoAlterada.getSigla())
         );
     }
 
@@ -110,7 +128,7 @@ class CrudEstadoServiceTest {
     void alterar_ThrowsEstadoNaoEncontradoException_WhenEstadoNotFound() {
         BDDMockito.when(mockEstadoRespository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Estado estadoParaAlterar = EstadoCreator.mockEstadoToUpdate(expectedEstado.getDataCriacao());
+        EstadoRequest estadoParaAlterar = EstadoCreator.mockEstadoRequestToUpdate();
 
         assertThrows(EstadoNaoEncontradoException.class, () -> crudEstadoService.alterar(99L, estadoParaAlterar));
     }

@@ -1,18 +1,58 @@
 package com.viniciusvieira.backend.util;
 
+import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.model.Estado;
-import com.viniciusvieira.backend.domain.model.Marca;
 
 import java.time.OffsetDateTime;
 
 public abstract class EstadoCreator {
-    public static Estado mockValidEstado(){
+    public static Estado mockEstado(){
         return Estado.builder()
                 .id(1L)
                 .nome("Apple")
                 .sigla("Ap")
                 .dataCriacao(OffsetDateTime.now())
                 .dataAtualizacao(OffsetDateTime.now())
+                .build();
+    }
+
+    public static EstadoResponse mockEstadoResponse(){
+        return EstadoResponse.builder()
+                .nome("Apple")
+                .sigla("Ap")
+                .dataCriacao(OffsetDateTime.now())
+                .dataAtualizacao(OffsetDateTime.now())
+                .build();
+    }
+
+    public static EstadoResponse mockEstadoResponseUpdate(){
+        return EstadoResponse.builder()
+                .nome("Dell")
+                .sigla("Dl")
+                .dataCriacao(OffsetDateTime.now())
+                .dataAtualizacao(OffsetDateTime.now())
+                .build();
+    }
+
+    public static EstadoRequest mockEstadoRequestToSave(){
+        return EstadoRequest.builder()
+                .nome("Apple")
+                .sigla("Ap")
+                .build();
+    }
+
+    public static EstadoRequest mockEstadoRequestToUpdate(){
+        return EstadoRequest.builder()
+                .nome("Dell")
+                .sigla("Dl")
+                .build();
+    }
+
+    public static EstadoRequest mockInvalidEstadoRequest(){
+        return EstadoRequest.builder()
+                .nome(null)
+                .sigla(null)
                 .build();
     }
 

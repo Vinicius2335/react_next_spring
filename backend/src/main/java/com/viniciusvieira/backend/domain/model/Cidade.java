@@ -25,11 +25,9 @@ public class Cidade {
     private String nome;
 
     @CreationTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataAlteracao;
 
     // 1 estado possui * cidades

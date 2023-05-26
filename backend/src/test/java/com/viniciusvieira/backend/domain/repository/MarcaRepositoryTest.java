@@ -19,16 +19,16 @@ class MarcaRepositoryTest {
     @Autowired
     private MarcaRepository marcaRepository;
 
-    private final Marca expectedMarca = MarcaCreator.mockValidMarca();
+    private final Marca expectedMarca = MarcaCreator.mockMarca();
 
     public Marca inserirNovaMarcaNoBanco(){
-        return marcaRepository.saveAndFlush(MarcaCreator.mockValidMarca());
+        return marcaRepository.saveAndFlush(MarcaCreator.mockMarca());
     }
 
     @Test
     @DisplayName("saveAndFlush Insert new marca when Successful")
     void saveAndFlush_InsertNewMarca_WhenSuccessful(){
-        Marca marcaSaved = marcaRepository.saveAndFlush(MarcaCreator.mockValidMarca());
+        Marca marcaSaved = marcaRepository.saveAndFlush(MarcaCreator.mockMarca());
 
         // Não pode comparar a classe inteira pq a data criaçao/alteração será diferente
         assertAll(

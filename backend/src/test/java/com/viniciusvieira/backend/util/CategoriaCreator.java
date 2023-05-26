@@ -7,7 +7,7 @@ import com.viniciusvieira.backend.domain.model.Categoria;
 import java.time.OffsetDateTime;
 
 public abstract class CategoriaCreator {
-    public static Categoria mockValidCategoria(){
+    public static Categoria mockCategoria(){
         return Categoria.builder()
                 .id(1L)
                 .nome("Eletronico")
@@ -16,7 +16,7 @@ public abstract class CategoriaCreator {
                 .build();
     }
 
-    public static CategoriaResponse mockValidCategoriaResponse(){
+    public static CategoriaResponse mockCategoriaResponse(){
         return CategoriaResponse.builder()
                 .nome("Eletronico")
                 .dataCriacao(OffsetDateTime.now())
@@ -24,7 +24,7 @@ public abstract class CategoriaCreator {
                 .build();
     }
 
-    public static CategoriaRequest mockValidCategoriaRequest(){
+    public static CategoriaRequest mockCategoriaRequest(){
         return CategoriaRequest.builder()
                 .nome("Eletronico")
                 .build();
@@ -36,7 +36,7 @@ public abstract class CategoriaCreator {
                 .build();
     }
 
-    public static Categoria mockValidCategoriaToUpdated(OffsetDateTime dataCriacao){
+    public static Categoria mockCategoriaToUpdated(OffsetDateTime dataCriacao){
         return Categoria.builder()
                 .id(1L)
                 .nome("Celular")
@@ -51,7 +51,7 @@ public abstract class CategoriaCreator {
                 .build();
     }
 
-    public static CategoriaResponse mockCategoriaResponseUpdated(){
+    public static CategoriaResponse mockCategoriaResponseUpdate(){
         return CategoriaResponse.builder()
                 .nome("Celular")
                 .dataAtualizacao(OffsetDateTime.now())

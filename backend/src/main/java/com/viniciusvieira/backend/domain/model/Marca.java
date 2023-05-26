@@ -25,10 +25,8 @@ public class Marca {
     private String nome;
 
     @CreationTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
-    @Column(nullable = false)
     private OffsetDateTime dataAtualizacao;
 }

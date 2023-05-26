@@ -1,9 +1,12 @@
 package com.viniciusvieira.backend.integration;
 
+import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
 import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Categoria;
 import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
 import com.viniciusvieira.backend.util.CategoriaCreator;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.*;
 
+@Log4j2
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -34,7 +38,7 @@ class CategoriaControllerIT {
     private static final String URL = "/api/categorias";
 
     private Categoria inserirNovaCategoriaNoBanco() {
-        Categoria novaCategoria = CategoriaCreator.mockValidCategoria();
+        Categoria novaCategoria = CategoriaCreator.mockCategoria();
         return categoriaRepository.saveAndFlush(novaCategoria);
     }
 
@@ -61,42 +65,82 @@ class CategoriaControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new categoria When successful")
-    void inserir_InsertNewCategoria_WhenSuccessful() {
-        Categoria novaCategoria = CategoriaCreator.mockValidCategoria();
-        ResponseEntity<Categoria> response = testRestTemplate.exchange(
+    @DisplayName("inserir Return statusCode 202 and new categoriaResponse When successful")
+    void inserir_InsertNewCategoriaResponse_WhenSuccessful() {
+        CategoriaRequest novaCategoria = CategoriaCreator.mockCategoriaRequest();
+        ResponseEntity<CategoriaResponse> response = testRestTemplate.exchange(
                 URL,
                 POST,
                 new HttpEntity<>(novaCategoria),
-                Categoria.class
+                CategoriaResponse.class
         );
+
+        log.info(response.getBody());
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.CREATED, response.getStatusCode()),
-                () -> assertEquals(novaCategoria.getId(), response.getBody().getId()),
                 () -> assertEquals(novaCategoria.getNome(), response.getBody().getNome())
         );
     }
 
     @Test
-    @DisplayName("alterar Return StatusCode 200 and categoria changed when successful")
-    void alterar_ReturnStatusCode200AndChangedCategoria_WhenSuccessful() {
-        Categoria novaCategoria = inserirNovaCategoriaNoBanco();
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(novaCategoria.getDataCriacao());
-
-        ResponseEntity<Categoria> response = testRestTemplate.exchange(
-                URL + "/1",
-                PUT,
-                new HttpEntity<>(categoriaParaAlterar),
-                Categoria.class
+    @DisplayName("inserir Return statusCode 400 When category have invalid fields")
+    void inserir_ReturnStatusCode400_WhenCategoryHaveInvalidFields() {
+        CategoriaRequest novaCategoria = CategoriaCreator.mockInvalidCategoriaRequest();
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL,
+                POST,
+                new HttpEntity<>(novaCategoria),
+                Object.class
         );
 
         assertAll(
                 () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("alterar Return StatusCode 200 and categoriaResponse changed when successful")
+    void alterar_ReturnStatusCode200AndChangedCategoria_WhenSuccessful() {
+        inserirNovaCategoriaNoBanco();
+        CategoriaRequest categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate();
+
+        ResponseEntity<CategoriaResponse> response = testRestTemplate.exchange(
+                URL + "/1",
+                PUT,
+                new HttpEntity<>(categoriaParaAlterar),
+                CategoriaResponse.class
+        );
+
+        log.info(response.getBody());
+
+        assertAll(
+                () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(categoriaParaAlterar.getId(), response.getBody().getId()),
                 () -> assertEquals(categoriaParaAlterar.getNome(), response.getBody().getNome())
+        );
+    }
+
+    @Test
+    @DisplayName("alterar Return StatusCode 400 when categoria have invalid fields")
+    void alterar_ReturnStatusCode400_WhenCategoriaHaveInvalidFields() {
+        inserirNovaCategoriaNoBanco();
+        CategoriaRequest categoriaParaAlterar = CategoriaCreator.mockInvalidCategoriaRequest();
+
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL + "/1",
+                PUT,
+                new HttpEntity<>(categoriaParaAlterar),
+                Object.class
+        );
+
+        log.info(response.getBody());
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode())
         );
     }
 
@@ -104,7 +148,7 @@ class CategoriaControllerIT {
     @DisplayName("alterar Return statusCode 404 When categoria not found")
     void alterar_ReturnStatusCode404_WhenCategoriaNotFound() {
         Categoria novaCategoria = inserirNovaCategoriaNoBanco();
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(novaCategoria.getDataCriacao());
+        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaToUpdated(novaCategoria.getDataCriacao());
 
         ResponseEntity<CategoriaNaoEncontradoException> response = testRestTemplate.exchange(
                 URL + "/99",

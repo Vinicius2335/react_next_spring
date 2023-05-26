@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.api.mapper.MarcaMapper;
+import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
 import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Marca;
 import com.viniciusvieira.backend.domain.repository.MarcaRepository;
@@ -29,9 +32,13 @@ class CrudMarcaServiceTest {
 
     @Mock
     private MarcaRepository mockMarcaRepository;
+    @Mock
+    private MarcaMapper mockMarcaMapper;
 
-    private final Marca expectedMarca = MarcaCreator.mockValidMarca();
-    private final List<Marca> expectedListMarca = List.of(expectedMarca);
+    private final Marca validMarca = MarcaCreator.mockMarca();
+    private final MarcaResponse expectedMarca = MarcaCreator.mockMarcaResponse();
+    private final MarcaResponse expectedMarcaUpdated = MarcaCreator.mockMarcaResponseUpdate();
+    private final List<Marca> expectedListMarca = List.of(validMarca);
 
     @BeforeEach
     void setUp() {
@@ -39,13 +46,19 @@ class CrudMarcaServiceTest {
         BDDMockito.when(mockMarcaRepository.findAll()).thenReturn(expectedListMarca);
 
         // findById
-        BDDMockito.when(mockMarcaRepository.findById(anyLong())).thenReturn(Optional.of(expectedMarca));
+        BDDMockito.when(mockMarcaRepository.findById(anyLong())).thenReturn(Optional.of(validMarca));
 
         // saveAndFlush
-        BDDMockito.when(mockMarcaRepository.saveAndFlush(any(Marca.class))).thenReturn(expectedMarca);
+        BDDMockito.when(mockMarcaRepository.saveAndFlush(any(Marca.class))).thenReturn(validMarca);
 
         // delete
         BDDMockito.doNothing().when(mockMarcaRepository).delete(any(Marca.class));
+
+        // MarcaMappepr - toDomainMarca
+        BDDMockito.when(mockMarcaMapper.toDomainMarca(any(MarcaRequest.class))).thenReturn(validMarca);
+
+        // toMarcaResponse
+        BDDMockito.when(mockMarcaMapper.toMarcaResponse(any(Marca.class))).thenReturn(expectedMarca);
     }
 
     @Test
@@ -57,7 +70,7 @@ class CrudMarcaServiceTest {
                 () -> assertNotNull(marcas),
                 () -> assertFalse(marcas.isEmpty()),
                 () -> assertEquals(1, marcas.size()),
-                () -> assertTrue(marcas.contains(expectedMarca))
+                () -> assertTrue(marcas.contains(validMarca))
         );
     }
 
@@ -68,7 +81,7 @@ class CrudMarcaServiceTest {
 
         assertAll(
                 () -> assertNotNull(marca),
-                () -> assertEquals(expectedMarca, marca)
+                () -> assertEquals(validMarca, marca)
         );
     }
 
@@ -83,25 +96,28 @@ class CrudMarcaServiceTest {
     @Test
     @DisplayName("inserir Insert new marca When successful")
     void inserir_InsertNewMarca_WhenSuccessful() {
-        Marca marcaParaInserir = MarcaCreator.mockValidMarca();
-        Marca marcaInserida = crudMarcaService.inserir(marcaParaInserir);
+        MarcaRequest marcaParaInserir = MarcaCreator.mockMarcaRequestToSave();
+        MarcaResponse marcaInserida = crudMarcaService.inserir(marcaParaInserir);
 
         assertAll(
                 () -> assertNotNull(marcaInserida),
-                () -> assertEquals(expectedMarca, marcaInserida)
+                () -> assertEquals(expectedMarca.getNome(), marcaInserida.getNome())
         );
     }
 
     @Test
     @DisplayName("alterar Update marca when successful")
     void alterar_UpdateMarca_WhenSuccessul() {
-        Marca marcaParaAlterar = MarcaCreator.mockMarcaToUpdate(expectedMarca.getDataCriacao());
-        Marca marcaAlterada = crudMarcaService.alterar(1L, marcaParaAlterar);
-        marcaAlterada.setDataAtualizacao(marcaParaAlterar.getDataAtualizacao());
+        Marca updateMarca = MarcaCreator.mockMarcaToUpdate(validMarca.getDataCriacao());
+        BDDMockito.when(mockMarcaRepository.saveAndFlush(any(Marca.class))).thenReturn(updateMarca);
+        BDDMockito.when(mockMarcaMapper.toMarcaResponse(any(Marca.class))).thenReturn(expectedMarcaUpdated);
+
+        MarcaRequest marcaParaAlterar = MarcaCreator.mockMarcaRequestToUpdate();
+        MarcaResponse marcaAlterada = crudMarcaService.alterar(1L, marcaParaAlterar);
 
         assertAll(
                 () -> assertNotNull(marcaAlterada),
-                () -> assertEquals(marcaParaAlterar, marcaAlterada)
+                () -> assertEquals(expectedMarcaUpdated.getNome(), marcaAlterada.getNome())
         );
     }
 
@@ -110,7 +126,7 @@ class CrudMarcaServiceTest {
     void alterar_ThrowsMarcaNaoEncontradaException_WhenMarcaNotFound() {
         BDDMockito.when(mockMarcaRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Marca marcaParaAlterar = MarcaCreator.mockMarcaToUpdate(expectedMarca.getDataCriacao());
+        MarcaRequest marcaParaAlterar = MarcaCreator.mockMarcaRequestToUpdate();
 
         assertThrows(MarcaNaoEncontradaException.class, () -> crudMarcaService.alterar(99L, marcaParaAlterar));
     }

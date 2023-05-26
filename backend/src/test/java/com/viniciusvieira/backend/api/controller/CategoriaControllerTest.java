@@ -32,10 +32,10 @@ class CategoriaControllerTest {
     @Mock
     private CrudCategoriaService crudCategoriaService;
 
-    private final Categoria validCategoria = CategoriaCreator.mockValidCategoria();
-    private final CategoriaResponse expectedCategoria = CategoriaCreator.mockValidCategoriaResponse();
+    private final Categoria validCategoria = CategoriaCreator.mockCategoria();
+    private final CategoriaResponse expectedCategoria = CategoriaCreator.mockCategoriaResponse();
     private final List<Categoria> expectedListCategorias = List.of(validCategoria);
-    private final CategoriaResponse expectedCategoriaUpdated = CategoriaCreator.mockCategoriaResponseUpdated();
+    private final CategoriaResponse expectedCategoriaUpdated = CategoriaCreator.mockCategoriaResponseUpdate();
 
     @BeforeEach
     void setUp() {
@@ -70,7 +70,7 @@ class CategoriaControllerTest {
     @Test
     @DisplayName("inserir Insert new categoria When successful")
     void inserir_InsertNewCategoria_WhenSuccessful() {
-        CategoriaRequest categoriaParaSalvar = CategoriaCreator.mockValidCategoriaRequest();
+        CategoriaRequest categoriaParaSalvar = CategoriaCreator.mockCategoriaRequest();
         ResponseEntity<CategoriaResponse> response = categoriaController.inserir(categoriaParaSalvar);
 
         assertAll(
@@ -89,7 +89,7 @@ class CategoriaControllerTest {
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(categoriaParaAlterar.getNome(), response.getBody().getNome())
+                () -> assertEquals(expectedCategoriaUpdated.getNome(), response.getBody().getNome())
         );
     }
 

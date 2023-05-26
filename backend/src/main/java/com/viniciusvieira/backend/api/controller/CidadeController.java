@@ -4,6 +4,7 @@ import com.viniciusvieira.backend.api.representation.model.request.CidadeRequest
 import com.viniciusvieira.backend.api.representation.model.response.CidadeResponse;
 import com.viniciusvieira.backend.domain.model.Cidade;
 import com.viniciusvieira.backend.domain.service.CrudCidadeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,14 @@ public class CidadeController {
     }
 
     @PostMapping
-    public ResponseEntity<CidadeResponse> inserir(@RequestBody CidadeRequest cidadeRequest){
+    public ResponseEntity<CidadeResponse> inserir(@RequestBody @Valid CidadeRequest cidadeRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(crudCidadeService.inserir(cidadeRequest));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CidadeResponse> alterar(@PathVariable Long id, @RequestBody CidadeRequest cidadeRequest){
+    public ResponseEntity<CidadeResponse> alterar(@PathVariable Long id, @RequestBody @Valid CidadeRequest cidadeRequest){
         return ResponseEntity.ok(crudCidadeService.alterar(id, cidadeRequest));
     }
 

@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.api.mapper.CategoriaMapper;
+import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
 import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Categoria;
 import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
@@ -28,9 +31,13 @@ class CrudCategoriaServiceTest {
 
     @Mock
     private CategoriaRepository mockCategoriaRespository;
+    @Mock
+    private CategoriaMapper mockCategoriaMapper;
 
-    private final Categoria expectedCategoria = CategoriaCreator.mockValidCategoria();
-    private final List<Categoria> expectedListCategoria = List.of(expectedCategoria);
+    private final Categoria validCategoria = CategoriaCreator.mockCategoria();
+    private final CategoriaResponse expectedCategoria = CategoriaCreator.mockCategoriaResponse();
+    private final CategoriaResponse expectedCategoriaUpdated = CategoriaCreator.mockCategoriaResponseUpdate();
+    private final List<Categoria> expectedListCategoria = List.of(validCategoria);
 
     @BeforeEach
     void setUp() {
@@ -38,13 +45,19 @@ class CrudCategoriaServiceTest {
         BDDMockito.when(mockCategoriaRespository.findAll()).thenReturn(expectedListCategoria);
 
         // findById
-        BDDMockito.when(mockCategoriaRespository.findById(anyLong())).thenReturn(Optional.of(expectedCategoria));
+        BDDMockito.when(mockCategoriaRespository.findById(anyLong())).thenReturn(Optional.of(validCategoria));
 
         // saveAndFlush
-        BDDMockito.when(mockCategoriaRespository.saveAndFlush(any(Categoria.class))).thenReturn(expectedCategoria);
+        BDDMockito.when(mockCategoriaRespository.saveAndFlush(any(Categoria.class))).thenReturn(validCategoria);
 
         // delete
         BDDMockito.doNothing().when(mockCategoriaRespository).delete(any(Categoria.class));
+
+        // Categoria Mapper - toDomainCategoria
+        BDDMockito.when(mockCategoriaMapper.toDomainCategoria(any(CategoriaRequest.class))).thenReturn(validCategoria);
+
+        // toCategoriaResponse
+        BDDMockito.when(mockCategoriaMapper.toCategoriaResponse(any(Categoria.class))).thenReturn(expectedCategoria);
     }
 
     @Test
@@ -57,7 +70,7 @@ class CrudCategoriaServiceTest {
                 () -> assertNotNull(categorias),
                 () -> assertFalse(categorias.isEmpty()),
                 () -> assertEquals(1, categorias.size()),
-                () -> assertTrue(categorias.contains(expectedCategoria))
+                () -> assertTrue(categorias.contains(validCategoria))
         );
     }
 
@@ -68,7 +81,7 @@ class CrudCategoriaServiceTest {
 
         assertAll(
                 () -> assertNotNull(categoria),
-                () -> assertEquals(expectedCategoria, categoria)
+                () -> assertEquals(expectedCategoria.getNome(), categoria.getNome())
         );
     }
 
@@ -83,12 +96,11 @@ class CrudCategoriaServiceTest {
     @Test
     @DisplayName("inserir Insert new categoria When successful")
     void inserir_InsertNewCategoria_WhenSuccessful() {
-        Categoria categoriaParaInserir = CategoriaCreator.mockValidCategoria();
-        Categoria categoriaInserida = crudCategoriaService.inserir(categoriaParaInserir);
+        CategoriaRequest categoriaParaInserir = CategoriaCreator.mockCategoriaRequest();
+        CategoriaResponse categoriaInserida = crudCategoriaService.inserir(categoriaParaInserir);
 
         assertAll(
                 () -> assertNotNull(categoriaInserida),
-                () -> assertEquals(expectedCategoria.getId(), categoriaInserida.getId()),
                 () -> assertEquals(expectedCategoria.getNome(), categoriaInserida.getNome())
         );
     }
@@ -96,13 +108,14 @@ class CrudCategoriaServiceTest {
     @Test
     @DisplayName("alterar Update categoria when successful")
     void alterar_UpdateCategoria_WhenSuccessul() {
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(expectedCategoria.getDataCriacao());
-        Categoria categoriaAlterada = crudCategoriaService.alterar(1L, categoriaParaAlterar);
-        categoriaAlterada.setDataAtualizacao(categoriaParaAlterar.getDataAtualizacao());
+        BDDMockito.when(mockCategoriaMapper.toCategoriaResponse(any(Categoria.class))).thenReturn(expectedCategoriaUpdated);
+
+        CategoriaRequest categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate();
+        CategoriaResponse categoriaAlterada = crudCategoriaService.alterar(1L, categoriaParaAlterar);
 
         assertAll(
                 () -> assertNotNull(categoriaAlterada),
-                () -> assertEquals(categoriaParaAlterar, categoriaAlterada)
+                () -> assertEquals(expectedCategoriaUpdated.getNome(), categoriaAlterada.getNome())
         );
     }
 
@@ -111,7 +124,7 @@ class CrudCategoriaServiceTest {
     void alterar_ThrowsCategoriaNaoEncontradoException_WhenCategoriaNotFound() {
         BDDMockito.when(mockCategoriaRespository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Categoria categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate(expectedCategoria.getDataCriacao());
+        CategoriaRequest categoriaParaAlterar = CategoriaCreator.mockCategoriaRequestToUpdate();
 
         assertThrows(CategoriaNaoEncontradoException.class, () -> crudCategoriaService.alterar(99L, categoriaParaAlterar));
     }

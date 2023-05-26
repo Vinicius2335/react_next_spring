@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.api.controller;
 
+import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.domain.service.CrudEstadoService;
@@ -30,9 +32,10 @@ class EstadoControllerTest {
     @Mock
     private CrudEstadoService mockCrudEstadoService;
 
-    private final Estado expectedEstado = EstadoCreator.mockValidEstado();
-    private final List<Estado> expectedListEstados = List.of(expectedEstado);
-    private final Estado expectedEstadoToUpdate = EstadoCreator.mockEstadoToUpdate(expectedEstado.getDataCriacao());
+    private final Estado validEstado = EstadoCreator.mockEstado();
+    private final EstadoResponse expectedEstado = EstadoCreator.mockEstadoResponse();
+    private final List<Estado> expectedListEstados = List.of(validEstado);
+    private final EstadoResponse expectedEstadoUpdated = EstadoCreator.mockEstadoResponseUpdate();
 
     @BeforeEach
     void setUp() {
@@ -40,13 +43,13 @@ class EstadoControllerTest {
         BDDMockito.when(mockCrudEstadoService.buscarTodos()).thenReturn(expectedListEstados);
 
         // buscarPeloId
-        BDDMockito.when(mockCrudEstadoService.buscarPeloId(anyLong())).thenReturn(expectedEstado);
+        BDDMockito.when(mockCrudEstadoService.buscarPeloId(anyLong())).thenReturn(validEstado);
 
         // inserir
-        BDDMockito.when(mockCrudEstadoService.inserir(any(Estado.class))).thenReturn(expectedEstado);
+        BDDMockito.when(mockCrudEstadoService.inserir(any(EstadoRequest.class))).thenReturn(expectedEstado);
 
         // alterar
-        BDDMockito.when(mockCrudEstadoService.alterar(anyLong(), any(Estado.class))).thenReturn(expectedEstadoToUpdate);
+        BDDMockito.when(mockCrudEstadoService.alterar(anyLong(), any(EstadoRequest.class))).thenReturn(expectedEstadoUpdated);
 
         // excluir
         BDDMockito.doNothing().when(mockCrudEstadoService).excluir(anyLong());
@@ -67,13 +70,12 @@ class EstadoControllerTest {
     @Test
     @DisplayName("inserir Insert new estado When successful")
     void inserir_InsertNewEstado_WhenSuccessful() {
-        Estado estadoParaSalvar = EstadoCreator.mockValidEstado();
-        ResponseEntity<Estado> response = estadoController.inserir(estadoParaSalvar);
+        EstadoRequest estadoParaSalvar = EstadoCreator.mockEstadoRequestToSave();
+        ResponseEntity<EstadoResponse> response = estadoController.inserir(estadoParaSalvar);
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.CREATED, response.getStatusCode()),
-                () -> assertEquals(expectedEstado.getId(), response.getBody().getId()),
                 () -> assertEquals(expectedEstado.getNome(), response.getBody().getNome()),
                 () -> assertEquals(expectedEstado.getSigla(), response.getBody().getSigla())
         );
@@ -82,23 +84,22 @@ class EstadoControllerTest {
     @Test
     @DisplayName("alterar Update estado when successful")
     void alterar_UpdateEstado_WhenSuccessul() {
-        Estado estadoParaAlterar = EstadoCreator.mockEstadoToUpdate(expectedEstado.getDataCriacao());
-        ResponseEntity<Estado> response = estadoController.alterar(1L, estadoParaAlterar);
+        EstadoRequest estadoParaAlterar = EstadoCreator.mockEstadoRequestToUpdate();
+        ResponseEntity<EstadoResponse> response = estadoController.alterar(1L, estadoParaAlterar);
 
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(estadoParaAlterar.getId(), response.getBody().getId()),
-                () -> assertEquals(estadoParaAlterar.getNome(), response.getBody().getNome()),
-                () -> assertEquals(expectedEstado.getSigla(), response.getBody().getSigla())
+                () -> assertEquals(expectedEstadoUpdated.getNome(), response.getBody().getNome()),
+                () -> assertEquals(expectedEstadoUpdated.getSigla(), response.getBody().getSigla())
         );
     }
 
     @Test
     @DisplayName("alterar Throws EstadoNaoEncontradoException When estado not found")
     void alterar_ThrowsEstadoNaoEncontradoException_WhenEstadoNotFound() {
-        BDDMockito.when(mockCrudEstadoService.alterar(anyLong(), any(Estado.class))).thenThrow(new EstadoNaoEncontradoException());
-        Estado estadoParaAlterar = EstadoCreator.mockEstadoToUpdate(expectedEstado.getDataCriacao());
+        BDDMockito.when(mockCrudEstadoService.alterar(anyLong(), any(EstadoRequest.class))).thenThrow(new EstadoNaoEncontradoException());
+        EstadoRequest estadoParaAlterar = EstadoCreator.mockEstadoRequestToUpdate();
 
         assertThrows(EstadoNaoEncontradoException.class, () -> estadoController.alterar(99L, estadoParaAlterar));
     }

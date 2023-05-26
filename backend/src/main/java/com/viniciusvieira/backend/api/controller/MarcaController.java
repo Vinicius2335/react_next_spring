@@ -4,6 +4,7 @@ import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
 import com.viniciusvieira.backend.domain.model.Marca;
 import com.viniciusvieira.backend.domain.service.CrudMarcaService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,14 @@ public class MarcaController {
     }
 
     @PostMapping
-    public ResponseEntity<MarcaResponse> inserir(@RequestBody MarcaRequest marcaRequest){
+    public ResponseEntity<MarcaResponse> inserir(@RequestBody @Valid MarcaRequest marcaRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(crudMarcaService.inserir(marcaRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MarcaResponse> alterar(@PathVariable Long id, @RequestBody MarcaRequest marcaRequest){
+    public ResponseEntity<MarcaResponse> alterar(@PathVariable Long id, @RequestBody @Valid MarcaRequest marcaRequest){
         return ResponseEntity.ok(crudMarcaService.alterar(id, marcaRequest));
     }
 

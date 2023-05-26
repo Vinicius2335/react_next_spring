@@ -4,6 +4,7 @@ import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest
 import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.domain.service.CrudEstadoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,14 @@ public class EstadoController {
     }
 
     @PostMapping
-    public ResponseEntity<EstadoResponse> inserir(@RequestBody EstadoRequest estadoRequest){
+    public ResponseEntity<EstadoResponse> inserir(@RequestBody @Valid EstadoRequest estadoRequest){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(crudEstadoService.inserir(estadoRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EstadoResponse> alterar(@PathVariable Long id, @RequestBody EstadoRequest estadoRequest){
+    public ResponseEntity<EstadoResponse> alterar(@PathVariable Long id, @RequestBody @Valid EstadoRequest estadoRequest){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(crudEstadoService.alterar(id, estadoRequest));
