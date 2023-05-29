@@ -18,5 +18,5 @@ public class CidadeRequest {
 
     @Valid
     @NotNull
-    private EstadoIdRequest estadoIdRequest;
+    private EstadoIdRequest estadoId;
 }

@@ -30,7 +30,7 @@ public class CidadeController {
                 .body(crudCidadeService.inserir(cidadeRequest));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CidadeResponse> alterar(@PathVariable Long id, @RequestBody @Valid CidadeRequest cidadeRequest){
         return ResponseEntity.ok(crudCidadeService.alterar(id, cidadeRequest));
     }

@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 class CategoriaControllerTest {
     @InjectMocks
     private CategoriaController categoriaController;
-
     @Mock
     private CrudCategoriaService crudCategoriaService;
 

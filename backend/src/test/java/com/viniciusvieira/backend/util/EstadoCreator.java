@@ -10,8 +10,8 @@ public abstract class EstadoCreator {
     public static Estado mockEstado(){
         return Estado.builder()
                 .id(1L)
-                .nome("Apple")
-                .sigla("Ap")
+                .nome("Paraná")
+                .sigla("PR")
                 .dataCriacao(OffsetDateTime.now())
                 .dataAtualizacao(OffsetDateTime.now())
                 .build();
@@ -19,8 +19,8 @@ public abstract class EstadoCreator {
 
     public static EstadoResponse mockEstadoResponse(){
         return EstadoResponse.builder()
-                .nome("Apple")
-                .sigla("Ap")
+                .nome("São Paulo")
+                .sigla("SP")
                 .dataCriacao(OffsetDateTime.now())
                 .dataAtualizacao(OffsetDateTime.now())
                 .build();
@@ -28,8 +28,8 @@ public abstract class EstadoCreator {
 
     public static EstadoResponse mockEstadoResponseUpdate(){
         return EstadoResponse.builder()
-                .nome("Dell")
-                .sigla("Dl")
+                .nome("São Paulo")
+                .sigla("SP")
                 .dataCriacao(OffsetDateTime.now())
                 .dataAtualizacao(OffsetDateTime.now())
                 .build();
@@ -37,15 +37,15 @@ public abstract class EstadoCreator {
 
     public static EstadoRequest mockEstadoRequestToSave(){
         return EstadoRequest.builder()
-                .nome("Apple")
-                .sigla("Ap")
+                .nome("Paraná")
+                .sigla("PR")
                 .build();
     }
 
     public static EstadoRequest mockEstadoRequestToUpdate(){
         return EstadoRequest.builder()
-                .nome("Dell")
-                .sigla("Dl")
+                .nome("São Paulo")
+                .sigla("SP")
                 .build();
     }
 
@@ -59,8 +59,8 @@ public abstract class EstadoCreator {
     public static Estado mockEstadoToUpdate(OffsetDateTime dataCriacao){
         return Estado.builder()
                 .id(1L)
-                .nome("Dell")
-                .sigla("DL")
+                .nome("São Paulo")
+                .sigla("SP")
                 .dataCriacao(dataCriacao)
                 .dataAtualizacao(OffsetDateTime.now())
                 .build();

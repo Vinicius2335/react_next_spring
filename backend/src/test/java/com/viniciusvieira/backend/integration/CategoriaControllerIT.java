@@ -44,7 +44,7 @@ class CategoriaControllerIT {
 
     @Test
     @DisplayName("buscarTodos Return statusCode 200 and list of categorias When successful")
-    void buscarTodos_ReturnReturnStatusCode200AndListCategorias_WhenSuccessful() {
+    void buscarTodos_ReturnStatusCode200AndListCategorias_WhenSuccessful() {
         Categoria categoriaSaved = inserirNovaCategoriaNoBanco();
         ParameterizedTypeReference<List<Categoria>> typeReference = new ParameterizedTypeReference<>() {
         };
