@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DataJpaTest
-@DisplayName("Teste Unitário para a classe EstadoRepository")
+@DisplayName("Teste Unitário para a interface EstadoRepository")
 class EstadoRepositoryTest {
     @Autowired
     private EstadoRepository estadoRepository;

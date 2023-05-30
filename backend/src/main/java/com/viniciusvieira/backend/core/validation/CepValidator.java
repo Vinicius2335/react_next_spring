@@ -9,7 +9,11 @@ public class CepValidator implements ConstraintValidator<CepValidation, String> 
 
     @Override
     public boolean isValid(String cep, ConstraintValidatorContext context) {
-        String regex = "\\d{5}-\\d{3}";
-        return cep.matches(regex);
+        if (cep == null){
+            return false;
+        } else {
+            String regex = "\\d{5}-\\d{3}";
+            return cep.matches(regex);
+        }
     }
 }

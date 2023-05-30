@@ -4,7 +4,6 @@ import com.viniciusvieira.backend.domain.model.Cidade;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DataJpaTest
-@DisplayName("Teste Unitário para a classe CidadeRepository")
+@DisplayName("Teste Unitário para a interface CidadeRepository")
 @Log4j2
 class CidadeRepositoryTest {
     @Autowired

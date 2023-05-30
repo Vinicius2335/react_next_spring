@@ -3,7 +3,7 @@ package com.viniciusvieira.backend.domain.service;
 import com.viniciusvieira.backend.api.mapper.PessoaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
-import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaExecption;
+import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Pessoa;
 import com.viniciusvieira.backend.domain.repository.PessoaRepository;
 import jakarta.transaction.Transactional;
@@ -22,9 +22,9 @@ public class CrudPessoaService {
         return pessoaRepository.findAll();
     }
 
-    private Pessoa buscarPorId(Long id){
+    public Pessoa buscarPorId(Long id){
         return pessoaRepository.findById(id)
-                .orElseThrow(() -> new PessoaNaoEncontradaExecption("Pessoa não encontrada"));
+                .orElseThrow(() -> new PessoaNaoEncontradaException("Pessoa não encontrada"));
     }
 
     @Transactional
