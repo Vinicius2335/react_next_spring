@@ -39,6 +39,7 @@ public class CrudCidadeService {
         Cidade cidadeEncontrada = buscarPeloId(id);
         Cidade cidadeParaAlterar = cidadeMapper.toDomainCidade(cidadeRequest);
         cidadeParaAlterar.setId(cidadeEncontrada.getId());
+        cidadeParaAlterar.setDataCriacao(cidadeEncontrada.getDataCriacao());
 
         Cidade cidadeAlterada = cidadeRepository.saveAndFlush(cidadeParaAlterar);
         return cidadeMapper.toCidadeResponse(cidadeAlterada);

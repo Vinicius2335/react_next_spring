@@ -39,6 +39,7 @@ public class CrudCategoriaService {
         Categoria categoriaEncontrada = buscarPeloId(id);
         Categoria categoriaParaAlterar = categoriaMapper.toDomainCategoria(categoriaRequest);
         categoriaParaAlterar.setId(categoriaEncontrada.getId());
+        categoriaParaAlterar.setDataCriacao(categoriaEncontrada.getDataCriacao());
 
         Categoria categoriaAlterada = categoriaRepository.saveAndFlush(categoriaParaAlterar);
         return categoriaMapper.toCategoriaResponse(categoriaAlterada);

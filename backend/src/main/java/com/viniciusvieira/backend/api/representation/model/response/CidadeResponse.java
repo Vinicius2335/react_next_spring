@@ -19,5 +19,5 @@ public class CidadeResponse {
     private String nome;
     private String nomeEstado;
     private OffsetDateTime dataCriacao;
-    private OffsetDateTime dataAtualizacao;
+    private OffsetDateTime dataAlteracao;
 }

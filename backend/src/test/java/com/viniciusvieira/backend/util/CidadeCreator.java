@@ -35,28 +35,28 @@ public abstract class CidadeCreator {
     public static CidadeRequest mockCidadeRequestToSave(){
         return CidadeRequest.builder()
                 .nome("Cascavel")
-                .estadoId(new EstadoIdRequest(1L))
+                .estado(new EstadoIdRequest(1L))
                 .build();
     }
 
     public static CidadeRequest mockCidadeRequestToUpdate(){
         return CidadeRequest.builder()
                 .nome("Foz do Iguaçu")
-                .estadoId(new EstadoIdRequest(1L))
+                .estado(new EstadoIdRequest(1L))
                 .build();
     }
 
     public static CidadeRequest mockInvalidCidadeRequestToSave(){
         return CidadeRequest.builder()
                 .nome(null)
-                .estadoId(null)
+                .estado(null)
                 .build();
     }
 
     public static CidadeResponse mockCidadeResponseUpdated(){
         return CidadeResponse.builder()
                 .nome("Foz do Iguaçu")
-                .nomeEstado(String.valueOf(EstadoCreator.mockEstado().getId()))
+                .nomeEstado(EstadoCreator.mockEstado().getNome())
                 .build();
     }
 }

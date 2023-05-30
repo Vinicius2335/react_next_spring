@@ -39,6 +39,7 @@ public class CrudEstadoService {
         Estado estadoEncontrado = buscarPeloId(id);
         Estado estadoParaAlterar = estadoMapper.toDomainEstado(estadoRequest);
         estadoParaAlterar.setId(estadoEncontrado.getId());
+        estadoParaAlterar.setDataCriacao(estadoEncontrado.getDataCriacao());
 
         Estado estadoAlterado = estadoRepository.saveAndFlush(estadoParaAlterar);
         return estadoMapper.toEstadoResponse(estadoAlterado);

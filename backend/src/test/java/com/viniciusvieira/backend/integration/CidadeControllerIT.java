@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -76,10 +75,10 @@ class CidadeControllerIT {
         );
     }
 
-    // BUG - 400 - JSON parse error: Cannot construct instance of `EstadoIdRequest`, cannot deserialize from Object value
     @Test
     @DisplayName("inserir Return statusCode 202 and new cidadeResponse When successful")
     void inserir_InsertNewCidadeResponse_WhenSuccessful() {
+        estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         CidadeRequest novaCidade = CidadeCreator.mockCidadeRequestToSave();
 
         ResponseEntity<CidadeResponse> response = testRestTemplate.exchange(
@@ -98,7 +97,6 @@ class CidadeControllerIT {
         );
     }
 
-    // TEST - olhar o responseBody
     @Test
     @DisplayName("inserir Return statusCode 400 When cidade have invalid fields")
     void inserir_ReturnStatusCode400_WhenCidadeHaveInvalidFields() {
@@ -117,7 +115,6 @@ class CidadeControllerIT {
         );
     }
 
-    // BUG
     @Test
     @DisplayName("alterar Return StatusCode 200 and cidadeResponse changed when successful")
     void alterar_ReturnStatusCode200AndChangedCidade_WhenSuccessful() {
@@ -131,6 +128,9 @@ class CidadeControllerIT {
                 CidadeResponse.class
         );
 
+        log.info(" - ");
+        log.info(response.getBody());
+
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
@@ -139,7 +139,6 @@ class CidadeControllerIT {
         );
     }
 
-    // TEST - olhar o responseBody
     @Test
     @DisplayName("alterar Return StatusCode 400 when cidade have invalid fields")
     void alterar_ReturnStatusCode400_WhenCidadeHaveInvalidFields() {
@@ -152,6 +151,8 @@ class CidadeControllerIT {
                 new HttpEntity<>(cidadeInvalida),
                 Object.class
         );
+
+        log.info(response.getBody());
 
         assertAll(
                 () -> assertNotNull(response),
@@ -180,14 +181,13 @@ class CidadeControllerIT {
         );
     }
 
-    // BUG - 404
     @Test
     @DisplayName("excluir Remove a cidade and return statusCode 204 when successful")
     void excluir_RemoveCidadeAndReturnStatusCode204_WhenSuccessful() {
         inserirNovaCidade();
 
         ResponseEntity<Void> response = testRestTemplate.exchange(
-                url + "1",
+                url + "/1",
                 DELETE,
                 null,
                 Void.class
@@ -195,8 +195,7 @@ class CidadeControllerIT {
 
         assertAll(
                 () -> assertNotNull(response),
-                () -> assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode()),
-                () -> assertEquals(Void.class, response.getBody().getClass())
+                () -> assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode())
         );
     }
 
