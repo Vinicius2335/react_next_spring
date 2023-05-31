@@ -65,6 +65,8 @@ class CrudPessoaServiceTest {
         BDDMockito.when(mockPessoaRepository.saveAndFlush(any(Pessoa.class))).thenReturn(validPessoa);
         // delete
         BDDMockito.doNothing().when(mockPessoaRepository).delete(any(Pessoa.class));
+        // findAllPessoasByCidadeId
+        BDDMockito.when(mockPessoaRepository.findAllPessoasByCidadeId(anyLong())).thenReturn(expectedListPessoa);
 
         // PessoaMapper
         // toDomainPessoa
@@ -158,4 +160,9 @@ class CrudPessoaServiceTest {
         assertThrows(PessoaNaoEncontradaException.class, () -> crudPessoaService.excluir(1L));
     }
 
+    @Test
+    @DisplayName("excluirTodasPessoasRelacionadasCidadeId When successful")
+    void excluirTodasPessoasRelacionadasCidadeId_WhenSuccessful(){
+        assertDoesNotThrow(() -> crudPessoaService.excluirTodasPessoasRelacionadasCidadeId(1L));
+    }
 }

@@ -48,6 +48,8 @@ class CrudCidadeServiceTest {
         BDDMockito.when(mockCidadeRepository.saveAndFlush(any(Cidade.class))).thenReturn(validCidade);
         // delete
         BDDMockito.doNothing().when(mockCidadeRepository).delete(any(Cidade.class));
+        // findAllCidadeByIdEstado
+        BDDMockito.when(mockCidadeRepository.findAllCidadeByIdEstado(anyLong())).thenReturn(expectedListCidade);
 
         // Cidade Mapper
         // toDomainCidade
@@ -139,5 +141,11 @@ class CrudCidadeServiceTest {
         BDDMockito.when(mockCidadeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(CidadeNaoEncontradaException.class, () -> crudCidadeService.excluir(99L));
+    }
+
+    @Test
+    @DisplayName("excluirTodasCidadesRelacionadosEstadoId When Successful")
+    void excluirTodasCidadesRelacionadosEstadoId_WhenSuccessful(){
+        assertDoesNotThrow(() -> crudCidadeService.excluirTodasCidadesRelacionadosEstadoId(1L));
     }
 }

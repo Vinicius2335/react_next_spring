@@ -50,4 +50,11 @@ public class CrudCidadeService {
         Cidade cidadeEncontrada = buscarPeloId(id);
         cidadeRepository.delete(cidadeEncontrada);
     }
+
+    public void excluirTodasCidadesRelacionadosEstadoId(Long id) {
+        List<Cidade> cidades = cidadeRepository.findAllCidadeByIdEstado(id);
+        if (!cidades.isEmpty()){
+            cidades.forEach(cidadeRepository::delete);
+        }
+    }
 }

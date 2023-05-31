@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -98,5 +99,40 @@ class PessoaRepositoryTest {
         List<Pessoa> pessoas = pessoaRepository.findAll();
 
         assertTrue(pessoas.isEmpty());
+    }
+
+    @Test
+    @DisplayName("findByCpf Return a pessoa When Successful")
+    void findByCpf_ReturnPessoa_WhenSuccessful(){
+        Pessoa pessoa = inserirNovaPessoaNoBanco();
+        Optional<Pessoa> pessoaEncontrada = pessoaRepository.findByCpf(pessoa.getCpf());
+
+        assertTrue(pessoaEncontrada.isPresent());
+    }
+
+    @Test
+    @DisplayName("findAllPessoasByCidadeId Return list pessoa When successful")
+    void findAllPessoasByCidadeId_ReturnList_WhenSuccessful(){
+        Pessoa pessoa = inserirNovaPessoaNoBanco();
+        Pessoa pessoa2 = Pessoa.builder()
+                .id(2L)
+                .cep("11111-000")
+                .cpf("302.218.730-08")
+                .cidade(CidadeCreator.mockCidade())
+                .nome("Teste 02")
+                .senha("teste2")
+                .email("teste2@gmail.com")
+                .endereco("rua teste2")
+                .build();
+        Pessoa inserindoPessoa2 = pessoaRepository.saveAndFlush(pessoa2);
+
+        List<Pessoa> pessoas = pessoaRepository.findAllPessoasByCidadeId(1L);
+
+        assertAll(
+                () -> assertNotNull(pessoas),
+                () -> assertEquals(2, pessoas.size()),
+                () -> assertTrue(pessoas.contains(pessoa)),
+                () -> assertTrue(pessoas.contains(inserindoPessoa2))
+        );
     }
 }

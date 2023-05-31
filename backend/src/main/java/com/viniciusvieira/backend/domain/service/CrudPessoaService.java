@@ -3,6 +3,7 @@ package com.viniciusvieira.backend.domain.service;
 import com.viniciusvieira.backend.api.mapper.PessoaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
+import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Pessoa;
 import com.viniciusvieira.backend.domain.repository.PessoaRepository;
@@ -27,9 +28,17 @@ public class CrudPessoaService {
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Pessoa não encontrada"));
     }
 
+    // TEST
     @Transactional
     public PessoaResponse inserir(PessoaRequest pessoaRequest) {
         Pessoa pessoaParaSalvar = pessoaMapper.toDomainPessoa(pessoaRequest);
+
+        boolean cpfEmUso = pessoaRepository.findByCpf(pessoaParaSalvar.getCpf()).isPresent();
+
+        if (cpfEmUso){
+            throw new NegocioException("Já existe uma pessoa cadastrada com esse CPF");
+        }
+
         Pessoa pessoaSalva = pessoaRepository.saveAndFlush(pessoaParaSalvar);
 
         return pessoaMapper.toPessoaResponse(pessoaSalva);
@@ -50,5 +59,12 @@ public class CrudPessoaService {
     public void excluir(Long id) {
         Pessoa pessoa = buscarPorId(id);
         pessoaRepository.delete(pessoa);
+    }
+
+    public void excluirTodasPessoasRelacionadasCidadeId(Long cidadeId){
+        List<Pessoa> pessoas = pessoaRepository.findAllPessoasByCidadeId(cidadeId);
+        if (!pessoas.isEmpty()){
+            pessoas.forEach(pessoaRepository::delete);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.domain.repository;
 
 import com.viniciusvieira.backend.domain.model.Cidade;
+import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,6 +101,31 @@ class CidadeRepositoryTest {
 
         assertAll(
                 () -> assertTrue(cidade.isEmpty())
+        );
+    }
+
+    @Test
+    @DisplayName("findAllCidadeByIdEstado_ResturnListCidade_WhenSuccessful")
+    void findAllCidadeByIdEstado_ReturnListCidade_WhenSuccessful(){
+        Cidade cidade = inseriNovaCidade();
+        Cidade cidade2 = Cidade.builder()
+                .id(2L)
+                .nome("Estado 2")
+                .estado(EstadoCreator.mockEstado())
+                .dataCriacao(OffsetDateTime.now())
+                .dataAlteracao(OffsetDateTime.now())
+                .build();
+        Cidade cidade2Inserida = cidadeRepository.saveAndFlush(cidade2);
+
+        List<Cidade> cidades = cidadeRepository.findAllCidadeByIdEstado(1L);
+
+        log.info(cidades);
+
+        assertAll(
+                () -> assertNotNull(cidades),
+                () -> assertEquals(2, cidades.size()),
+                () -> assertTrue(cidades.contains(cidade)),
+                () -> assertTrue(cidades.contains(cidade2Inserida))
         );
     }
 }
