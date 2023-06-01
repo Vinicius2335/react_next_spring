@@ -10,6 +10,9 @@ public class CascadeDeleteService {
     private final CrudEstadoService crudEstadoService;
     private final CrudCidadeService crudCidadeService;
     private final CrudPessoaService crudPessoaService;
+    private final CrudMarcaService crudMarcaService;
+    private final CrudCategoriaService crudCategoriaService;
+    private final CrudProdutoService crudProdutoService;
 
     @Transactional
     public void cascadeDeleteEstado(Long estadoId){
@@ -29,5 +32,19 @@ public class CascadeDeleteService {
         crudPessoaService.excluirTodasPessoasRelacionadasCidadeId(cidadeId);
         // exclui cidade
         crudCidadeService.excluir(cidadeId);
+    }
+
+    @Transactional
+    public void cascadeDeleteMarca(Long marcaId){
+        crudMarcaService.buscarPeloId(marcaId);
+        crudProdutoService.excluirTodosProdutosRelacionadosMarcaId(marcaId);
+        crudMarcaService.excluir(marcaId);
+    }
+
+    @Transactional
+    public void cascadeDeleteCategoria(Long categoriaId){
+        crudCategoriaService.buscarPeloId(categoriaId);
+        crudProdutoService.excluirTodosProdutosRelacionadosCategoriaId(categoriaId);
+        crudCategoriaService.excluir(categoriaId);
     }
 }

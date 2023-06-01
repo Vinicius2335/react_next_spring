@@ -28,7 +28,7 @@ public class CrudPessoaService {
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Pessoa não encontrada"));
     }
 
-    // TEST
+    // TEST - cpf
     @Transactional
     public PessoaResponse inserir(PessoaRequest pessoaRequest) {
         Pessoa pessoaParaSalvar = pessoaMapper.toDomainPessoa(pessoaRequest);

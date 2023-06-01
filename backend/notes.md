@@ -2,7 +2,7 @@
 
 
 1. Criar Exception Handler
-2. Criar Pessoa, Produto, Permissao, Carrinho de compra, PermissaoPessoa e CarrinhoCompraProduto
+2. Criar Produto, Permissao, Carrinho de compra, PermissaoPessoa e CarrinhoCompraProduto
    - Inserir Pessoa, se já existe uma pessoa com o CPF já cadastrado, não permitir.
 3. Testes Repository, Service, Controller, Integração 
 4. validação Pessoa cpf, email, cep
@@ -24,5 +24,11 @@
 - Estado
   - Cidade
     - Pessoa
+
+- Marca
+  - Produto
+
+- Categoria
+  - Produto
 
 - criado mas não foi implementado nos controllers ou testado
