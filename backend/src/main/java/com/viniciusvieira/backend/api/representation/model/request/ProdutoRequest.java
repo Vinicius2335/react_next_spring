@@ -1,10 +1,7 @@
 package com.viniciusvieira.backend.api.representation.model.request;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Negative;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,11 +25,11 @@ public class ProdutoRequest {
     private String descricaoDetalhada;
 
     @NotNull(message = "Valor de Custo não pode ser nulo")
-    @Negative(message = "Valor de Custo não pode ser negativo")
+    @Positive(message = "Valor de Custo não pode ser negativo")
     private BigDecimal valorCusto;
 
     @NotNull(message = "Valor de Venda não pode ser nulo")
-    @Negative(message = "Valor de Venda não pode ser negativo")
+    @Positive(message = "Valor de Venda não pode ser negativo")
     private BigDecimal valorVenda;
 
     @Valid
