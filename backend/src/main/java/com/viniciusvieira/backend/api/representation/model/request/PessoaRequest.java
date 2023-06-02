@@ -16,28 +16,29 @@ import org.hibernate.validator.constraints.br.CPF;
 @Builder
 @Data
 public class PessoaRequest {
-    @NotBlank(message = "NOME não pode ser nulo ou branco")
+    @NotBlank(message = "NOME não pode ser nulo ou em branco")
     private String nome;
 
-    // TODO - talvez uma anotaçao personalizada
-    @NotBlank(message = "CPF não pode ser nulo ou branco")
+    @NotBlank(message = "CPF não pode ser nulo ou em branco")
     @CPF
     private String cpf;
 
-    @NotBlank(message = "EMAIL não pode ser nulo ou branco")
+    @NotBlank(message = "EMAIL não pode ser nulo ou em branco")
     @Email
     private String email;
 
-    @NotBlank(message = "SENHA não pode ser nulo ou branco")
+    @NotBlank(message = "SENHA não pode ser nulo ou em branco")
     private String senha;
 
-    @NotBlank(message = "ENDERECO não pode ser nulo ou branco")
+    @NotBlank(message = "ENDERECO não pode ser nulo ou em branco")
     private String endereco;
 
-    // TODO - talvez uma anotaçao personalizada
-    @NotBlank(message = "CEP não pode ser nulo ou branco")
+    @NotBlank(message = "CEP não pode ser nulo ou em branco")
     @CepValidation
     private String cep;
+
+    @NotBlank(message = "Nome da Permissao nao pode ser nulo ou em branco")
+    private String nomePermissao;
 
     @Valid
     @NotNull

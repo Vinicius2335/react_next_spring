@@ -2,12 +2,11 @@
 
 
 1. Criar Exception Handler
-2. Criar Produto, Permissao, Carrinho de compra, PermissaoPessoa e CarrinhoCompraProduto
+2. Criar Permissao e PermissaoPessoa, Carrinho de compra e CarrinhoCompraProduto
    - Inserir Pessoa, se já existe uma pessoa com o CPF já cadastrado, não permitir.
 3. Testes Repository, Service, Controller, Integração 
-4. validação Pessoa cpf, email, cep
-5. upload de imagem - **_tabela imagens só guarda o nome do arquivo_**
-6. Cascade Delete
+4. upload de imagem - **_tabela imagens só guarda o nome do arquivo_**
+5. Cascade Delete
 
 -------------------
 
@@ -18,6 +17,8 @@
   - ``[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}``
 - Regex CEP
   - ``\\d{5}-\\d{3}``
+  
+- Ficar de olho em permissoes de Pessoas
 
 ## Cascade Delete
 

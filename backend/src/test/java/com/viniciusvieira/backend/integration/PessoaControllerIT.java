@@ -2,13 +2,16 @@ package com.viniciusvieira.backend.integration;
 
 import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
+import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Pessoa;
 import com.viniciusvieira.backend.domain.repository.CidadeRepository;
 import com.viniciusvieira.backend.domain.repository.EstadoRepository;
+import com.viniciusvieira.backend.domain.repository.PermissaoRepository;
 import com.viniciusvieira.backend.domain.repository.PessoaRepository;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
+import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -42,10 +45,13 @@ class PessoaControllerIT {
     private EstadoRepository estadoRepository;
     @Autowired
     private CidadeRepository cidadeRepository;
+    @Autowired
+    private PermissaoRepository permissaoRepository;
 
     private static final String URL = "/api/pessoas";
 
     public Pessoa inserirNovaPessoaNoBanco(){
+        permissaoRepository.saveAndFlush(PermissaoCreator.mockPermissao());
         estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         cidadeRepository.saveAndFlush(CidadeCreator.mockCidade());
         return pessoaRepository.saveAndFlush(PessoaCreator.mockPessoa());
@@ -79,6 +85,7 @@ class PessoaControllerIT {
     @Test
     @DisplayName("inserir Return statusCode 202 and new pessoaResponse When successful")
     void inserir_InsertNewPessoaResponse_WhenSuccessful() {
+        permissaoRepository.saveAndFlush(PermissaoCreator.mockPermissao());
         estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         cidadeRepository.saveAndFlush(CidadeCreator.mockCidade());
 
@@ -97,6 +104,28 @@ class PessoaControllerIT {
                 () -> assertEquals(HttpStatus.CREATED, response.getStatusCode()),
                 () -> assertEquals(novaPessoa.getNome(), response.getBody().getNome()),
                 () -> assertEquals(novaPessoa.getCpf(), response.getBody().getCpf())
+        );
+    }
+
+    @Test
+    @DisplayName("inserir Return statusCode 400 and NegocioException When cpf is in use")
+    void inserir_ReturnStatusCode400AndNegocioException_WhenCpfInUse(){
+        inserirNovaPessoaNoBanco();
+
+        PessoaRequest novaPessoa = PessoaCreator.mockPessoaRequestToSave();
+        ResponseEntity<NegocioException> response = testRestTemplate.exchange(
+                URL,
+                POST,
+                new HttpEntity<>(novaPessoa),
+                NegocioException.class
+        );
+
+        log.info(response.getBody());
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
+                () -> assertEquals(NegocioException.class, response.getBody().getClass())
         );
     }
 
@@ -164,8 +193,8 @@ class PessoaControllerIT {
     @Test
     @DisplayName("alterar Return statusCode 404 When pessoa not found")
     void alterar_ReturnStatusCode404_WhenPessoaNotFound() {
-        Pessoa novaPessoa = inserirNovaPessoaNoBanco();
-        Pessoa pessoaParaAlterar = PessoaCreator.mockPessoaToUpdate(novaPessoa.getDataCriacao());
+        inserirNovaPessoaNoBanco();
+        PessoaRequest pessoaParaAlterar = PessoaCreator.mockPessoaRequestToUpdate();
 
         ResponseEntity<PessoaNaoEncontradaException> response = testRestTemplate.exchange(
                 URL + "/99",

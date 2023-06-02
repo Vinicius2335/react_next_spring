@@ -6,6 +6,8 @@ import com.viniciusvieira.backend.api.representation.model.response.PessoaRespon
 import com.viniciusvieira.backend.domain.model.Pessoa;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PessoaCreator {
     public static Pessoa mockPessoa(){
@@ -18,6 +20,7 @@ public abstract class PessoaCreator {
                 .senha("teste")
                 .email("teste@gmail.com")
                 .endereco("rua teste")
+                .permissoes(new ArrayList<>(List.of(PermissaoCreator.mockPermissao())))
                 .build();
     }
 
@@ -32,6 +35,7 @@ public abstract class PessoaCreator {
                 .email("update@gmail.com")
                 .endereco("rua teste update")
                 .dataCriacao(dataCriacao)
+                .permissoes(new ArrayList<>(List.of(PermissaoCreator.mockPermissao())))
                 .build();
     }
 
@@ -68,6 +72,7 @@ public abstract class PessoaCreator {
                 .email("teste@gmail.com")
                 .endereco("rua teste")
                 .cidade(new CidadeIdRequest(1L))
+                .nomePermissao(PermissaoCreator.mockPermissao().getNome())
                 .build();
     }
 
@@ -80,6 +85,7 @@ public abstract class PessoaCreator {
                 .email("update@gmail.com")
                 .endereco("rua teste update")
                 .cidade(new CidadeIdRequest(1L))
+                .nomePermissao(PermissaoCreator.mockPermissao().getNome())
                 .build();
     }
 
@@ -92,6 +98,7 @@ public abstract class PessoaCreator {
                 .email(null)
                 .endereco(null)
                 .cidade(null)
+                .nomePermissao(null)
                 .build();
     }
 }

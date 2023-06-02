@@ -4,6 +4,7 @@ import com.viniciusvieira.backend.domain.model.Pessoa;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Log4j2
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DataJpaTest
 @DisplayName("Teste Unitário para a interface PessoaRepository")
@@ -127,6 +129,34 @@ class PessoaRepositoryTest {
         Pessoa inserindoPessoa2 = pessoaRepository.saveAndFlush(pessoa2);
 
         List<Pessoa> pessoas = pessoaRepository.findAllPessoasByCidadeId(1L);
+
+        assertAll(
+                () -> assertNotNull(pessoas),
+                () -> assertEquals(2, pessoas.size()),
+                () -> assertTrue(pessoas.contains(pessoa)),
+                () -> assertTrue(pessoas.contains(inserindoPessoa2))
+        );
+    }
+
+    @Test
+    @DisplayName("findAllPessoasByCidadeId2 Return list pessoa When successful")
+    void findAllPessoasByCidadeId2_ReturnList_WhenSuccessful(){
+        Pessoa pessoa = inserirNovaPessoaNoBanco();
+        Pessoa pessoa2 = Pessoa.builder()
+                .id(2L)
+                .cep("11111-000")
+                .cpf("302.218.730-08")
+                .cidade(CidadeCreator.mockCidade())
+                .nome("Teste 02")
+                .senha("teste2")
+                .email("teste2@gmail.com")
+                .endereco("rua teste2")
+                .build();
+        Pessoa inserindoPessoa2 = pessoaRepository.saveAndFlush(pessoa2);
+
+        List<Pessoa> pessoas = pessoaRepository.findPessoasByCidadeId(1L);
+
+        log.info(pessoas);
 
         assertAll(
                 () -> assertNotNull(pessoas),

@@ -1,5 +1,6 @@
 package com.viniciusvieira.backend.domain.model;
 
+import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,4 +52,28 @@ public class Pessoa {
     @ManyToOne(optional = false)
     @JoinColumn(name = "cidade_id", nullable = false)
     private Cidade cidade;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "pessoa_permissao",
+            joinColumns = @JoinColumn(name = "id_pessoa"),
+            inverseJoinColumns = @JoinColumn(name = "id_permissao")
+    )
+    private List<Permissao> permissoes = new ArrayList<>();
+
+    // TEST
+    public void adicionarPermissao(Permissao permissao){
+        this.permissoes.add(permissao);
+        permissao.getPessoas().add(this);
+    }
+
+    // TEST
+    public void removerPermissao(Long idPermissao){
+        Permissao permissaoParaRemover = this.permissoes.stream()
+                .filter(permissao -> Objects.equals(permissao.getId(), idPermissao))
+                .findFirst()
+                .orElseThrow(() -> new PermissaoNaoEncontradaException("Permissao nao cadastrada ou nao registrada para essa pessoa"));
+        this.permissoes.remove(permissaoParaRemover);
+        permissaoParaRemover.getPessoas().remove(this);
+    }
 }

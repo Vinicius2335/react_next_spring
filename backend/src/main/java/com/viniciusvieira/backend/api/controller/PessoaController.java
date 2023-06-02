@@ -35,6 +35,13 @@ public class PessoaController {
         return ResponseEntity.ok(crudPessoaService.alterar(id, pessoaRequest));
     }
 
+    // TEST
+    @DeleteMapping("/{idPessoa}/permissoes/{idPermissao}")
+    public ResponseEntity<Void> excluirPermissao(@PathVariable Long idPessoa, @PathVariable Long idPermissao){
+        crudPessoaService.excluirPermissao(idPessoa,  idPermissao);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id){
         crudPessoaService.excluir(id);

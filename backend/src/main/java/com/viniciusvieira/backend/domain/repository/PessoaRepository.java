@@ -15,4 +15,6 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 
     @Query("from Pessoa p join fetch p.cidade c where c.id = :id")
     List<Pessoa> findAllPessoasByCidadeId(@Param("id") Long cidadeId);
+
+    List<Pessoa> findPessoasByCidadeId(Long cidadeId);
 }
