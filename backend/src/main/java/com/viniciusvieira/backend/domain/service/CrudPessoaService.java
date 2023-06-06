@@ -63,7 +63,6 @@ public class CrudPessoaService {
         pessoaRepository.delete(pessoa);
     }
 
-    // TEST
     @Transactional
     public void excluirPermissao(Long idPessoa, Long idPermissao){
         Pessoa pessoa = buscarPorId(idPessoa);

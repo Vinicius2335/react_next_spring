@@ -15,7 +15,6 @@ import java.time.OffsetDateTime;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProdutoResponse {
-    // NOTE - Prestar atenção no MarcaResponse / CategoriaResponse
     private Integer quantidade;
     private String descricaoCurta;
     private String descricaoDetalhada;

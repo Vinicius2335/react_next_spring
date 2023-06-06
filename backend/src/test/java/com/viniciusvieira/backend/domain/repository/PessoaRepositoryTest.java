@@ -43,6 +43,8 @@ class PessoaRepositoryTest {
         cidadeRepository.saveAndFlush(CidadeCreator.mockCidade());
         Pessoa pessoaSaved = pessoaRepository.saveAndFlush(PessoaCreator.mockPessoa());
 
+        log.info(pessoaSaved);
+
         assertAll(
                 () -> assertNotNull(pessoaSaved),
                 () -> assertEquals(expectedPessoa.getId(), pessoaSaved.getId()),

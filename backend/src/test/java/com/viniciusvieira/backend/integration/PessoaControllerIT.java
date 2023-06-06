@@ -244,4 +244,57 @@ class PessoaControllerIT {
                 () -> assertEquals(PessoaNaoEncontradaException.class, response.getBody().getClass())
         );
     }
+
+    @Test
+    @DisplayName("excluirPermissao Return statusCode 204 when successful")
+    void excluirPermissao_ReturnStatusCode204_WhenSuccessful() {
+        inserirNovaPessoaNoBanco();
+        ResponseEntity<Void> response = testRestTemplate.exchange(
+                URL + "/1/permissoes/1",
+                DELETE,
+                null,
+                Void.class
+        );
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("excluirPermissao Return statusCode 404 When pessoa not found")
+    void excluirPermissao_ReturnStatusCode404_WhenPessoaNotFound() {
+        inserirNovaPessoaNoBanco();
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL + "/99/permissoes/1",
+                DELETE,
+                null,
+                Object.class
+        );
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("excluirPermissao Return statusCode 404 When permissao not found")
+    void excluirPermissao_ReturnStatusCode404_WhenPermissaoNotFound() {
+        inserirNovaPessoaNoBanco();
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                URL + "/1/permissoes/90",
+                DELETE,
+                null,
+                Object.class
+        );
+
+        log.info(response.getBody());
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode())
+        );
+    }
 }

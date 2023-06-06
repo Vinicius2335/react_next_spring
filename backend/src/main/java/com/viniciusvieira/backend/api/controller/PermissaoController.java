@@ -14,7 +14,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/permissaos")
+@RequestMapping("/api/permissoes")
 public class PermissaoController {
     private final CrudPermissaoService crudPermissaoService;
 
