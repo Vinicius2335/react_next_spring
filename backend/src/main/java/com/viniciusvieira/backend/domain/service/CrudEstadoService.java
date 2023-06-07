@@ -4,7 +4,6 @@ import com.viniciusvieira.backend.api.mapper.EstadoMapper;
 import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.Cidade;
 import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.domain.repository.EstadoRepository;
 import jakarta.transaction.Transactional;

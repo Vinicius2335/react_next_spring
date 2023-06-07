@@ -2,7 +2,7 @@
 
 
 1. Criar Exception Handler
-2. Criar Carrinho de compra e CarrinhoCompraProduto
+2. Criar CarrinhoCompraProduto
 3. Testes Repository, Service, Controller, Integração 
 4. upload de imagem - **_tabela imagens só guarda o nome do arquivo_**
 5. Cascade Delete
@@ -21,6 +21,7 @@
 
 - Quando terminar, tentar fazer um cascadeDelete de estado alterando todos os relacionamentos dos models para CascadeType.ALL para testar oq acontece.
  
+- A pessoa só poderá realizar uma compra se estiver cadastrada ?
 
 
 ## Cascade Delete

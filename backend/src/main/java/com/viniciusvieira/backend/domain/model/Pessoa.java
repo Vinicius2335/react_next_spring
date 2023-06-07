@@ -49,8 +49,8 @@ public class Pessoa {
     @UpdateTimestamp
     private OffsetDateTime dataAtualizacao;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "cidade_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "cidade_id")
     private Cidade cidade;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
