@@ -16,5 +16,10 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
     @Query("from Pessoa p join fetch p.cidade c where c.id = :id")
     List<Pessoa> findAllPessoasByCidadeId(@Param("id") Long cidadeId);
 
+    // mesma coisa que em cima, porem feito pela proprio spring sem Query
+    // Um Inner Join, retornando todas as pessoa relacionadas com Cidade Id 'X'
     List<Pessoa> findPessoasByCidadeId(Long cidadeId);
+
+    // Inner Join, retornando todas as pessoas relacionadas com o Estado Id 'X'
+    List<Pessoa> findPessoasByCidadeEstadoId(Long estadoId);
 }

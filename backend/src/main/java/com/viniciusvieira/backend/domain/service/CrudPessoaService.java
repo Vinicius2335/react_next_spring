@@ -76,4 +76,11 @@ public class CrudPessoaService {
             pessoas.forEach(pessoaRepository::delete);
         }
     }
+
+    public void excluirTodasPessoasRelacionadasEstadoId(Long estadoId){
+        List<Pessoa> pessoas = pessoaRepository.findPessoasByCidadeEstadoId(estadoId);
+        if (!pessoas.isEmpty()){
+            pessoas.forEach(pessoaRepository::delete);
+        }
+    }
 }

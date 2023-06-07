@@ -12,18 +12,23 @@
 # Observação
 
 - Produto tem que ter quantidade tambem.
-- Regex CPF
-  - ``[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}``
-- Regex CEP
-  - ``\\d{5}-\\d{3}``
   
 - Ficar de olho em permissoes de Pessoas
+
+- Por causa das config na classes domain/model Pessoa cascadeType.ALL e FetchType.LAZY, o cascade delete está acontecendo automaticamente no Relacionamento Pessoa -> Pessoa_Permissao -> Permissao
+  - Não precisa necessariamente deletar a permissao quando deletar uma pessoa, apenas acabar com o relacionamento na tabela Pessoa_Permissao
+  - cascade.ALL talvez esteja meio bruto aki
+
+- Quando terminar, tentar fazer um cascadeDelete de estado alterando todos os relacionamentos dos models para CascadeType.ALL para testar oq acontece.
+ 
+
 
 ## Cascade Delete
 
 - Estado
   - Cidade
     - Pessoa
+      - Permissao
 
 - Marca
   - Produto

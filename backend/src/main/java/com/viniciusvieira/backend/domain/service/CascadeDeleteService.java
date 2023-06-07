@@ -18,6 +18,8 @@ public class CascadeDeleteService {
     public void cascadeDeleteEstado(Long estadoId){
         // verifica se o estado existe
         crudEstadoService.buscarPeloId(estadoId);
+        // exclui todas as permissoes/pessosas relacionadas Estado ID
+        crudPessoaService.excluirTodasPessoasRelacionadasEstadoId(estadoId);
         // exclui todas as cidades relacionada ao estado ID
         crudCidadeService.excluirTodasCidadesRelacionadosEstadoId(estadoId);
         // exclui estado

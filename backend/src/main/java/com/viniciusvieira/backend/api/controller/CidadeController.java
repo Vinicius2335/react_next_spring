@@ -3,6 +3,7 @@ package com.viniciusvieira.backend.api.controller;
 import com.viniciusvieira.backend.api.representation.model.request.CidadeRequest;
 import com.viniciusvieira.backend.api.representation.model.response.CidadeResponse;
 import com.viniciusvieira.backend.domain.model.Cidade;
+import com.viniciusvieira.backend.domain.service.CascadeDeleteService;
 import com.viniciusvieira.backend.domain.service.CrudCidadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/cidades")
 public class CidadeController {
     private final CrudCidadeService crudCidadeService;
+    private final CascadeDeleteService cascadeDeleteService;
 
     @GetMapping
     public ResponseEntity<List<Cidade>> buscarTodos(){
@@ -37,7 +39,8 @@ public class CidadeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id){
-        crudCidadeService.excluir(id);
+//        crudCidadeService.excluir(id);
+        cascadeDeleteService.cascadeDeleteCidade(id);
         return ResponseEntity.noContent().build();
     }
 

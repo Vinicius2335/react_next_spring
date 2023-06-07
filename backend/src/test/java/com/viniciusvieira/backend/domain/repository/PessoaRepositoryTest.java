@@ -167,4 +167,31 @@ class PessoaRepositoryTest {
                 () -> assertTrue(pessoas.contains(inserindoPessoa2))
         );
     }
+
+    @Test
+    @DisplayName("findPessoasByCidadeEstadoId Return list pessoas When successful")
+    void findPessoasByCidadeEstadoId_ReturnListPessoas_WhenSuccessful(){
+        Pessoa pessoa = inserirNovaPessoaNoBanco();
+        Pessoa pessoa2 = Pessoa.builder()
+                .id(2L)
+                .cep("11111-000")
+                .cpf("302.218.730-08")
+                .cidade(CidadeCreator.mockCidade())
+                .nome("Teste 02")
+                .senha("teste2")
+                .email("teste2@gmail.com")
+                .endereco("rua teste2")
+                .build();
+        Pessoa pessoa2Salvada = pessoaRepository.saveAndFlush(pessoa2);
+
+        List<Pessoa> pessoas = pessoaRepository.findPessoasByCidadeEstadoId(1L);
+
+        assertAll(
+                () -> assertNotNull(pessoas),
+                () -> assertEquals(2, pessoas.size()),
+                () -> assertEquals(pessoa.getCidade().getEstado(), pessoas.get(0).getCidade().getEstado()),
+                () -> assertEquals(pessoa.getCidade().getEstado(), pessoas.get(1).getCidade().getEstado())
+        );
+
+    }
 }

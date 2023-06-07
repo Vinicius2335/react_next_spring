@@ -213,7 +213,9 @@ class PessoaControllerIT {
     @Test
     @DisplayName("excluir Return statusCode 204 when successful")
     void excluir_ReturnStatusCode204_WhenSuccessful() {
-        inserirNovaPessoaNoBanco();
+        Pessoa pessoa = inserirNovaPessoaNoBanco();
+        log.info("Pessoa Inserida -> {}", pessoa);
+
         ResponseEntity<Void> response = testRestTemplate.exchange(
                 URL + "/1",
                 DELETE,
@@ -295,6 +297,48 @@ class PessoaControllerIT {
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("Teste CascadeDelete excluindo um estado depois de inserir varios relacionamentos")
+    void testeCascadeDelete_RemoveEstado() {
+        // Estado -> Cidade -> Pessoa -> Pessoa_Permissao -> Permissao
+        inserirNovaPessoaNoBanco();
+
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                "/api/estados/1",
+                DELETE,
+                null,
+                Object.class
+        );
+
+        log.info(response.getBody());
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("Teste CascadeDelete excluindo um cidade depois de inserir varios relacionamentos")
+    void testeCascadeDelete_RemoveCidade() {
+        // Cidade -> Pessoa -> Pessoa_Permissao -> Permissao
+        inserirNovaPessoaNoBanco();
+
+        ResponseEntity<Object> response = testRestTemplate.exchange(
+                "/api/cidades/1",
+                DELETE,
+                null,
+                Object.class
+        );
+
+        log.info(response.getBody());
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode())
         );
     }
 }

@@ -3,6 +3,7 @@ package com.viniciusvieira.backend.api.controller;
 import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
 import com.viniciusvieira.backend.domain.model.Estado;
+import com.viniciusvieira.backend.domain.service.CascadeDeleteService;
 import com.viniciusvieira.backend.domain.service.CrudEstadoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/estados")
 public class EstadoController {
     private final CrudEstadoService crudEstadoService;
+    private final CascadeDeleteService cascadeDeleteService;
 
     @GetMapping
     public ResponseEntity<List<Estado>> buscarTodos(){
@@ -39,7 +41,7 @@ public class EstadoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id){
-        crudEstadoService.excluir(id);
+        cascadeDeleteService.cascadeDeleteEstado(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
