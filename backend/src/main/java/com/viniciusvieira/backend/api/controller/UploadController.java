@@ -1,30 +1,30 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.domain.service.FileUploadService;
+import com.viniciusvieira.backend.domain.model.ProdutoImagem;
+import com.viniciusvieira.backend.domain.service.CrudProdutoImagemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/upload")
+@RequestMapping("/api/imagens")
 public class UploadController {
-    private final FileUploadService fileUploadService;
+    private final CrudProdutoImagemService crudProdutoImagemService;
 
-    // TODO - retornar um fileResponse
-    @PostMapping
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        String fileSaved = fileUploadService.uploadFilePathDirectory(file);
-
+    @GetMapping
+    public ResponseEntity<List<ProdutoImagem>> buscarTodos(){
         return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(fileSaved);
+                .ok(crudProdutoImagemService.buscarTodos());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> excluir(@PathVariable Long id) {
+        crudProdutoImagemService.excluir(id);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

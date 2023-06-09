@@ -4,15 +4,12 @@
 1. Criar Exception Handler
 2. Criar CarrinhoCompraProduto
 3. Testes Repository, Service, Controller, Integração 
-4. upload de imagem - **_tabela imagens só guarda o nome do arquivo_**
-5. Cascade Delete
+4. Cascade Delete
 
 -------------------
 
 # Observação
 
-- Produto tem que ter quantidade tambem.
-  
 - Ficar de olho em permissoes de Pessoas
 
 - Por causa das config na classes domain/model Pessoa cascadeType.ALL e FetchType.LAZY, o cascade delete está acontecendo automaticamente no Relacionamento Pessoa -> Pessoa_Permissao -> Permissao
@@ -33,8 +30,17 @@
 
 - Marca
   - Produto
+    - Imagens (fazer) 
 
 - Categoria
   - Produto
+    - Imagens (fazer)
 
 - criado mas não foi implementado nos controllers ou testado
+
+# Testes
+
+- ProdutoController
+- UploadController
+- ProdutoImagemRepository
+- CrudProdutoImagemService
