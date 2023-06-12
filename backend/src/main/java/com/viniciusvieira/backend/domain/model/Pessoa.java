@@ -53,7 +53,7 @@ public class Pessoa {
     @JoinColumn(name = "cidade_id")
     private Cidade cidade;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "pessoa_permissao",
             joinColumns = @JoinColumn(name = "id_pessoa"),

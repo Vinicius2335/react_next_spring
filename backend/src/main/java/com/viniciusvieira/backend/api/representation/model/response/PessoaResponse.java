@@ -25,7 +25,7 @@ public class PessoaResponse {
     private String senha;
     private String endereco;
     private String cep;
-    private CidadeResponse cidade;
+    private String nomeCidade;
     private OffsetDateTime dataCriacao;
     private OffsetDateTime dataAtualizacao;
 }

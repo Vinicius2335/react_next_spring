@@ -29,7 +29,7 @@ public class ImagemUploadService {
             return null;
 
         } catch (IOException e) {
-            throw new IOException("Error saving upload file. . .");
+            throw new IOException("Error ao tentar realizar o upload/salvar nova imagem. . .");
         }
     }
 
@@ -42,7 +42,7 @@ public class ImagemUploadService {
             return null;
 
         } catch (IOException e) {
-            throw new IOException("Error saving upload file. . .");
+            throw new IOException("Error ao tentar realizar o upload/alterar imagem. . .");
         }
     }
 

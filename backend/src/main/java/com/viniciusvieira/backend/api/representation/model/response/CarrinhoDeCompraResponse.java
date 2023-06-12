@@ -16,6 +16,8 @@ import java.time.OffsetDateTime;
 public class CarrinhoDeCompraResponse {
     private String situacao;
     private String observacao;
+    // TEST - verificar se isso funciona depois
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private PessoaResponse pessoa;
     private OffsetDateTime dataCompra;
     private OffsetDateTime dataAtualizacao;
