@@ -35,7 +35,6 @@ public class ProdutoController {
                 .body(crudProdutoService.inserir(produtoRequest));
     }
 
-    // TEST
     @PostMapping("/{idProduto}/image/")
     public ResponseEntity<ProdutoImagemResponse> uploadFile(@PathVariable Long idProduto, @RequestParam("file") MultipartFile file) throws IOException {
         Produto produtoEncontrado = crudProdutoService.buscarPorId(idProduto);
@@ -53,8 +52,8 @@ public class ProdutoController {
 
     // TEST
     @PutMapping("/{idProduto}/image/{idImage}/")
-    public ResponseEntity<ProdutoImagemResponse> alterar(@PathVariable Long idProduto, @PathVariable Long idImage,
-                                                         @RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<ProdutoImagemResponse> alterarImagem(@PathVariable Long idProduto, @PathVariable Long idImage,
+                                                               @RequestParam("file") MultipartFile file) throws IOException {
         crudProdutoService.buscarPorId(idProduto);
         return ResponseEntity.ok(imagemUploadService.uploadEAlteraImagem(idImage, file));
     }

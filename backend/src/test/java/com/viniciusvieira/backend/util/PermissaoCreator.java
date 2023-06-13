@@ -4,9 +4,6 @@ import com.viniciusvieira.backend.api.representation.model.request.PermissaoRequ
 import com.viniciusvieira.backend.api.representation.model.response.PermissaoResponse;
 import com.viniciusvieira.backend.domain.model.Permissao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class PermissaoCreator {
     public static Permissao mockPermissao(){
         return Permissao.builder()

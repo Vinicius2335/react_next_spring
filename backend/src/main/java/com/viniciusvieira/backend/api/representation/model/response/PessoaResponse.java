@@ -1,11 +1,6 @@
 package com.viniciusvieira.backend.api.representation.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.viniciusvieira.backend.api.representation.model.request.CidadeIdRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

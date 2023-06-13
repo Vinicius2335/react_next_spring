@@ -20,13 +20,20 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpMethod.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
 @Log4j2
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -42,6 +49,10 @@ class ProdutoControllerIT {
     private MarcaRepository marcaRepository;
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    // para conseguir realizar o testar upload de imagem que tem o MultiPartFile
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
     private static final String URL = "/api/produtos";
 
@@ -118,6 +129,42 @@ class ProdutoControllerIT {
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode())
         );
+    }
+
+    @Test
+    @DisplayName("uploadFile Save image of produto and return statusCode 204 When successful")
+    void uploadFile_SaveImageOfProdutoAndReturn204_WhenSuccessful() throws Exception {
+        inserirNovaProdutoNoBanco();
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para upload".getBytes()
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        mockMvc.perform(multipart(URL + "/1/image/")
+                .file(file))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    @DisplayName("uploadFile return statusCode 404 When produto not found by id")
+    void uploadFile_Return404_WhenProdutoNotFoundById() throws Exception {
+        inserirNovaProdutoNoBanco();
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para upload".getBytes()
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        mockMvc.perform(multipart(URL + "/99/image/")
+                        .file(file))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test

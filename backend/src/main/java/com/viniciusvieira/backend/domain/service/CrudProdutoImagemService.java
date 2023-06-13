@@ -56,7 +56,7 @@ public class CrudProdutoImagemService {
             ProdutoImagem imagemAlterada = produtoImagemRepository.saveAndFlush(produtoImagemParaAlterar);
             return produtoImagemMapper.toProdutoImagemResponse(imagemAlterada);
         } else {
-           throw new NegocioException("Erro ao tentar alterar a imagem de produto salva");
+           throw new NegocioException("Erro ao tentar alterar a imagem do produto");
         }
     }
 
@@ -68,6 +68,8 @@ public class CrudProdutoImagemService {
 
         if (isImageDeleted){
             produtoImagemRepository.delete(produtoImagem);
+        } else {
+            throw new NegocioException("Erro ao tentar excluir a imagem do produto");
         }
     }
 

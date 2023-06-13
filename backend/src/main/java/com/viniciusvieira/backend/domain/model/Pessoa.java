@@ -61,13 +61,11 @@ public class Pessoa {
     )
     private List<Permissao> permissoes = new ArrayList<>();
 
-    // TEST
     public void adicionarPermissao(Permissao permissao){
         this.permissoes.add(permissao);
         permissao.getPessoas().add(this);
     }
 
-    // TEST
     public void removerPermissao(Long idPermissao){
         Permissao permissaoParaRemover = this.permissoes.stream()
                 .filter(permissao -> Objects.equals(permissao.getId(), idPermissao))

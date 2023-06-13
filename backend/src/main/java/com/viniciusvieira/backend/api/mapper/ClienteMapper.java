@@ -1,7 +1,6 @@
 package com.viniciusvieira.backend.api.mapper;
 
 import com.viniciusvieira.backend.api.representation.model.request.ClienteRequest;
-import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
 import com.viniciusvieira.backend.domain.model.Pessoa;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
 package com.viniciusvieira.backend.domain.repository;
 
 import com.viniciusvieira.backend.domain.model.Cidade;
-import com.viniciusvieira.backend.domain.model.Estado;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import lombok.extern.log4j.Log4j2;

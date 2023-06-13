@@ -1,7 +1,9 @@
 package com.viniciusvieira.backend.api.controller;
 
 import com.viniciusvieira.backend.api.representation.model.request.ProdutoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoResponse;
+import com.viniciusvieira.backend.domain.exception.ProdutoImagemNaoEncontradoException;
 import com.viniciusvieira.backend.domain.exception.ProdutoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.Categoria;
 import com.viniciusvieira.backend.domain.model.Marca;
@@ -9,6 +11,7 @@ import com.viniciusvieira.backend.domain.model.Produto;
 import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
 import com.viniciusvieira.backend.domain.repository.MarcaRepository;
 import com.viniciusvieira.backend.domain.service.CrudProdutoService;
+import com.viniciusvieira.backend.domain.service.ImagemUploadService;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import com.viniciusvieira.backend.util.MarcaCreator;
 import com.viniciusvieira.backend.util.ProdutoCreator;
@@ -20,9 +23,13 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +48,8 @@ class ProdutoControllerTest {
     private MarcaRepository mockMarcaRepository;
     @Mock
     private CategoriaRepository mockCategoriaRepository;
+    @Mock
+    private ImagemUploadService mockImagemUploadService;
 
     private final Produto validProduto = ProdutoCreator.mockProduto();
     private final ProdutoResponse expectedProduto = ProdutoCreator.mockProdutoResponse();
@@ -48,7 +57,7 @@ class ProdutoControllerTest {
     private final List<Produto> expectedListProdutos = List.of(validProduto);
     
     @BeforeEach
-    void setUp(){
+    void setUp() throws IOException {
         // MarcaRepository
         // saveAndlFlush
         BDDMockito.when(mockMarcaRepository.saveAndFlush(any(Marca.class)))
@@ -70,6 +79,14 @@ class ProdutoControllerTest {
         BDDMockito.when(mockCrudProdutoService.alterar(anyLong(), any(ProdutoRequest.class))).thenReturn(expectedProdutoUpdated);
         // excluir
         BDDMockito.doNothing().when(mockCrudProdutoService).excluir(anyLong());
+
+        // ImagemUploadService
+        // uploadEInseriNovaImagem
+        BDDMockito.when(mockImagemUploadService.uploadEInseriNovaImagem(any(Produto.class), any(MultipartFile.class)))
+                .thenReturn(ProdutoCreator.mockProdutoImagemResponse());
+        // uploadEAlteraImagem
+        BDDMockito.when(mockImagemUploadService.uploadEAlteraImagem(anyLong(), any(MultipartFile.class)))
+                .thenReturn(ProdutoCreator.mockProdutoImagemResponse());
     }
 
     @Test
@@ -101,6 +118,39 @@ class ProdutoControllerTest {
     }
 
     @Test
+    @DisplayName("uploadFile Upload image When successful")
+    void uploadFile_UploadImage_WhenSuccessful() throws IOException {
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem".getBytes()
+        );
+        ResponseEntity<ProdutoImagemResponse> response = produtoController.uploadFile(1L, file);
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.CREATED, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("uploadFile Throws ProdutoNotFoundException When produto not found")
+    void uploadFile_ThorwsProdutoNotFoundException_WhenProdutoNotFound() {
+        BDDMockito.doThrow(ProdutoNaoEncontradoException.class).when(mockCrudProdutoService).buscarPorId(anyLong());
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem".getBytes()
+        );
+
+        assertThrows(ProdutoNaoEncontradoException.class, () -> produtoController.uploadFile(99L, file));
+
+    }
+
+    @Test
     @DisplayName("alterar Update produto when successful")
     void alterar_UpdateProduto_WhenSuccessul() {
         ProdutoRequest produtoParaAlterar = ProdutoCreator.mockProdutoRequestToUpdate();
@@ -123,6 +173,58 @@ class ProdutoControllerTest {
         ProdutoRequest produtoParaAlterar = ProdutoCreator.mockProdutoRequestToUpdate();
 
         assertThrows(ProdutoNaoEncontradoException.class, () -> produtoController.alterar(99L, produtoParaAlterar));
+    }
+
+    @Test
+    @DisplayName("alterarImagem Update image When successful")
+    void alterarImagem_UpdateImage_WhenSuccessful() throws IOException {
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para Upload".getBytes()
+        );
+
+        ResponseEntity<ProdutoImagemResponse> response = produtoController.alterarImagem(1L, 1L, file);
+
+        assertAll(
+                () -> assertNotNull(response),
+                () -> assertEquals(HttpStatus.OK, response.getStatusCode())
+        );
+    }
+
+    @Test
+    @DisplayName("alterarImagem Throws ProdutoNaoEncontradoException When produto not found")
+    void alterarImagem_ThorwsProdutoNaoEncontradoException_WhenProdutoNotFound() {
+        BDDMockito.when(mockCrudProdutoService.buscarPorId(anyLong())).thenThrow(ProdutoNaoEncontradoException.class);
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para Upload".getBytes()
+        );
+
+        assertThrows(ProdutoNaoEncontradoException.class,
+                () -> produtoController.alterarImagem(99L, 1L, file));
+
+    }
+
+    @Test
+    @DisplayName("alterarImagem Throws ProdutoImagemNaoEncontradoException When produtoImagem not found")
+    void alterarImagem_ThorwsProdutoImagemNaoEncontradoException_WhenProdutoImagemNotFound() throws IOException {
+        BDDMockito.when(mockImagemUploadService.uploadEAlteraImagem(anyLong(), any(MultipartFile.class)))
+                .thenThrow(ProdutoImagemNaoEncontradoException.class);
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "upload.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para Upload".getBytes()
+        );
+
+        assertThrows(ProdutoImagemNaoEncontradoException.class,
+                () -> produtoController.alterarImagem(1L, 99L, file));
+
     }
 
     @Test

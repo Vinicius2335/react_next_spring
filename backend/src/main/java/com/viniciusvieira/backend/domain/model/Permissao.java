@@ -33,7 +33,7 @@ public class Permissao {
     @UpdateTimestamp
     private OffsetDateTime dataAtualizacao;
 
-    @ManyToMany(mappedBy = "permissoes", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "permissoes", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Pessoa> pessoas = new ArrayList<>();
 }

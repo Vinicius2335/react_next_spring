@@ -1,18 +1,16 @@
 package com.viniciusvieira.backend.api.controller;
 
 import com.viniciusvieira.backend.api.representation.model.request.ClienteRequest;
-import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
-import com.viniciusvieira.backend.domain.model.Pessoa;
-import com.viniciusvieira.backend.domain.service.CrudPessoaService;
 import com.viniciusvieira.backend.domain.service.SalvarClienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController

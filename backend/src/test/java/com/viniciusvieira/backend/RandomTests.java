@@ -1,7 +1,6 @@
 package com.viniciusvieira.backend;
 
 import com.viniciusvieira.backend.domain.exception.NegocioException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -10,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class RandomTests {
     private static final String PATH_DIRECTORY = "src/main/resources/static/image";

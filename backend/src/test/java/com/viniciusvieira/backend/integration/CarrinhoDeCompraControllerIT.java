@@ -3,7 +3,6 @@ package com.viniciusvieira.backend.integration;
 import com.viniciusvieira.backend.api.representation.model.request.CarrinhoDeCompraRequest;
 import com.viniciusvieira.backend.api.representation.model.response.CarrinhoDeCompraResponse;
 import com.viniciusvieira.backend.domain.exception.CarrinhoDeCompraNaoEncontradoException;
-import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.model.CarrinhoDeCompra;
 import com.viniciusvieira.backend.domain.repository.*;
 import com.viniciusvieira.backend.util.*;
