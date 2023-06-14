@@ -2,6 +2,7 @@ package com.viniciusvieira.backend.api.controller;
 
 import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
+import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.Cidade;
 import com.viniciusvieira.backend.domain.model.Estado;
@@ -90,6 +91,15 @@ class PessoaControllerTest {
                 () -> assertEquals(expectedPessoa.getNome(), response.getBody().getNome()),
                 () -> assertEquals(expectedPessoa.getCpf(), response.getBody().getCpf())
         );
+    }
+
+    @Test
+    @DisplayName("inserir Thorws NegocioException When CPF is in use")
+    void inserir_ThorwsNegocioException_WhenCpfIsInUse() {
+        BDDMockito.when(mockCrudPessoaService.inserir(any(PessoaRequest.class))).thenThrow(NegocioException.class);
+        PessoaRequest pessoaParaSalvar = PessoaCreator.mockPessoaRequestToSave();
+
+        assertThrows(NegocioException.class, () -> pessoaController.inserir(pessoaParaSalvar));
     }
 
     @Test

@@ -12,6 +12,13 @@ public abstract class PermissaoCreator {
                 .build();
     }
 
+    public static Permissao mockPermissaoCliente(){
+        return Permissao.builder()
+                .id(2L)
+                .nome("CLIENTE")
+                .build();
+    }
+
     public static Permissao mockPermissaoUpdated(){
         return Permissao.builder()
                 .id(1L)

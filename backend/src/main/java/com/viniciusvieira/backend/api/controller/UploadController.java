@@ -21,7 +21,7 @@ public class UploadController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
         crudProdutoImagemService.excluir(id);
         return ResponseEntity
                 .noContent()
