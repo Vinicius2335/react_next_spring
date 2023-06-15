@@ -40,10 +40,3 @@
 
 # Testes
 
-- ProdutoController - falta só alterarImagem do teste de integração
-- ProdutoImagemRepository - ok
-- CrudProdutoImagemService - ok
-- UploadController - Ok
-- ImagemUploadService
-- SalvarClienteService - Ok
-- ClienteController - Ok

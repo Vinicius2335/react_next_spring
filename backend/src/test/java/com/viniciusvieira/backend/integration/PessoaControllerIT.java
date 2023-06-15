@@ -83,8 +83,8 @@ class PessoaControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new pessoaResponse When successful")
-    void inserir_InsertNewPessoaResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new pessoaResponse When successful")
+    void inserir_InsertNewPessoaResponseAndReturn201_WhenSuccessful() {
         permissaoRepository.saveAndFlush(PermissaoCreator.mockPermissao());
         estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         cidadeRepository.saveAndFlush(CidadeCreator.mockCidade());

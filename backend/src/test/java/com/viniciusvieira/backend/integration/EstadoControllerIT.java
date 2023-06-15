@@ -64,8 +64,8 @@ class EstadoControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new estadoResponse When successful")
-    void inserir_ReturnStatusCode202AndEstadoResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new estadoResponse When successful")
+    void inserir_ReturnStatusCode201AndEstadoResponse_WhenSuccessful() {
         EstadoRequest novaEstado = EstadoCreator.mockEstadoRequestToSave();
         ResponseEntity<EstadoResponse> response = testRestTemplate.exchange(
                 URL,

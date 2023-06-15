@@ -97,8 +97,8 @@ class MarcaControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new marcaResponse When successful")
-    void inserir_ReturnStatusCode202AndMarcaResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new marcaResponse When successful")
+    void inserir_ReturnStatusCode201AndMarcaResponse_WhenSuccessful() {
         MarcaRequest novaMarca = MarcaCreator.mockMarcaRequestToSave();
         ResponseEntity<MarcaResponse> response = testRestTemplate.exchange(
                 URL,

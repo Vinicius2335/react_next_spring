@@ -54,6 +54,7 @@ public class ProdutoController {
     @PutMapping("/{idProduto}/image/{idImage}/")
     public ResponseEntity<ProdutoImagemResponse> alterarImagem(@PathVariable Long idProduto, @PathVariable Long idImage,
                                                                @RequestParam("file") MultipartFile file) throws IOException {
+
         crudProdutoService.buscarPorId(idProduto);
         return ResponseEntity.ok(imagemUploadService.uploadEAlteraImagem(idImage, file));
     }

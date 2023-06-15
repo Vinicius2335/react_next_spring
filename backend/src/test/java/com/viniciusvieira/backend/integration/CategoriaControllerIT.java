@@ -65,8 +65,8 @@ class CategoriaControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new categoriaResponse When successful")
-    void inserir_InsertNewCategoriaResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new categoriaResponse When successful")
+    void inserir_InsertNewCategoriaResponseAndReturn201_WhenSuccessful() {
         CategoriaRequest novaCategoria = CategoriaCreator.mockCategoriaRequest();
         ResponseEntity<CategoriaResponse> response = testRestTemplate.exchange(
                 URL,

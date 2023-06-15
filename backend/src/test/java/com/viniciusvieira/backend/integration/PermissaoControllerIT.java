@@ -97,8 +97,8 @@ class PermissaoControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new permissaoResponse When successful")
-    void inserir_ReturnStatusCode202AndPermissaoResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new permissaoResponse When successful")
+    void inserir_ReturnStatusCode201AndPermissaoResponse_WhenSuccessful() {
         PermissaoRequest novaPermissao = PermissaoCreator.mockPermissaoRequest();
         ResponseEntity<PermissaoResponse> response = testRestTemplate.exchange(
                 URL,

@@ -6,10 +6,12 @@ import com.viniciusvieira.backend.domain.exception.ProdutoNaoEncontradoException
 import com.viniciusvieira.backend.domain.model.Produto;
 import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
 import com.viniciusvieira.backend.domain.repository.MarcaRepository;
+import com.viniciusvieira.backend.domain.repository.ProdutoImagemRepository;
 import com.viniciusvieira.backend.domain.repository.ProdutoRepository;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import com.viniciusvieira.backend.util.MarcaCreator;
 import com.viniciusvieira.backend.util.ProdutoCreator;
+import com.viniciusvieira.backend.util.ProdutoImagemCreator;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,10 +27,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,17 +54,25 @@ class ProdutoControllerIT {
     private MarcaRepository marcaRepository;
     @Autowired
     private CategoriaRepository categoriaRepository;
+    @Autowired
+    private ProdutoImagemRepository produtoImagemRepository;
 
     // para conseguir realizar o testar upload de imagem que tem o MultiPartFile
     @Autowired
     private WebApplicationContext webApplicationContext;
 
     private static final String URL = "/api/produtos";
+    private static final String PATH_DIRECTORY = "src/main/resources/static/image";
 
-    public Produto inserirNovaProdutoNoBanco() {
+    private Produto inserirNovaProdutoNoBanco() {
         marcaRepository.saveAndFlush(MarcaCreator.mockMarca());
         categoriaRepository.saveAndFlush(CategoriaCreator.mockCategoria());
         return produtoRepository.saveAndFlush(ProdutoCreator.mockProduto());
+    }
+
+    private void criarArquivoParaTeste() throws IOException {
+        File file = new File(PATH_DIRECTORY + "/image.png");
+        file.createNewFile();
     }
 
     @Test
@@ -90,8 +103,8 @@ class ProdutoControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new produtoResponse When successful")
-    void inserir_InsertNewProdutoResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new produtoResponse When successful")
+    void inserir_InsertNewProdutoResponseAndReturn201_WhenSuccessful() {
         marcaRepository.saveAndFlush(MarcaCreator.mockMarca());
         categoriaRepository.saveAndFlush(CategoriaCreator.mockCategoria());
 
@@ -230,6 +243,87 @@ class ProdutoControllerIT {
                 () -> assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode()),
                 () -> assertEquals(ProdutoNaoEncontradoException.class, response.getBody().getClass())
         );
+    }
+
+    @Test
+    @DisplayName("alterarImagem Update imagem and return statusCode 200 When successful")
+    void alterarImagem_UpdateImageAndReturn200_WhenSuccessful() throws Exception {
+        inserirNovaProdutoNoBanco();
+        criarArquivoParaTeste();
+        produtoImagemRepository.saveAndFlush(ProdutoImagemCreator.mockProdutoImagem());
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "teste.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para teste".getBytes()
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        MockMultipartHttpServletRequestBuilder builder = multipart(URL + "/1/image/1/");
+        builder.with(request -> {
+            request.setMethod("PUT");
+            return request;
+        });
+
+        mockMvc.perform(
+                builder.file(file))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    @DisplayName("alterarImagem Return statusCode 404 When produto not found")
+    void alterarImagem_Return404_WhenProdutoNotFound() throws Exception {
+        inserirNovaProdutoNoBanco();
+        produtoImagemRepository.saveAndFlush(ProdutoImagemCreator.mockProdutoImagem());
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "teste.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para teste".getBytes()
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        MockMultipartHttpServletRequestBuilder builder = multipart(URL + "/99/image/1/");
+        builder.with(request -> {
+            request.setMethod("PUT");
+            return request;
+        });
+
+        mockMvc.perform(
+                        builder.file(file))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("alterarImagem Return statusCode 404 When produtoImagem not found")
+    void alterarImagem_Return404_WhenProdutoImagemNotFound() throws Exception {
+        inserirNovaProdutoNoBanco();
+        produtoImagemRepository.saveAndFlush(ProdutoImagemCreator.mockProdutoImagem());
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "teste.png",
+                MediaType.IMAGE_PNG_VALUE,
+                "Imagem para teste".getBytes()
+        );
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+        MockMultipartHttpServletRequestBuilder builder = multipart(URL + "/1/image/99/");
+        builder.with(request -> {
+            request.setMethod("PUT");
+            return request;
+        });
+
+        mockMvc.perform(
+                        builder.file(file))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+
     }
 
     @Test

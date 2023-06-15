@@ -76,8 +76,8 @@ class CidadeControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new cidadeResponse When successful")
-    void inserir_InsertNewCidadeResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new cidadeResponse When successful")
+    void inserir_InsertNewCidadeResponseAndReturn201_WhenSuccessful() {
         estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         CidadeRequest novaCidade = CidadeCreator.mockCidadeRequestToSave();
 
@@ -93,7 +93,7 @@ class CidadeControllerIT {
         assertAll(
                 () -> assertNotNull(response),
                 () -> assertEquals(HttpStatus.CREATED, response.getStatusCode()),
-                () -> assertEquals(novaCidade.getNome(), response.getBody().getNome())
+                () -> assertEquals(expectedCidade.getNome(), response.getBody().getNome())
         );
     }
 

@@ -81,8 +81,8 @@ class CarrinhoDeCompraControllerIT {
     }
 
     @Test
-    @DisplayName("inserir Return statusCode 202 and new carrinhoDeCompraResponse When successful")
-    void inserir_InsertNewCarrinhoDeCompraResponse_WhenSuccessful() {
+    @DisplayName("inserir Return statusCode 201 and new carrinhoDeCompraResponse When successful")
+    void inserir_InsertNewCarrinhoDeCompraResponseAndReturn201_WhenSuccessful() {
         permissaoRepository.saveAndFlush(PermissaoCreator.mockPermissao());
         estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         cidadeRepository.saveAndFlush(CidadeCreator.mockCidade());
