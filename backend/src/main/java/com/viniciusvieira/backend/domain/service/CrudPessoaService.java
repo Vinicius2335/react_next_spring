@@ -25,9 +25,21 @@ public class CrudPessoaService {
         return pessoaRepository.findAll();
     }
 
+    // TEST
+    public Pessoa buscarPeloEmail(String email){
+        return pessoaRepository.findByEmail(email)
+                .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL"));
+    }
+
     public Pessoa buscarPorId(Long id){
         return pessoaRepository.findById(id)
-                .orElseThrow(() -> new PessoaNaoEncontradaException("Pessoa não encontrada"));
+                .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este ID"));
+    }
+
+    // TEST
+    public Pessoa buscarPeloEmailECodigo(String email, String codigo){
+        return pessoaRepository.findByEmailAndCodigoRecuperacaoSenha(email, codigo)
+                .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO"))
     }
 
     @Transactional
@@ -55,6 +67,11 @@ public class CrudPessoaService {
 
         Pessoa pessoaAlterada = pessoaRepository.saveAndFlush(pessoaParaAlterar);
         return pessoaMapper.toPessoaResponse(pessoaAlterada);
+    }
+
+    @Transactional
+    public void alterarParaGerenciamento(Pessoa pessoa){
+        pessoaRepository.saveAndFlush(pessoa);
     }
 
     @Transactional

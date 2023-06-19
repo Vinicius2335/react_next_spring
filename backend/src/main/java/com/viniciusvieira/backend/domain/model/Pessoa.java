@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +35,6 @@ public class Pessoa {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String senha;
 
     @Column(nullable = false)
@@ -42,6 +42,10 @@ public class Pessoa {
 
     @Column(nullable = false)
     private String cep;
+
+    private String codigoRecuperacaoSenha;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataEnvioCodigo;
 
     @CreationTimestamp
     private OffsetDateTime dataCriacao;

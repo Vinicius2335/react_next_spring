@@ -8,8 +8,10 @@ import com.viniciusvieira.backend.domain.model.Permissao;
 import com.viniciusvieira.backend.domain.model.Pessoa;
 import com.viniciusvieira.backend.domain.repository.PessoaRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -17,6 +19,7 @@ public class SalvarClienteService {
     private final PessoaRepository pessoaRepository;
     private final ClienteMapper clienteMapper;
     private final CrudPermissaoService crudPermissaoService;
+    private final EmailService emailService;
 
     public PessoaResponse inserirCliente(ClienteRequest clienteRequest){
         Pessoa cliente = clienteMapper.toDomainPessoa(clienteRequest);
@@ -28,14 +31,26 @@ public class SalvarClienteService {
 
         Permissao permissaoEncontrada = crudPermissaoService.buscarPeloNome("CLIENTE");
         cliente.adicionarPermissao(permissaoEncontrada);
-        // TODO - por enquanto a senha está vazia
-        // soluçao para nao dar erro ao inserir um novo cliente pq senha não pode ser nulo
-        cliente.setSenha(RandomStringUtils.randomAlphanumeric(8));
-
         Pessoa clienteSalvo = pessoaRepository.saveAndFlush(cliente);
+
+        // enviando email
+        Map<String, Object> propriedades = new HashMap<>();
+        propriedades.put("nome", clienteSalvo.getNome());
+        propriedades.put("mensagem", "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
+
+        emailService.sendEmailTemplate(
+                clienteSalvo.getEmail(),
+                "Cadastro na Loja Tabajara",
+                propriedades
+        );
         return clienteMapper.toPessoaResponse(clienteSalvo);
     }
 
     // TODO - fazer o alterar
 
 }
+
+/*
+//        emailService.sendEmailSimples(clienteSalvo.getEmail(), "Cadastro na Loja Tabajara",
+//                "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
+ */

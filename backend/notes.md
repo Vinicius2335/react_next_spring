@@ -40,3 +40,7 @@
 
 # Testes
 
+- PessoaGerenciamentoController
+- GerenciamentoService
+- PessoaRepository - findByEmail - findByEmailAndCodigoRecuperacaoSenha
+- CrudPessoaService - buscarPeloEmail - buscarPeloEmailECodigo
