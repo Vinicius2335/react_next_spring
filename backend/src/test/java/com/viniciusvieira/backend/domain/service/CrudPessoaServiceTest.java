@@ -50,7 +50,8 @@ class CrudPessoaServiceTest {
     private CrudPermissaoService mockCrudPermissaoService;
 
     private final Pessoa validPessoa = PessoaCreator.mockPessoa();
-    private final PessoaResponse expectedPessoa = PessoaCreator.mockPessoaResponse();
+    private final Pessoa validPessoaComCodigo = PessoaCreator.mockPessoaComCodigo();
+    private final PessoaResponse expectedPessoaResponse = PessoaCreator.mockPessoaResponse();
     private final PessoaResponse expectedPessoaUpdated = PessoaCreator.mockPessoaResponseUpdate();
     private final List<Pessoa> expectedListPessoa = List.of(validPessoa);
 
@@ -75,12 +76,17 @@ class CrudPessoaServiceTest {
         BDDMockito.when(mockPessoaRepository.findAllPessoasByCidadeId(anyLong())).thenReturn(expectedListPessoa);
         // findByCpf
         BDDMockito.when(mockPessoaRepository.findByCpf(anyString())).thenReturn(Optional.empty());
+        // findByEmail
+        BDDMockito.when(mockPessoaRepository.findByEmail(anyString())).thenReturn(Optional.of(validPessoa));
+        // findByEmailAndCodigoRecuperacaoSenha
+        BDDMockito.when(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString()))
+                .thenReturn(Optional.of(validPessoaComCodigo));
 
         // PessoaMapper
         // toDomainPessoa
         BDDMockito.when(mockPessoaMapper.toDomainPessoa(any(PessoaRequest.class))).thenReturn(validPessoa);
         // toPessoaResponse
-        BDDMockito.when(mockPessoaMapper.toPessoaResponse(any(Pessoa.class))).thenReturn(expectedPessoa);
+        BDDMockito.when(mockPessoaMapper.toPessoaResponse(any(Pessoa.class))).thenReturn(expectedPessoaResponse);
 
         // CrudPermissaoService
         // buscarPeloNome
@@ -123,6 +129,50 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPeloEmail Return pessoa When successful")
+    void buscarPeloEmail_ReturnPessoa_WhenSuccessful(){
+        Pessoa pessoaEncontrada = crudPessoaService.buscarPeloEmail(validPessoa.getEmail());
+
+        assertAll(
+                () -> assertNotNull(pessoaEncontrada),
+                () -> assertEquals(validPessoa, pessoaEncontrada)
+        );
+    }
+
+    @Test
+    @DisplayName("buscarPeloEmail Throws PessoaNaoEncontradaException When pessoa not found")
+    void buscarPeloEmail_ThrowsPessoaNaoEncontradaException_WhenPessoaNotFound() {
+        BDDMockito.when(mockPessoaRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        String email = validPessoa.getEmail();
+        assertThrows(PessoaNaoEncontradaException.class, () -> crudPessoaService.buscarPeloEmail(email));
+    }
+
+    @Test
+    @DisplayName("buscarPeloEmailECodigo Return pessoa When successful")
+    void buscarPeloEmailECodigo_ReturnPessoa_WhenSuccessful(){
+        String email = validPessoaComCodigo.getEmail();
+        String codigo = validPessoaComCodigo.getCodigoRecuperacaoSenha();
+        Pessoa pessoaEncontrada = crudPessoaService.buscarPeloEmailECodigo(email, codigo);
+
+        assertAll(
+                () -> assertNotNull(pessoaEncontrada),
+                () -> assertEquals(validPessoaComCodigo, pessoaEncontrada)
+        );
+    }
+
+    @Test
+    @DisplayName("buscarPeloEmailECodigo Throws PessoaNaoEncontradaException When pessoa not found")
+    void buscarPeloEmailECodigo_ThrowsPessoaNaoEncontradaException_WhenPessoaNotFound() {
+        BDDMockito.when(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString()))
+                .thenReturn(Optional.empty());
+
+        String email = validPessoaComCodigo.getEmail();
+        String codigo = validPessoaComCodigo.getCodigoRecuperacaoSenha();
+        assertThrows(PessoaNaoEncontradaException.class, () -> crudPessoaService.buscarPeloEmailECodigo(email, codigo));
+    }
+
+    @Test
     @DisplayName("inserir Insert new pessoa When successful")
     void inserir_InsertNewPessoa_WhenSuccessful() {
         PessoaRequest pessoaParaInserir = PessoaCreator.mockPessoaRequestToSave();
@@ -130,7 +180,7 @@ class CrudPessoaServiceTest {
 
         assertAll(
                 () -> assertNotNull(pessoaInserida),
-                () -> assertEquals(expectedPessoa.getNome(), pessoaInserida.getNome())
+                () -> assertEquals(expectedPessoaResponse.getNome(), pessoaInserida.getNome())
         );
     }
 

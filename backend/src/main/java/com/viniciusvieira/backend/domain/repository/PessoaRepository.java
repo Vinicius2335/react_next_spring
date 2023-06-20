@@ -23,10 +23,8 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
     // Inner Join, retornando todas as pessoas relacionadas com o Estado Id 'X'
     List<Pessoa> findPessoasByCidadeEstadoId(Long estadoId);
 
-    // TEST
     Optional<Pessoa> findByEmail(String email);
 
-    // TEST
     Optional<Pessoa> findByEmailAndCodigoRecuperacaoSenha(String email, String codigoRecuperacaoSenha);
 
 }

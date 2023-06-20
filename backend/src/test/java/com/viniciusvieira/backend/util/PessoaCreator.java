@@ -1,12 +1,15 @@
 package com.viniciusvieira.backend.util;
 
 import com.viniciusvieira.backend.api.representation.model.request.CidadeIdRequest;
+import com.viniciusvieira.backend.api.representation.model.request.PessoaGerenciamentoRequest;
 import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
 import com.viniciusvieira.backend.domain.model.Pessoa;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public abstract class PessoaCreator {
@@ -20,6 +23,22 @@ public abstract class PessoaCreator {
                 .senha("teste")
                 .email("teste@gmail.com")
                 .endereco("rua teste")
+                .permissoes(new ArrayList<>(List.of(PermissaoCreator.mockPermissao())))
+                .build();
+    }
+
+    public static Pessoa mockPessoaComCodigo(){
+        return Pessoa.builder()
+                .id(1L)
+                .cep("01001-000")
+                .cpf("302.218.730-07")
+                .cidade(CidadeCreator.mockCidade())
+                .nome("Teste 01")
+                .senha("teste")
+                .email("teste@gmail.com")
+                .endereco("rua teste")
+                .codigoRecuperacaoSenha("Teste")
+                .dataEnvioCodigo(LocalDateTime.now())
                 .permissoes(new ArrayList<>(List.of(PermissaoCreator.mockPermissao())))
                 .build();
     }
@@ -76,6 +95,14 @@ public abstract class PessoaCreator {
                 .build();
     }
 
+    public static PessoaGerenciamentoRequest mockPessoaGerenciamentoRequest(){
+        return PessoaGerenciamentoRequest.builder()
+                .email("teste@gmail.com")
+                .senha("teste")
+                .codigoParaRecuperarSenha("Teste")
+                .build();
+    }
+
     public static PessoaRequest mockPessoaRequestToUpdate() {
         return PessoaRequest.builder()
                 .cep("01001-002")
@@ -101,4 +128,5 @@ public abstract class PessoaCreator {
                 .nomePermissao(null)
                 .build();
     }
+
 }

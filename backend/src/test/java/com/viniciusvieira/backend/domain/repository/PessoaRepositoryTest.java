@@ -5,12 +5,15 @@ import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +72,19 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("findByEmail Return optional pessoa When successful")
+    void findByEmail_ReturnOptionalPessoa_WhenSuccessful(){
+        Pessoa pessoaInserida = inserirNovaPessoaNoBanco();
+
+        Optional<Pessoa> pessoaEncontrada = pessoaRepository.findByEmail(pessoaInserida.getEmail());
+
+        assertAll(
+                () -> assertFalse(pessoaEncontrada.isEmpty()),
+                () -> assertEquals(pessoaInserida, pessoaEncontrada.get())
+        );
+    }
+
+    @Test
     @DisplayName("findById Return a pessoa When successful")
     void findById_ReturnPessoa_WhenSuccessful(){
         Pessoa novaPessoaInserida = inserirNovaPessoaNoBanco();
@@ -77,6 +93,22 @@ class PessoaRepositoryTest {
         assertAll(
                 () -> assertNotNull(pessoaEncontrada),
                 () -> assertEquals(novaPessoaInserida, pessoaEncontrada)
+        );
+    }
+
+    @Test
+    @DisplayName("findByEmailAndCodigoRecuperacaoSenha Return optional pessoa When successful")
+    void findByEmailAndCodigoRecuperacaoSenha_ReturnOptionalPessoa_WhenSuccessful(){
+        Pessoa pessoaInserida = inserirNovaPessoaNoBanco();
+        pessoaInserida.setCodigoRecuperacaoSenha(RandomStringUtils.randomAlphanumeric(8));
+        pessoaInserida.setDataEnvioCodigo(LocalDateTime.now());
+
+        Optional<Pessoa> pessoaEncontrada = pessoaRepository.findByEmailAndCodigoRecuperacaoSenha(pessoaInserida.getEmail(),
+                pessoaInserida.getCodigoRecuperacaoSenha());
+
+        assertAll(
+                () -> assertFalse(pessoaEncontrada.isEmpty()),
+                () -> assertEquals(pessoaInserida, pessoaEncontrada.get())
         );
     }
 

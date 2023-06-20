@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @RequiredArgsConstructor
 @Service
@@ -18,7 +19,7 @@ public class PessoaGerenciamentoService {
     public void solicitarCodigo(String email){
         Pessoa pessoa = crudPessoaService.buscarPeloEmail(email);
         pessoa.setCodigoRecuperacaoSenha(gerarCodigoParaRecuperarSenha());
-        pessoa.setDataEnvioCodigo(new Date());
+        pessoa.setDataEnvioCodigo(LocalDateTime.now());
         crudPessoaService.alterarParaGerenciamento(pessoa);
 
         emailService.sendEmailSimples(pessoa.getEmail(),
@@ -30,15 +31,14 @@ public class PessoaGerenciamentoService {
         Pessoa pessoaEncontrada = crudPessoaService.buscarPeloEmailECodigo(pessoaGerenciamentoRequest.getEmail(),
                 pessoaGerenciamentoRequest.getCodigoParaRecuperarSenha());
 
-        // resultado em milesegindos por isso tem que dividir por 1000 depois
-        Date diferenca = new Date(new Date().getTime() - pessoaEncontrada.getDataEnvioCodigo().getTime());
+        long diferenca = ChronoUnit.MINUTES.between(LocalDateTime.now(), pessoaEncontrada.getDataEnvioCodigo());
 
-        // validade do codigo de recuperação é de 15min
-        // 15min = 900 segundos
-        if (diferenca.getTime()/1000 < 900){
+        // validade do código de recuperação é de 15min
+        if (diferenca <= 15){
             // TODO - depois de adicionar o spring security é necessário criptografar a senha
             pessoaEncontrada.setSenha(pessoaGerenciamentoRequest.getSenha());
             pessoaEncontrada.setCodigoRecuperacaoSenha(null);
+            pessoaEncontrada.setDataEnvioCodigo(null);
             crudPessoaService.alterarParaGerenciamento(pessoaEncontrada);
         } else {
             throw new NegocioException("Tempo expirado, solicite um novo código");
