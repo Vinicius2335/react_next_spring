@@ -35,9 +35,15 @@
 - Categoria
   - Produto
     - Imagens (fazer)
+    - CarrinhoDeCompraProduto
+    
+
 
 - criado mas não foi implementado nos controllers ou testado
 
 # Testes
 
 - PessoaGerenciamentoController
+- CarrinhoDeCompraProdutoRepository
+- CrudCarrinhoDeCompraProdutoService
+- CarrinhoDeCompraProdutoController

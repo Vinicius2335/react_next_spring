@@ -1,6 +1,5 @@
 package com.viniciusvieira.backend.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,42 +16,34 @@ import java.time.OffsetDateTime;
 @Builder
 @Data
 @Entity
-@Table(name = "produto")
-public class Produto {
+@Table(name = "carrinho_compra_produto")
+public class CarrinhoDeCompraProduto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
+    private BigDecimal valor;
+
+    @Column(nullable = false)
     private int quantidade;
 
-    @Column(nullable = false)
-    private String descricaoCurta;
-
-    @Column(nullable = false)
-    private String descricaoDetalhada;
-
-    @Column(nullable = false)
-    private BigDecimal valorCusto;
-
-    @Column(nullable = false)
-    private BigDecimal valorVenda;
+    private String observacao;
 
     @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dataAtualizacao;
 
-    @ManyToOne
-    @JoinColumn(name = "marca_id")
-    private Marca marca;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "produto_id", nullable = false)
+    private Produto produto;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carrinho_compra_id", nullable = false)
+    private CarrinhoDeCompra carrinhoDeCompra;
 
-    @ManyToOne
-    @JsonIgnore
-    private CarrinhoDeCompraProduto carrinhoDeCompraProduto;
 }
