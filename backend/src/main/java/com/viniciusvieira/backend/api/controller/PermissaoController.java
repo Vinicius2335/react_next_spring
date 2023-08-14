@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/permissoes")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class PermissaoController {
     private final CrudPermissaoService crudPermissaoService;
 

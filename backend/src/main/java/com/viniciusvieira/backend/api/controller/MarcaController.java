@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/marcas")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class MarcaController {
     private final CrudMarcaService crudMarcaService;
 

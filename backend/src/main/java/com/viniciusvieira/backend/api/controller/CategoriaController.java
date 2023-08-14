@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/categorias")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CategoriaController {
     private final CrudCategoriaService crudCategoriaService;
 

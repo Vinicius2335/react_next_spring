@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/cidades")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CidadeController {
     private final CrudCidadeService crudCidadeService;
     private final CascadeDeleteService cascadeDeleteService;

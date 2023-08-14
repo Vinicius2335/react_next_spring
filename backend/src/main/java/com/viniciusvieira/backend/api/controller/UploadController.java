@@ -11,6 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/imagens")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class UploadController {
     private final CrudProdutoImagemService crudProdutoImagemService;
 
