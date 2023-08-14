@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/****** Sidebar ******/
+.menu-sidebar {
+  @apply flex items-center gap-2 text-lg font-bold text-zinc-100 hover:bg-[#282828] rounded-md h-12 pl-6;
+}
+
+.sidebar-div {
+  @apply flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-lg text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10
+}
+
+.sidebar-link {
+  @apply flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-sm text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10
+}
+
+/****** Footer ******/
+.layout-footer {
+  @apply flex items-center justify-center py-4
+}
