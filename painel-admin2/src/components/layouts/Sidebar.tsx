@@ -11,7 +11,7 @@ export function Sidebar() {
             </div>
             <ul className="p-0 data-[te-collapse-show]:block " data-te-collapse-show>
               <li className="relative">
-                <Link href={""} className="sidebar-link">
+                <Link href={"/"} className="sidebar-link">
                   Dashboard
                 </Link>
               </li>
