@@ -1,8 +1,8 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.CidadeIdRequest;
-import com.viniciusvieira.backend.api.representation.model.request.ClienteRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.CidadeIdRequest;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 
 public abstract class ClienteCreator {
     public static ClienteRequest mockClienteRequest(){

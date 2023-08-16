@@ -1,10 +1,11 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.api.representation.model.request.PermissaoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PermissaoResponse;
+import com.viniciusvieira.backend.api.controller.usuario.PermissaoController;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
 import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Permissao;
-import com.viniciusvieira.backend.domain.service.CrudPermissaoService;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
+import com.viniciusvieira.backend.domain.service.usuario.CrudPermissaoService;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

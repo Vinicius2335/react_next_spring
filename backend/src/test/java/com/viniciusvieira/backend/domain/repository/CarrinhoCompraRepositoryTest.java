@@ -1,6 +1,10 @@
 package com.viniciusvieira.backend.domain.repository;
 
-import com.viniciusvieira.backend.domain.model.CarrinhoDeCompra;
+import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
+import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
+import com.viniciusvieira.backend.domain.repository.venda.CarrinhoCompraRepository;
 import com.viniciusvieira.backend.util.CarrinhoDeCompraCreator;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;

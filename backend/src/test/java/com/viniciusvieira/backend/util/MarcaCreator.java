@@ -1,8 +1,8 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
-import com.viniciusvieira.backend.domain.model.Marca;
+import com.viniciusvieira.backend.api.representation.model.request.venda.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.MarcaResponse;
+import com.viniciusvieira.backend.domain.model.venda.Marca;
 
 import java.time.OffsetDateTime;
 

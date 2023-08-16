@@ -1,6 +1,9 @@
 package com.viniciusvieira.backend.domain.repository;
 
-import com.viniciusvieira.backend.domain.model.Pessoa;
+import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
+import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
@@ -13,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

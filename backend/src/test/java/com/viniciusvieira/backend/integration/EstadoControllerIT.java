@@ -1,10 +1,10 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.EstadoResponse;
 import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.Estado;
-import com.viniciusvieira.backend.domain.repository.EstadoRepository;
+import com.viniciusvieira.backend.domain.model.usuario.Estado;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

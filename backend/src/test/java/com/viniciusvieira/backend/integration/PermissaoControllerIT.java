@@ -1,10 +1,10 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.PermissaoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PermissaoResponse;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
 import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Permissao;
-import com.viniciusvieira.backend.domain.repository.PermissaoRepository;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
+import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;

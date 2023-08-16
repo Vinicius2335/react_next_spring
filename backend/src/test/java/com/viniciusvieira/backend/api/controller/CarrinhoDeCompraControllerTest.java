@@ -1,15 +1,16 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.api.representation.model.request.CarrinhoDeCompraRequest;
-import com.viniciusvieira.backend.api.representation.model.response.CarrinhoDeCompraResponse;
+import com.viniciusvieira.backend.api.controller.venda.CarrinhoDeCompraController;
+import com.viniciusvieira.backend.api.representation.model.request.venda.CarrinhoDeCompraRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.CarrinhoDeCompraResponse;
 import com.viniciusvieira.backend.domain.exception.CarrinhoDeCompraNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.CarrinhoDeCompra;
-import com.viniciusvieira.backend.domain.model.Cidade;
-import com.viniciusvieira.backend.domain.model.Estado;
-import com.viniciusvieira.backend.domain.repository.CarrinhoCompraRepository;
-import com.viniciusvieira.backend.domain.repository.CidadeRepository;
-import com.viniciusvieira.backend.domain.repository.EstadoRepository;
-import com.viniciusvieira.backend.domain.service.CrudCarrinhoDeCompraService;
+import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
+import com.viniciusvieira.backend.domain.model.usuario.Cidade;
+import com.viniciusvieira.backend.domain.model.usuario.Estado;
+import com.viniciusvieira.backend.domain.repository.venda.CarrinhoCompraRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
+import com.viniciusvieira.backend.domain.service.venda.CrudCarrinhoDeCompraService;
 import com.viniciusvieira.backend.util.CarrinhoDeCompraCreator;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;

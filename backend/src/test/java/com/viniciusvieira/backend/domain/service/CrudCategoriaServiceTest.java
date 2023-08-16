@@ -1,11 +1,12 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.api.mapper.CategoriaMapper;
-import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
+import com.viniciusvieira.backend.api.mapper.venda.CategoriaMapper;
+import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.CategoriaResponse;
 import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.Categoria;
-import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
+import com.viniciusvieira.backend.domain.model.venda.Categoria;
+import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
+import com.viniciusvieira.backend.domain.service.venda.CrudCategoriaService;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

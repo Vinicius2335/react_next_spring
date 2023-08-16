@@ -1,10 +1,11 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
+import com.viniciusvieira.backend.api.controller.venda.MarcaController;
+import com.viniciusvieira.backend.api.representation.model.request.venda.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.MarcaResponse;
 import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Marca;
-import com.viniciusvieira.backend.domain.service.CrudMarcaService;
+import com.viniciusvieira.backend.domain.model.venda.Marca;
+import com.viniciusvieira.backend.domain.service.venda.CrudMarcaService;
 import com.viniciusvieira.backend.util.MarcaCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

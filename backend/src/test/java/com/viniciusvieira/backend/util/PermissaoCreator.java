@@ -1,8 +1,8 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.PermissaoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PermissaoResponse;
-import com.viniciusvieira.backend.domain.model.Permissao;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 
 public abstract class PermissaoCreator {
     public static Permissao mockPermissao(){

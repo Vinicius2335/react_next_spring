@@ -1,12 +1,14 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.api.mapper.ClienteMapper;
-import com.viniciusvieira.backend.api.representation.model.request.ClienteRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
+import com.viniciusvieira.backend.api.mapper.usuario.ClienteMapper;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
-import com.viniciusvieira.backend.domain.model.Permissao;
-import com.viniciusvieira.backend.domain.model.Pessoa;
-import com.viniciusvieira.backend.domain.repository.PessoaRepository;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
+import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
+import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
+import com.viniciusvieira.backend.domain.service.usuario.CrudPermissaoService;
+import com.viniciusvieira.backend.domain.service.usuario.SalvarClienteService;
 import com.viniciusvieira.backend.util.ClienteCreator;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;

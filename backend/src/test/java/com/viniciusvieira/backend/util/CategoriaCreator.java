@@ -1,8 +1,8 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
-import com.viniciusvieira.backend.domain.model.Categoria;
+import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.CategoriaResponse;
+import com.viniciusvieira.backend.domain.model.venda.Categoria;
 
 import java.time.OffsetDateTime;
 

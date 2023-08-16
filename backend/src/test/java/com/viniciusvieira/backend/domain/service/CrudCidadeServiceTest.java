@@ -1,11 +1,12 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.api.mapper.CidadeMapper;
-import com.viniciusvieira.backend.api.representation.model.request.CidadeRequest;
-import com.viniciusvieira.backend.api.representation.model.response.CidadeResponse;
+import com.viniciusvieira.backend.api.mapper.usuario.CidadeMapper;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.CidadeRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.CidadeResponse;
 import com.viniciusvieira.backend.domain.exception.CidadeNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Cidade;
-import com.viniciusvieira.backend.domain.repository.CidadeRepository;
+import com.viniciusvieira.backend.domain.model.usuario.Cidade;
+import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
+import com.viniciusvieira.backend.domain.service.usuario.CrudCidadeService;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

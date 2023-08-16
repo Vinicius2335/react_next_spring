@@ -1,7 +1,7 @@
 package com.viniciusvieira.backend.util;
 
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
-import com.viniciusvieira.backend.domain.model.ProdutoImagem;
+import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
 
 import java.time.OffsetDateTime;
 

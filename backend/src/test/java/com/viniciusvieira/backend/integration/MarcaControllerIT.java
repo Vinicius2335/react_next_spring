@@ -1,10 +1,10 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.MarcaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.MarcaResponse;
+import com.viniciusvieira.backend.api.representation.model.request.venda.MarcaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.MarcaResponse;
 import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Marca;
-import com.viniciusvieira.backend.domain.repository.MarcaRepository;
+import com.viniciusvieira.backend.domain.model.venda.Marca;
+import com.viniciusvieira.backend.domain.repository.venda.MarcaRepository;
 import com.viniciusvieira.backend.util.MarcaCreator;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;

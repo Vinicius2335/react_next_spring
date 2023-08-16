@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.domain.repository;
 
-import com.viniciusvieira.backend.domain.model.Categoria;
+import com.viniciusvieira.backend.domain.model.venda.Categoria;
+import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

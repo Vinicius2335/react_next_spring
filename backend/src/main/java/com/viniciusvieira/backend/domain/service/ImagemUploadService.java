@@ -1,7 +1,7 @@
 package com.viniciusvieira.backend.domain.service;
 
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
-import com.viniciusvieira.backend.domain.model.Produto;
+import com.viniciusvieira.backend.domain.model.venda.Produto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;

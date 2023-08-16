@@ -1,13 +1,13 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.ProdutoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.ProdutoResponse;
+import com.viniciusvieira.backend.api.representation.model.request.venda.ProdutoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;
 import com.viniciusvieira.backend.domain.exception.ProdutoNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.Produto;
-import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
-import com.viniciusvieira.backend.domain.repository.MarcaRepository;
-import com.viniciusvieira.backend.domain.repository.ProdutoImagemRepository;
-import com.viniciusvieira.backend.domain.repository.ProdutoRepository;
+import com.viniciusvieira.backend.domain.model.venda.Produto;
+import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
+import com.viniciusvieira.backend.domain.repository.venda.MarcaRepository;
+import com.viniciusvieira.backend.domain.repository.venda.ProdutoImagemRepository;
+import com.viniciusvieira.backend.domain.repository.venda.ProdutoRepository;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import com.viniciusvieira.backend.util.MarcaCreator;
 import com.viniciusvieira.backend.util.ProdutoCreator;

@@ -1,15 +1,14 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.CidadeIdRequest;
-import com.viniciusvieira.backend.api.representation.model.request.PessoaGerenciamentoRequest;
-import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
-import com.viniciusvieira.backend.domain.model.Pessoa;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.CidadeIdRequest;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaGerenciamentoRequest;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
+import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public abstract class PessoaCreator {

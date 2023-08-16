@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.domain.repository;
 
-import com.viniciusvieira.backend.domain.model.Estado;
+import com.viniciusvieira.backend.domain.model.usuario.Estado;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

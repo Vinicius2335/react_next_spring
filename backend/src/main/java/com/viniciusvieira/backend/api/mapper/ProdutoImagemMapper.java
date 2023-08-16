@@ -1,7 +1,7 @@
 package com.viniciusvieira.backend.api.mapper;
 
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
-import com.viniciusvieira.backend.domain.model.ProdutoImagem;
+import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

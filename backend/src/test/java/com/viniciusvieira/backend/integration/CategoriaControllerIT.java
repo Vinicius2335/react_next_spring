@@ -1,10 +1,10 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.CategoriaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.CategoriaResponse;
+import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.CategoriaResponse;
 import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.Categoria;
-import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
+import com.viniciusvieira.backend.domain.model.venda.Categoria;
+import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;

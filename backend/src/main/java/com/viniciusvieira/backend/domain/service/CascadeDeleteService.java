@@ -1,5 +1,11 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.domain.service.usuario.CrudCidadeService;
+import com.viniciusvieira.backend.domain.service.usuario.CrudEstadoService;
+import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
+import com.viniciusvieira.backend.domain.service.venda.CrudCategoriaService;
+import com.viniciusvieira.backend.domain.service.venda.CrudMarcaService;
+import com.viniciusvieira.backend.domain.service.venda.CrudProdutoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

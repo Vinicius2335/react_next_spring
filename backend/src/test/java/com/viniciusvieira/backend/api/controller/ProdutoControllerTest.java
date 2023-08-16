@@ -1,16 +1,17 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.api.representation.model.request.ProdutoRequest;
+import com.viniciusvieira.backend.api.controller.venda.ProdutoController;
+import com.viniciusvieira.backend.api.representation.model.request.venda.ProdutoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
-import com.viniciusvieira.backend.api.representation.model.response.ProdutoResponse;
+import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;
 import com.viniciusvieira.backend.domain.exception.ProdutoImagemNaoEncontradoException;
 import com.viniciusvieira.backend.domain.exception.ProdutoNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.Categoria;
-import com.viniciusvieira.backend.domain.model.Marca;
-import com.viniciusvieira.backend.domain.model.Produto;
-import com.viniciusvieira.backend.domain.repository.CategoriaRepository;
-import com.viniciusvieira.backend.domain.repository.MarcaRepository;
-import com.viniciusvieira.backend.domain.service.CrudProdutoService;
+import com.viniciusvieira.backend.domain.model.venda.Categoria;
+import com.viniciusvieira.backend.domain.model.venda.Marca;
+import com.viniciusvieira.backend.domain.model.venda.Produto;
+import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
+import com.viniciusvieira.backend.domain.repository.venda.MarcaRepository;
+import com.viniciusvieira.backend.domain.service.venda.CrudProdutoService;
 import com.viniciusvieira.backend.domain.service.ImagemUploadService;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import com.viniciusvieira.backend.util.MarcaCreator;

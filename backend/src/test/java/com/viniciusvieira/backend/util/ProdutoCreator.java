@@ -1,11 +1,11 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.CategoriaIdRequest;
-import com.viniciusvieira.backend.api.representation.model.request.MarcaIdRequest;
-import com.viniciusvieira.backend.api.representation.model.request.ProdutoRequest;
+import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaIdRequest;
+import com.viniciusvieira.backend.api.representation.model.request.venda.MarcaIdRequest;
+import com.viniciusvieira.backend.api.representation.model.request.venda.ProdutoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
-import com.viniciusvieira.backend.api.representation.model.response.ProdutoResponse;
-import com.viniciusvieira.backend.domain.model.Produto;
+import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;
+import com.viniciusvieira.backend.domain.model.venda.Produto;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

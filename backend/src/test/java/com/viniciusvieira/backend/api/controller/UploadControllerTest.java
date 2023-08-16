@@ -1,7 +1,7 @@
 package com.viniciusvieira.backend.api.controller;
 
 import com.viniciusvieira.backend.domain.exception.ProdutoImagemNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.ProdutoImagem;
+import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
 import com.viniciusvieira.backend.domain.service.CrudProdutoImagemService;
 import com.viniciusvieira.backend.util.ProdutoImagemCreator;
 import lombok.extern.log4j.Log4j2;

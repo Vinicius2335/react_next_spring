@@ -1,10 +1,14 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.CarrinhoDeCompraRequest;
-import com.viniciusvieira.backend.api.representation.model.response.CarrinhoDeCompraResponse;
+import com.viniciusvieira.backend.api.representation.model.request.venda.CarrinhoDeCompraRequest;
+import com.viniciusvieira.backend.api.representation.model.response.venda.CarrinhoDeCompraResponse;
 import com.viniciusvieira.backend.domain.exception.CarrinhoDeCompraNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.CarrinhoDeCompra;
-import com.viniciusvieira.backend.domain.repository.*;
+import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
+import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
+import com.viniciusvieira.backend.domain.repository.venda.CarrinhoCompraRepository;
 import com.viniciusvieira.backend.util.*;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;

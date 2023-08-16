@@ -1,9 +1,10 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.api.representation.model.request.ClienteRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
+import com.viniciusvieira.backend.api.controller.usuario.ClienteController;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
-import com.viniciusvieira.backend.domain.service.SalvarClienteService;
+import com.viniciusvieira.backend.domain.service.usuario.SalvarClienteService;
 import com.viniciusvieira.backend.util.ClienteCreator;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;

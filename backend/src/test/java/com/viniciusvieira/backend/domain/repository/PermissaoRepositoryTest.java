@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.domain.repository;
 
-import com.viniciusvieira.backend.domain.model.Permissao;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
+import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

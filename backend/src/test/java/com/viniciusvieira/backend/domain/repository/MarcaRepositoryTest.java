@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.domain.repository;
 
-import com.viniciusvieira.backend.domain.model.Marca;
+import com.viniciusvieira.backend.domain.model.venda.Marca;
+import com.viniciusvieira.backend.domain.repository.venda.MarcaRepository;
 import com.viniciusvieira.backend.util.MarcaCreator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

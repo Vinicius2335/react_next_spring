@@ -1,8 +1,8 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.EstadoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.EstadoResponse;
-import com.viniciusvieira.backend.domain.model.Estado;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.EstadoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.EstadoResponse;
+import com.viniciusvieira.backend.domain.model.usuario.Estado;
 
 import java.time.OffsetDateTime;
 

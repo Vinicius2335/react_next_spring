@@ -1,11 +1,11 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.CidadeRequest;
-import com.viniciusvieira.backend.api.representation.model.response.CidadeResponse;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.CidadeRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.CidadeResponse;
 import com.viniciusvieira.backend.domain.exception.CidadeNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Cidade;
-import com.viniciusvieira.backend.domain.repository.CidadeRepository;
-import com.viniciusvieira.backend.domain.repository.EstadoRepository;
+import com.viniciusvieira.backend.domain.model.usuario.Cidade;
+import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import lombok.extern.log4j.Log4j2;

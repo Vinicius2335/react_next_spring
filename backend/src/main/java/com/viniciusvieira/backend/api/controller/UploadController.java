@@ -1,6 +1,6 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.domain.model.ProdutoImagem;
+import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
 import com.viniciusvieira.backend.domain.service.CrudProdutoImagemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

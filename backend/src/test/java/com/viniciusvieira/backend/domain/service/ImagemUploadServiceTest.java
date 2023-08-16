@@ -1,7 +1,7 @@
 package com.viniciusvieira.backend.domain.service;
 
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
-import com.viniciusvieira.backend.domain.model.Produto;
+import com.viniciusvieira.backend.domain.model.venda.Produto;
 import com.viniciusvieira.backend.util.ProdutoCreator;
 import com.viniciusvieira.backend.util.ProdutoImagemCreator;
 import lombok.extern.log4j.Log4j2;

@@ -1,14 +1,14 @@
 package com.viniciusvieira.backend.integration;
 
-import com.viniciusvieira.backend.api.representation.model.request.PessoaRequest;
-import com.viniciusvieira.backend.api.representation.model.response.PessoaResponse;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Pessoa;
-import com.viniciusvieira.backend.domain.repository.CidadeRepository;
-import com.viniciusvieira.backend.domain.repository.EstadoRepository;
-import com.viniciusvieira.backend.domain.repository.PermissaoRepository;
-import com.viniciusvieira.backend.domain.repository.PessoaRepository;
+import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
+import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
+import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import com.viniciusvieira.backend.util.PermissaoCreator;

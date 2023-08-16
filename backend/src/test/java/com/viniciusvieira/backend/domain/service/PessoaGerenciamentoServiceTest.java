@@ -1,9 +1,11 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.api.representation.model.request.PessoaGerenciamentoRequest;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaGerenciamentoRequest;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.Pessoa;
+import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
+import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
+import com.viniciusvieira.backend.domain.service.usuario.PessoaGerenciamentoService;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

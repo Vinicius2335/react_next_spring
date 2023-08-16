@@ -1,6 +1,9 @@
 package com.viniciusvieira.backend.domain.repository;
 
-import com.viniciusvieira.backend.domain.model.Produto;
+import com.viniciusvieira.backend.domain.model.venda.Produto;
+import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
+import com.viniciusvieira.backend.domain.repository.venda.MarcaRepository;
+import com.viniciusvieira.backend.domain.repository.venda.ProdutoRepository;
 import com.viniciusvieira.backend.util.CategoriaCreator;
 import com.viniciusvieira.backend.util.MarcaCreator;
 import com.viniciusvieira.backend.util.ProdutoCreator;
