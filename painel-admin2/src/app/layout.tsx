@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="flex flex-1">
             <Sidebar />
 
-            {children}
+            <main className="w-full ml-24">{children}</main>
           </div>
         </div>
 

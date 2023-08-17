@@ -2,9 +2,9 @@ import { DataTable } from "@/components/Datatable";
 
 export default function Home() {
   return (
-    <main className="flex-1 p-6">
+    <div className="flex-1 p-10">
       Home
       <DataTable />
-    </main>
+    </div>
   )
 }
