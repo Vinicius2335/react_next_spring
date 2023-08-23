@@ -25,3 +25,7 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.sidebar-icons {
+  @apply text-2xl text-foreground pointer-events-none flex-shrink-0
+}

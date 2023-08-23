@@ -7,7 +7,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
   return (
     <div>
       <Navbar />
-      <main className="w-full mt-28 flex items-center justify-center">
+      <main className="w-full mt-8 flex flex-col items-center justify-center">
             {children}
             <Footer />
       </main>
