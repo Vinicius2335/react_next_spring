@@ -1,5 +1,6 @@
 "use client"
 
+import Footer from "@/components/layout/Footer"
 import { Navbar } from "@/components/layout/Navbar"
 
 export default function UserLayout({ children }: { children: React.ReactNode }) {
@@ -8,7 +9,7 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
       <Navbar />
       <main className="w-full mt-28 flex items-center justify-center">
             {children}
-            {/* <Footer /> */}
+            <Footer />
       </main>
     </div>
   )
