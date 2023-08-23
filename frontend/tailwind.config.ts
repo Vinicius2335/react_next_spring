@@ -15,6 +15,11 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      colors: {
+        "sakai-bg": "#1e1e1e",
+        "sakai-bg-hover": "hsla(0,0%,100%,.04)",
+        "sakai-primary": "#9FA8DA"
+      },
     },
   },
   darkMode: "class",
