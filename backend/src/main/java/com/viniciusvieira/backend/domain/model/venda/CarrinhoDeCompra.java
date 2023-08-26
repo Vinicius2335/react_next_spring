@@ -19,7 +19,7 @@ import java.time.OffsetDateTime;
 @Table(name = "carrinho_compra")
 public class CarrinhoDeCompra {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -34,6 +34,7 @@ public class CarrinhoDeCompra {
     @UpdateTimestamp
     private OffsetDateTime dataAtualizacao;
 
+    // 1 pessoa possue 0 ou * carrinho de compra
     @ManyToOne
     @JoinColumn(name = "pessoa_id")
     private Pessoa pessoa;

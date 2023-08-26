@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class PermissaoRequest {
-    @NotBlank(message = "Nome não pode ser nulo ou vazio")
+    @NotBlank(message = "NOME não pode ser nulo ou vazio")
     private String nome;
 }

@@ -1,7 +1,6 @@
 package com.viniciusvieira.backend.util;
 
 import com.viniciusvieira.backend.api.representation.model.request.venda.CarrinhoDeCompraRequest;
-import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaIdRequest;
 import com.viniciusvieira.backend.api.representation.model.response.venda.CarrinhoDeCompraResponse;
 import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
 

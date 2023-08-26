@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +35,7 @@ public class ClienteRequest {
     @CepValidation
     private String cep;
 
-    @Valid
-    @NotNull
-    private CidadeIdRequest cidade;
+    @NotNull(message = "CIDADE_ID não pode ser nulo")
+    @Positive(message = "CIDADE_ID não pode ser negativo ou zero")
+    private Long cidadeId;
 }

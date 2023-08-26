@@ -1,7 +1,5 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaIdRequest;
-import com.viniciusvieira.backend.api.representation.model.request.venda.MarcaIdRequest;
 import com.viniciusvieira.backend.api.representation.model.request.venda.ProdutoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
 import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;

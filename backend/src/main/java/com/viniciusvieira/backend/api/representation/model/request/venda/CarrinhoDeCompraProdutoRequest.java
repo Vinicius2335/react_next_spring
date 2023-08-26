@@ -18,12 +18,18 @@ public class CarrinhoDeCompraProdutoRequest {
     @NotNull(message = "VALOR não pode ser nulo")
     @Positive(message = "VALOR não pode ser negativo")
     private BigDecimal valor;
+
     @Positive(message = "QUANTIDADE não pode ser negativo")
     private int quantidade;
+
     // pode ser vazio ou nulo
     private String observacao;
-    @Valid
-    private ProdutoIdRequest produto;
-    @Valid
-    private CarrinhoDeCompraIdRequest carrinhoCompra;
+
+    @NotNull(message = "PRODUTO_ID não pode ser nulo")
+    @Positive(message = "PRODUTO_ID não pode ser negativo ou zero")
+    private Long produtoId;
+
+    @NotNull(message = "ID Carrinho de compra não pode ser nulo")
+    @Positive(message = "CARRINHO_COMPRA_ID não pode ser negativo ou zero")
+    private Long carrinhoCompraId;
 }

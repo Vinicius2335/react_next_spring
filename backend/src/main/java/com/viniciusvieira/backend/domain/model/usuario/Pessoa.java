@@ -23,7 +23,7 @@ import java.util.Objects;
 @Table(name = "pessoa")
 public class Pessoa {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -45,7 +45,6 @@ public class Pessoa {
 
     private String codigoRecuperacaoSenha;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dataEnvioCodigo;
 
     @CreationTimestamp

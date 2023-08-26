@@ -18,7 +18,7 @@ import java.time.OffsetDateTime;
 @Table(name = "cidade")
 public class Cidade {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

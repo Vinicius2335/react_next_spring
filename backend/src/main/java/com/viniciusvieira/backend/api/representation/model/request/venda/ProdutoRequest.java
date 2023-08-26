@@ -32,11 +32,11 @@ public class ProdutoRequest {
     @Positive(message = "Valor de Venda não pode ser negativo")
     private BigDecimal valorVenda;
 
-    @Valid
-    @NotNull(message = "Id Marca não pode ser nulo")
-    private MarcaIdRequest marca;
+    @NotNull(message = "MARCA_ID não pode ser nulo")
+    @Positive(message = "MARCA_ID não pode ser negatiovo ou zero")
+    private Long marcaId;
 
-    @Valid
-    @NotNull(message = "Id Categoria não pode ser nulo")
-    private CategoriaIdRequest categoria;
+    @NotNull(message = "CATEGORIA_ID não pode ser nulo")
+    @Positive(message = "CATEGORIA_ID não pode ser negatiovo ou zero")
+    private Long categoriaId;
 }

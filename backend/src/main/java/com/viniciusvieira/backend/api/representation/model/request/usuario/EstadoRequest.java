@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class EstadoRequest {
-    @NotBlank(message = "Nome não pode ser nulo ou vazio")
+    @NotBlank(message = "NOME não pode ser nulo ou vazio")
     private String nome;
 
-    @NotBlank(message = "Sigla não pode ser nulo ou vazio")
+    @NotBlank(message = "SIGLA não pode ser nulo ou vazio")
     private String sigla;
 }

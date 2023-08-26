@@ -20,7 +20,7 @@ import java.time.OffsetDateTime;
 @Table(name = "produto")
 public class Produto {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -52,7 +52,4 @@ public class Produto {
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    @ManyToOne
-    @JsonIgnore
-    private CarrinhoDeCompraProduto carrinhoDeCompraProduto;
 }

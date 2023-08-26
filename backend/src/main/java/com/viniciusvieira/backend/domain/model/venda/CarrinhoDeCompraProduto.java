@@ -19,7 +19,7 @@ import java.time.OffsetDateTime;
 @Table(name = "carrinho_compra_produto")
 public class CarrinhoDeCompraProduto {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -31,18 +31,16 @@ public class CarrinhoDeCompraProduto {
     private String observacao;
 
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     private OffsetDateTime dataAtualizacao;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "carrinho_compra_id", nullable = false)
     private CarrinhoDeCompra carrinhoDeCompra;
 
