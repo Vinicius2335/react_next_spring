@@ -4,6 +4,7 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Pesso
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
@@ -51,10 +52,15 @@ class PessoaControllerIT {
     private static final String URL = "/api/pessoas";
 
     public Pessoa inserirNovaPessoaNoBanco(){
-        permissaoRepository.saveAndFlush(PermissaoCreator.mockPermissao());
+        Permissao permissao = permissaoRepository.saveAndFlush(PermissaoCreator.mockPermissao());
         estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         cidadeRepository.saveAndFlush(CidadeCreator.mockCidade());
-        return pessoaRepository.saveAndFlush(PessoaCreator.mockPessoa());
+        Pessoa pessoa = PessoaCreator.mockPessoa();
+        pessoa.adicionarPermissao(permissao);
+        Pessoa pessoaInserida = pessoaRepository.saveAndFlush(pessoa);
+        System.out.println("DENTRO DE INSERIR NOVA PESSOA NO BANCO");
+        System.out.println(pessoaInserida);
+        return pessoaInserida;
     }
 
     @Test

@@ -42,7 +42,11 @@ public class EstadoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id){
-        cascadeDeleteService.cascadeDeleteEstado(id);
+        Estado estado = crudEstadoService.buscarPeloId(id);
+        if (estado != null){
+            cascadeDeleteService.cascadeDeleteEstado(id);
+        }
+
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

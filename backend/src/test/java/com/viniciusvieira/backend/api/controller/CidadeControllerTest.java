@@ -5,6 +5,7 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Cidad
 import com.viniciusvieira.backend.api.representation.model.response.usuario.CidadeResponse;
 import com.viniciusvieira.backend.domain.exception.CidadeNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Cidade;
+import com.viniciusvieira.backend.domain.service.CascadeDeleteService;
 import com.viniciusvieira.backend.domain.service.usuario.CrudCidadeService;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,8 @@ class CidadeControllerTest {
     private CidadeController cidadeController;
     @Mock
     private CrudCidadeService mockCrudCidadeService;
+    @Mock
+    private CascadeDeleteService mockCascadeDeleteService;
 
     private final Cidade validCidade = CidadeCreator.mockCidade();
     private final CidadeResponse expectedCidade = CidadeCreator.mockCidadeResponse();
@@ -47,6 +50,9 @@ class CidadeControllerTest {
         BDDMockito.when(mockCrudCidadeService.alterar(anyLong(), any(CidadeRequest.class))).thenReturn(expectedCidadeUpdate);
         // excluir
         BDDMockito.doNothing().when(mockCrudCidadeService).excluir(anyLong());
+
+        // CascadeDeleteService
+        BDDMockito.doNothing().when(mockCascadeDeleteService).cascadeDeleteCidade(anyLong());
     }
 
     @Test
@@ -113,7 +119,7 @@ class CidadeControllerTest {
     @Test
     @DisplayName("excluir Throws CidadeNaoEncontradoException When cidade not found")
     void excluir_ThrowsCidadeNaoEncontradoException_WhenCidadeNotFound() {
-        BDDMockito.doThrow(CidadeNaoEncontradaException.class).when(mockCrudCidadeService).excluir(anyLong());
+        BDDMockito.doThrow(CidadeNaoEncontradaException.class).when(mockCrudCidadeService).buscarPeloId(anyLong());
 
         assertThrows(CidadeNaoEncontradaException.class, () -> cidadeController.excluir(9L));
     }

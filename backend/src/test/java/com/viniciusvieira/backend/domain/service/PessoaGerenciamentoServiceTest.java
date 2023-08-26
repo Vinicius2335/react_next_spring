@@ -18,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -88,9 +89,14 @@ class PessoaGerenciamentoServiceTest {
     void alterarSenha_ThrowsNegocioException_WhenCodigoExpirado(){
         Pessoa pessoaComDataExpirada = PessoaCreator.mockPessoaComCodigo();
 
-        Date data = new Date();
-        data.setMinutes(data.getMinutes() + 17);
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(data.toInstant(), ZoneId.systemDefault());
+        // TEST - refeito usando calendar
+        //Date data = new Date();
+        //data.setMinutes(data.getMinutes() + 17);
+        //LocalDateTime localDateTime = LocalDateTime.ofInstant(data.toInstant(), ZoneId.systemDefault());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 17);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
 
         pessoaComDataExpirada.setDataEnvioCodigo(localDateTime);
         BDDMockito.when(mockCrudPessoaService.buscarPeloEmailECodigo(anyString(), anyString())).thenReturn(pessoaComDataExpirada);

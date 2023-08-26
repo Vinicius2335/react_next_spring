@@ -26,6 +26,7 @@ public class SalvarClienteService {
         Pessoa cliente = clienteMapper.toDomainPessoa(clienteRequest);
         boolean isCpfEmUso = pessoaRepository.findByCpf(cliente.getCpf()).isPresent();
 
+        // TODO - CpfAlreadyExistsException
         if (isCpfEmUso){
             throw new NegocioException("Já existe uma pessoa cadastrada com esse CPF");
         }
@@ -44,6 +45,7 @@ public class SalvarClienteService {
                 "Cadastro na Loja Tabajara",
                 propriedades
         );
+
         return clienteMapper.toPessoaResponse(clienteSalvo);
     }
 

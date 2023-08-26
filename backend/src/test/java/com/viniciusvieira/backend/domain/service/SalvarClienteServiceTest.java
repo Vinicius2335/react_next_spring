@@ -42,6 +42,10 @@ class SalvarClienteServiceTest {
     private ClienteMapper mockClienteMapper;
     @Mock
     private CrudPermissaoService mockCrudPermissaoService;
+    @Mock
+    private EmailService mockEmailService;
+
+    private final Pessoa validPessoa = PessoaCreator.mockPessoa();
 
     @BeforeEach
     void setUp(){
@@ -63,9 +67,13 @@ class SalvarClienteServiceTest {
         // CrudPermissaoService
         // buscarPeloNome
         Permissao permissao = PermissaoCreator.mockPermissao();
-        permissao.setPessoas(new ArrayList<>(List.of(PessoaCreator.mockPessoa())));
+        permissao.addNewPessoa(validPessoa);
         BDDMockito.when(mockCrudPermissaoService.buscarPeloNome(anyString()))
                 .thenReturn(permissao);
+
+        // EmailService
+        // sendEmailTemplate
+        BDDMockito.doNothing().when(mockEmailService).sendEmailTemplate(anyString(), anyString(), anyMap());
 
     }
 

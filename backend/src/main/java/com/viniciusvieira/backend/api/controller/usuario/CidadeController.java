@@ -40,8 +40,11 @@ public class CidadeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id){
-//        crudCidadeService.excluir(id);
-        cascadeDeleteService.cascadeDeleteCidade(id);
+        Cidade cidade = crudCidadeService.buscarPeloId(id);
+        if (cidade != null){
+            cascadeDeleteService.cascadeDeleteCidade(id);
+        }
+
         return ResponseEntity.noContent().build();
     }
 

@@ -13,6 +13,7 @@ import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
 import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;
+import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,6 +51,7 @@ class PessoaControllerTest {
 
     @BeforeEach
     void setUp() {
+        validPessoa.adicionarPermissao(PermissaoCreator.mockPermissao());
         // EstadoRepository - saveAndFlush
         BDDMockito.when(mockEstadoRepository.saveAndFlush(any(Estado.class))).thenReturn(EstadoCreator.mockEstado());
         // CidadeRepository - saveAndFlush

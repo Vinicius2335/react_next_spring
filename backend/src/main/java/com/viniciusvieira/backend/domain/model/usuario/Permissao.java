@@ -2,10 +2,7 @@ package com.viniciusvieira.backend.domain.model.usuario;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -33,7 +30,25 @@ public class Permissao {
     @UpdateTimestamp
     private OffsetDateTime dataAtualizacao;
 
-    @ManyToMany(mappedBy = "permissoes", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToMany(
+            mappedBy = "permissoes",
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST},
+            fetch = FetchType.LAZY
+    )
     @JsonIgnore
+    @Setter(AccessLevel.NONE)
+    @ToString.Exclude
     private List<Pessoa> pessoas = new ArrayList<>();
+
+    // TEST
+    public void addNewPessoa(Pessoa pessoa){
+        this.getPessoas().add(pessoa);
+        pessoa.getPermissoes().add(this);
+    }
+
+    // TEST - verificar se o removeIf funciona como eu quero
+    public void removePessoa(Pessoa pessoa){
+        getPessoas().removeIf(pessoa1 -> pessoa1.getId().equals(pessoa.getId()));
+        pessoa.getPermissoes().remove(this);
+    }
 }

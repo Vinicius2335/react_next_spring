@@ -2,9 +2,16 @@ package com.viniciusvieira.backend.api.mapper.venda;
 
 import com.viniciusvieira.backend.api.representation.model.request.venda.ProdutoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;
+import com.viniciusvieira.backend.domain.model.venda.Categoria;
+import com.viniciusvieira.backend.domain.model.venda.Marca;
 import com.viniciusvieira.backend.domain.model.venda.Produto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.modelmapper.TypeMap;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -19,4 +26,5 @@ public class ProdutoMapper {
     public ProdutoResponse toProdutoResponse(Produto produto){
         return modelMapper.map(produto, ProdutoResponse.class);
     }
+
 }

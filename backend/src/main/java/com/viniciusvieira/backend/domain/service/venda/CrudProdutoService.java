@@ -29,8 +29,11 @@ public class CrudProdutoService {
 
     @Transactional
     public ProdutoResponse inserir(ProdutoRequest produtoRequest) {
+        System.out.println("---------------------------------------------");
         Produto produtoParaSalvar = produtoMapper.toDomainProduto(produtoRequest);
+        System.out.println("ProdutoParaSalvar " +produtoParaSalvar);
         Produto produtoSalva = produtoRepository.saveAndFlush(produtoParaSalvar);
+        System.out.println("ProdutoSalvo " + produtoSalva);
 
         return produtoMapper.toProdutoResponse(produtoSalva);
     }

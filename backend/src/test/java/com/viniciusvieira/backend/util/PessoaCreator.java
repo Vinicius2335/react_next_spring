@@ -21,7 +21,7 @@ public abstract class PessoaCreator {
                 .senha("teste")
                 .email("teste@gmail.com")
                 .endereco("rua teste")
-                .permissoes(new ArrayList<>(List.of(PermissaoCreator.mockPermissao())))
+                .permissoes(new ArrayList<>())
                 .build();
     }
 
@@ -37,7 +37,7 @@ public abstract class PessoaCreator {
                 .endereco("rua teste")
                 .codigoRecuperacaoSenha("Teste")
                 .dataEnvioCodigo(LocalDateTime.now())
-                .permissoes(new ArrayList<>(List.of(PermissaoCreator.mockPermissao())))
+                .permissoes(new ArrayList<>())
                 .build();
     }
 
@@ -52,7 +52,7 @@ public abstract class PessoaCreator {
                 .email("update@gmail.com")
                 .endereco("rua teste update")
                 .dataCriacao(dataCriacao)
-                .permissoes(new ArrayList<>(List.of(PermissaoCreator.mockPermissao())))
+                .permissoes(new ArrayList<>())
                 .build();
     }
 
@@ -88,7 +88,7 @@ public abstract class PessoaCreator {
                 .senha("teste")
                 .email("teste@gmail.com")
                 .endereco("rua teste")
-                .cidade(new CidadeIdRequest(1L))
+                .cidadeId(1L)
                 .nomePermissao(PermissaoCreator.mockPermissao().getNome())
                 .build();
     }
@@ -109,7 +109,7 @@ public abstract class PessoaCreator {
                 .senha("update")
                 .email("update@gmail.com")
                 .endereco("rua teste update")
-                .cidade(new CidadeIdRequest(1L))
+                .cidadeId(1L)
                 .nomePermissao(PermissaoCreator.mockPermissao().getNome())
                 .build();
     }
@@ -122,7 +122,7 @@ public abstract class PessoaCreator {
                 .senha(null)
                 .email(null)
                 .endereco(null)
-                .cidade(null)
+                .cidadeId(0L)
                 .nomePermissao(null)
                 .build();
     }

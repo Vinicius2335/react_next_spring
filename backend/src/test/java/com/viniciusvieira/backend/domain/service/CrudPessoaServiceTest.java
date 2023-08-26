@@ -93,7 +93,7 @@ class CrudPessoaServiceTest {
         // CrudPermissaoService
         // buscarPeloNome
         Permissao permissao = PermissaoCreator.mockPermissao();
-        permissao.setPessoas(new ArrayList<>(List.of(PessoaCreator.mockPessoa())));
+        permissao.addNewPessoa(validPessoa);
         BDDMockito.when(mockCrudPermissaoService.buscarPeloNome(anyString())).thenReturn(permissao);
 
     }

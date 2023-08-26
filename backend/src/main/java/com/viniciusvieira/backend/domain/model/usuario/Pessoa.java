@@ -1,11 +1,9 @@
 package com.viniciusvieira.backend.domain.model.usuario;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -57,16 +55,19 @@ public class Pessoa {
     @JoinColumn(name = "cidade_id")
     private Cidade cidade;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    // TEST - Campo agora é final
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "pessoa_permissao",
             joinColumns = @JoinColumn(name = "id_pessoa"),
             inverseJoinColumns = @JoinColumn(name = "id_permissao")
     )
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
     private List<Permissao> permissoes = new ArrayList<>();
 
     public void adicionarPermissao(Permissao permissao){
-        this.permissoes.add(permissao);
+        this.getPermissoes().add(permissao);
         permissao.getPessoas().add(this);
     }
 
@@ -75,7 +76,7 @@ public class Pessoa {
                 .filter(permissao -> Objects.equals(permissao.getId(), idPermissao))
                 .findFirst()
                 .orElseThrow(() -> new PermissaoNaoEncontradaException("Permissao nao cadastrada ou nao registrada para essa pessoa"));
-        this.permissoes.remove(permissaoParaRemover);
+        this.getPermissoes().remove(permissaoParaRemover);
         permissaoParaRemover.getPessoas().remove(this);
     }
 }

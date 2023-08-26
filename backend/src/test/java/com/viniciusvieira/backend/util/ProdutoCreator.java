@@ -1,6 +1,8 @@
 package com.viniciusvieira.backend.util;
 
 import com.viniciusvieira.backend.api.representation.model.request.venda.ProdutoRequest;
+import com.viniciusvieira.backend.api.representation.model.request.venda.ids.CategoriaId;
+import com.viniciusvieira.backend.api.representation.model.request.venda.ids.MarcaId;
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
 import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;
 import com.viniciusvieira.backend.domain.model.venda.Produto;
@@ -67,8 +69,8 @@ public abstract class ProdutoCreator {
                 .descricaoDetalhada("Computador Teste")
                 .valorCusto(new BigDecimal("10.00"))
                 .valorVenda(new BigDecimal("20.00"))
-                .marca(new MarcaIdRequest(1L))
-                .categoria(new CategoriaIdRequest(1L))
+                .marca(new MarcaId(1L))
+                .categoria(new CategoriaId(1L))
                 .build();
     }
 
@@ -79,8 +81,8 @@ public abstract class ProdutoCreator {
                 .descricaoDetalhada("Celular Teste")
                 .valorCusto(new BigDecimal("20.00"))
                 .valorVenda(new BigDecimal("40.00"))
-                .marca(new MarcaIdRequest(1L))
-                .categoria(new CategoriaIdRequest(1L))
+                .marca(new MarcaId(1L))
+                .categoria(new CategoriaId(1L))
                 .build();
     }
 

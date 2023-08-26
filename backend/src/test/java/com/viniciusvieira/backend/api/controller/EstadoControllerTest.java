@@ -5,6 +5,7 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Estad
 import com.viniciusvieira.backend.api.representation.model.response.usuario.EstadoResponse;
 import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.usuario.Estado;
+import com.viniciusvieira.backend.domain.service.CascadeDeleteService;
 import com.viniciusvieira.backend.domain.service.usuario.CrudEstadoService;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,8 @@ class EstadoControllerTest {
 
     @Mock
     private CrudEstadoService mockCrudEstadoService;
+    @Mock
+    private CascadeDeleteService mockCascadeDeleteService;
 
     private final Estado validEstado = EstadoCreator.mockEstado();
     private final EstadoResponse expectedEstado = EstadoCreator.mockEstadoResponse();
@@ -42,18 +45,17 @@ class EstadoControllerTest {
     void setUp() {
         // buscarTodos
         BDDMockito.when(mockCrudEstadoService.buscarTodos()).thenReturn(expectedListEstados);
-
         // buscarPeloId
         BDDMockito.when(mockCrudEstadoService.buscarPeloId(anyLong())).thenReturn(validEstado);
-
         // inserir
         BDDMockito.when(mockCrudEstadoService.inserir(any(EstadoRequest.class))).thenReturn(expectedEstado);
-
         // alterar
         BDDMockito.when(mockCrudEstadoService.alterar(anyLong(), any(EstadoRequest.class))).thenReturn(expectedEstadoUpdated);
-
         // excluir
         BDDMockito.doNothing().when(mockCrudEstadoService).excluir(anyLong());
+
+        // CascadeDeleteService
+        BDDMockito.doNothing().when(mockCascadeDeleteService).cascadeDeleteEstado(anyLong());
     }
 
     @Test
@@ -119,7 +121,7 @@ class EstadoControllerTest {
     @Test
     @DisplayName("excluir Throws EstadoNaoEncontradoException When estado not found")
     void excluir_ThrowsEstadoNaoEncontradoException_WhenEstadoNotFound() {
-        BDDMockito.doThrow(EstadoNaoEncontradoException.class).when(mockCrudEstadoService).excluir(anyLong());
+        BDDMockito.doThrow(EstadoNaoEncontradoException.class).when(mockCrudEstadoService).buscarPeloId(anyLong());
 
         assertThrows(EstadoNaoEncontradoException.class, () -> estadoController.excluir(1L));
     }

@@ -44,6 +44,7 @@ class ClienteControllerIT {
 
     @Test
     @DisplayName("inserir Save pessoa cliente and return statusCode 201 When successful")
+    // COMMENT - Tem que configurar as variaveis de ambiente para o envio de email para nao dar erro
     void inserir_SaveClienteAndReturn201_WhenSuccessful(){
         estadoRepository.saveAndFlush(EstadoCreator.mockEstado());
         cidadeRepository.saveAndFlush(CidadeCreator.mockCidade());

@@ -4,11 +4,14 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Permi
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 
+import java.util.ArrayList;
+
 public abstract class PermissaoCreator {
     public static Permissao mockPermissao(){
         return Permissao.builder()
                 .id(1L)
                 .nome("Usuário")
+                .pessoas(new ArrayList<>())
                 .build();
     }
 
@@ -16,6 +19,7 @@ public abstract class PermissaoCreator {
         return Permissao.builder()
                 .id(2L)
                 .nome("CLIENTE")
+                .pessoas(new ArrayList<>())
                 .build();
     }
 
@@ -23,6 +27,7 @@ public abstract class PermissaoCreator {
         return Permissao.builder()
                 .id(1L)
                 .nome("Usuário")
+                .pessoas(new ArrayList<>())
                 .build();
     }
 

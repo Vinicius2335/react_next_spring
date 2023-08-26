@@ -43,7 +43,7 @@ public abstract class CarrinhoDeCompraCreator {
         return CarrinhoDeCompraRequest.builder()
                 .situacao("carrinho de compra")
                 .observacao("carrinho de compra")
-                .pessoa(new PessoaIdRequest(1L))
+                .pessoaId(1L)
                 .build();
     }
 
@@ -51,7 +51,7 @@ public abstract class CarrinhoDeCompraCreator {
         return CarrinhoDeCompraRequest.builder()
                 .situacao("teste")
                 .observacao("teste")
-                .pessoa(new PessoaIdRequest(1L))
+                .pessoaId(1L)
                 .build();
     }
 
@@ -59,7 +59,7 @@ public abstract class CarrinhoDeCompraCreator {
         return CarrinhoDeCompraRequest.builder()
                 .situacao(null)
                 .observacao(null)
-                .pessoa(null)
+                .pessoaId(0L)
                 .build();
     }
 }

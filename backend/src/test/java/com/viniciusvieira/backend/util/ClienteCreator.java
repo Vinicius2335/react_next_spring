@@ -10,7 +10,7 @@ public abstract class ClienteCreator {
                 .cpf(PessoaCreator.mockPessoa().getCpf())
                 .nome("Cliente Teste")
                 .email("cliente@gmail.com")
-                .cidade(new CidadeIdRequest(1L))
+                .cidadeId(1L)
                 .endereco("Endereço do cliente para teste")
                 .build();
     }
@@ -21,7 +21,7 @@ public abstract class ClienteCreator {
                 .cpf("")
                 .nome(null)
                 .email("")
-                .cidade(new CidadeIdRequest(1L))
+                .cidadeId(0L)
                 .endereco(null)
                 .build();
     }
@@ -29,7 +29,7 @@ public abstract class ClienteCreator {
     public static PessoaResponse mockClientePessoaResponse(){
         return PessoaResponse.builder()
                 .cep("01001-002")
-                .cpf("791.419.531-69")
+                .cpf(PessoaCreator.mockPessoa().getCpf())
                 .nome("Cliente Teste")
                 .email("cliente@gmail.com")
                 .endereco("Endereço do cliente para teste")

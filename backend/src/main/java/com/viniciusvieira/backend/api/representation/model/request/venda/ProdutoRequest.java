@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.api.representation.model.request.venda;
 
+import com.viniciusvieira.backend.api.representation.model.request.venda.ids.CategoriaId;
+import com.viniciusvieira.backend.api.representation.model.request.venda.ids.MarcaId;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -32,11 +34,9 @@ public class ProdutoRequest {
     @Positive(message = "Valor de Venda não pode ser negativo")
     private BigDecimal valorVenda;
 
-    @NotNull(message = "MARCA_ID não pode ser nulo")
-    @Positive(message = "MARCA_ID não pode ser negatiovo ou zero")
-    private Long marcaId;
+    @Valid
+    private MarcaId marca;
 
-    @NotNull(message = "CATEGORIA_ID não pode ser nulo")
-    @Positive(message = "CATEGORIA_ID não pode ser negatiovo ou zero")
-    private Long categoriaId;
+    @Valid
+    private CategoriaId categoria;
 }

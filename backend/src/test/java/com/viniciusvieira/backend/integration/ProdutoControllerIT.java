@@ -109,6 +109,7 @@ class ProdutoControllerIT {
         categoriaRepository.saveAndFlush(CategoriaCreator.mockCategoria());
 
         ProdutoRequest novoProduto = ProdutoCreator.mockProdutoRequestToSave();
+
         ResponseEntity<ProdutoResponse> response = testRestTemplate.exchange(
                 URL,
                 POST,

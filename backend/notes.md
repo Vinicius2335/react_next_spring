@@ -48,3 +48,5 @@
 - CarrinhoDeCompraProdutoRepository
 - CrudCarrinhoDeCompraProdutoService
 - CarrinhoDeCompraProdutoController
+- CascadeService
+- EmailService
