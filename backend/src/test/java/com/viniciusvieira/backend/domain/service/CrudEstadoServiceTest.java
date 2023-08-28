@@ -1,12 +1,5 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.api.mapper.usuario.EstadoMapper;
-import com.viniciusvieira.backend.api.representation.model.request.usuario.EstadoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.usuario.EstadoResponse;
-import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.usuario.Estado;
-import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
-import com.viniciusvieira.backend.domain.service.usuario.CrudEstadoService;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

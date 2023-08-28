@@ -86,17 +86,4 @@ public class CrudPessoaService {
         pessoaRepository.saveAndFlush(pessoa);
     }
 
-    public void excluirTodasPessoasRelacionadasCidadeId(Long cidadeId){
-        List<Pessoa> pessoas = pessoaRepository.findAllPessoasByCidadeId(cidadeId);
-        if (!pessoas.isEmpty()){
-            pessoas.forEach(pessoaRepository::delete);
-        }
-    }
-
-    public void excluirTodasPessoasRelacionadasEstadoId(Long estadoId){
-        List<Pessoa> pessoas = pessoaRepository.findPessoasByCidadeEstadoId(estadoId);
-        if (!pessoas.isEmpty()){
-            pessoas.forEach(pessoaRepository::delete);
-        }
-    }
 }

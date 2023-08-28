@@ -1,12 +1,6 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.api.controller.usuario.EstadoController;
-import com.viniciusvieira.backend.api.representation.model.request.usuario.EstadoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.usuario.EstadoResponse;
-import com.viniciusvieira.backend.domain.exception.EstadoNaoEncontradoException;
-import com.viniciusvieira.backend.domain.model.usuario.Estado;
 import com.viniciusvieira.backend.domain.service.CascadeDeleteService;
-import com.viniciusvieira.backend.domain.service.usuario.CrudEstadoService;
 import com.viniciusvieira.backend.util.EstadoCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

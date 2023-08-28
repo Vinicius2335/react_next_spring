@@ -4,8 +4,6 @@ import com.viniciusvieira.backend.api.representation.model.request.venda.Carrinh
 import com.viniciusvieira.backend.api.representation.model.response.venda.CarrinhoDeCompraResponse;
 import com.viniciusvieira.backend.domain.exception.CarrinhoDeCompraNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
-import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
-import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.domain.repository.venda.CarrinhoCompraRepository;

@@ -55,5 +55,5 @@ public class SalvarClienteService {
 
 /*
 //        emailService.sendEmailSimples(clienteSalvo.getEmail(), "Cadastro na Loja Tabajara",
-//                "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
+//        "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail")
  */

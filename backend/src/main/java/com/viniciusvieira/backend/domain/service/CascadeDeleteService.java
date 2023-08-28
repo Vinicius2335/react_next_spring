@@ -1,7 +1,5 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.domain.service.usuario.CrudCidadeService;
-import com.viniciusvieira.backend.domain.service.usuario.CrudEstadoService;
 import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
 import com.viniciusvieira.backend.domain.service.venda.CrudCategoriaService;
 import com.viniciusvieira.backend.domain.service.venda.CrudMarcaService;
@@ -13,39 +11,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class CascadeDeleteService {
-    private final CrudEstadoService crudEstadoService;
-    private final CrudCidadeService crudCidadeService;
     private final CrudPessoaService crudPessoaService;
     private final CrudMarcaService crudMarcaService;
     private final CrudCategoriaService crudCategoriaService;
     private final CrudProdutoService crudProdutoService;
 
-    @Transactional
-    public void cascadeDeleteEstado(Long estadoId){
-        // verifica se o estado existe
-        crudEstadoService.buscarPeloId(estadoId);
-        // exclui todas as permissoes/pessosas relacionadas Estado ID
-        crudPessoaService.excluirTodasPessoasRelacionadasEstadoId(estadoId);
-        // exclui todas as cidades relacionada ao estado ID
-        crudCidadeService.excluirTodasCidadesRelacionadosEstadoId(estadoId);
-        // exclui estado
-        crudEstadoService.excluir(estadoId);
-    }
-
-    @Transactional
-    public void cascadeDeleteCidade(Long cidadeId){
-        // verifico se cidade existe
-        crudCidadeService.buscarPeloId(cidadeId);
-        // exclui todas as pessoas relacionadas com cidadeId
-        crudPessoaService.excluirTodasPessoasRelacionadasCidadeId(cidadeId);
-        // exclui cidade
-        crudCidadeService.excluir(cidadeId);
-    }
 
     @Transactional
     public void cascadeDeleteMarca(Long marcaId){
+        // verifico se marca existe
         crudMarcaService.buscarPeloId(marcaId);
+        // exclui todos os produtos relacionados com marcaId
         crudProdutoService.excluirTodosProdutosRelacionadosMarcaId(marcaId);
+        // exclui marca
         crudMarcaService.excluir(marcaId);
     }
 

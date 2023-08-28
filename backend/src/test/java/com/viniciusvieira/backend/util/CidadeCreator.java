@@ -1,9 +1,5 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.usuario.CidadeRequest;
-import com.viniciusvieira.backend.api.representation.model.response.usuario.CidadeResponse;
-import com.viniciusvieira.backend.domain.model.usuario.Cidade;
-
 import java.time.OffsetDateTime;
 
 public abstract class CidadeCreator {

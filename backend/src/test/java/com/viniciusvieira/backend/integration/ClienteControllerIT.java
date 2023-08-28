@@ -2,8 +2,6 @@ package com.viniciusvieira.backend.integration;
 
 import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
-import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
-import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.util.*;

@@ -28,14 +28,6 @@ public class ClienteRequest {
     @Email
     private String email;
 
-    @NotBlank(message = "ENDERECO não pode ser nulo ou em branco")
-    private String endereco;
-
-    @NotBlank(message = "CEP não pode ser nulo ou em branco")
-    @CepValidation
-    private String cep;
-
-    @NotNull(message = "CIDADE_ID não pode ser nulo")
-    @Positive(message = "CIDADE_ID não pode ser negativo ou zero")
-    private Long cidadeId;
+   @Valid
+   private EnderecoRequest endereco;
 }

@@ -31,17 +31,9 @@ public class PessoaRequest {
     @NotBlank(message = "SENHA não pode ser nulo ou em branco")
     private String senha;
 
-    @NotBlank(message = "ENDERECO não pode ser nulo ou em branco")
-    private String endereco;
-
-    @NotBlank(message = "CEP não pode ser nulo ou em branco")
-    @CepValidation
-    private String cep;
+    @Valid
+    private EnderecoRequest endereco;
 
     @NotBlank(message = "NOME da Permissao nao pode ser nulo ou em branco")
     private String nomePermissao;
-
-    @NotNull(message = "CIDADE_ID não pode ser nulo")
-    @Positive(message = "CIDADE_ID não pode ser negatiovo ou zero")
-    private Long cidadeId;
 }

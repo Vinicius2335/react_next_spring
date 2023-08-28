@@ -18,9 +18,9 @@ public class PessoaResponse {
     private String cpf;
     private String email;
     private String senha;
-    private String endereco;
-    private String cep;
-    private String nomeCidade;
+
+    private EnderecoResponse endereco;
+
     private OffsetDateTime dataCriacao;
     private OffsetDateTime dataAtualizacao;
 }

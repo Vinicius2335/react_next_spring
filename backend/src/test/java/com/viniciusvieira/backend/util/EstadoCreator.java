@@ -1,9 +1,5 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.usuario.EstadoRequest;
-import com.viniciusvieira.backend.api.representation.model.response.usuario.EstadoResponse;
-import com.viniciusvieira.backend.domain.model.usuario.Estado;
-
 import java.time.OffsetDateTime;
 
 public abstract class EstadoCreator {

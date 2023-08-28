@@ -5,11 +5,7 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Pesso
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
-import com.viniciusvieira.backend.domain.model.usuario.Cidade;
-import com.viniciusvieira.backend.domain.model.usuario.Estado;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
-import com.viniciusvieira.backend.domain.repository.usuario.CidadeRepository;
-import com.viniciusvieira.backend.domain.repository.usuario.EstadoRepository;
 import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
 import com.viniciusvieira.backend.util.CidadeCreator;
 import com.viniciusvieira.backend.util.EstadoCreator;

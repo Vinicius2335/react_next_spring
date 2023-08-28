@@ -35,25 +35,18 @@ public class Pessoa {
 
     private String senha;
 
-    @Column(nullable = false)
-    private String endereco;
-
-    @Column(nullable = false)
-    private String cep;
-
     private String codigoRecuperacaoSenha;
 
     private LocalDateTime dataEnvioCodigo;
+
+    @Embedded
+    private Endereco endereco;
 
     @CreationTimestamp
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
     private OffsetDateTime dataAtualizacao;
-
-    @ManyToOne
-    @JoinColumn(name = "cidade_id")
-    private Cidade cidade;
 
     // TEST - Campo agora é final
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
