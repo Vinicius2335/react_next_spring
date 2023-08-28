@@ -36,15 +36,16 @@ public class SalvarClienteService {
         Pessoa clienteSalvo = pessoaRepository.saveAndFlush(cliente);
 
         // enviando email
-        Map<String, Object> propriedades = new HashMap<>();
-        propriedades.put("nome", clienteSalvo.getNome());
-        propriedades.put("mensagem", "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
-
-        emailService.sendEmailTemplate(
-                clienteSalvo.getEmail(),
-                "Cadastro na Loja Tabajara",
-                propriedades
-        );
+        // COMMENT -- Comentado para testes
+        //Map<String, Object> propriedades = new HashMap<>();
+        //propriedades.put("nome", clienteSalvo.getNome());
+        //propriedades.put("mensagem", "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
+        //
+        //emailService.sendEmailTemplate(
+        //        clienteSalvo.getEmail(),
+        //        "Cadastro na Loja Tabajara",
+        //        propriedades
+        //);
 
         return clienteMapper.toPessoaResponse(clienteSalvo);
     }

@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Embeddable
 public class Endereco {
-    @Column(name = "endereco_nome", nullable = false)
-    private String nome;
+    @Column(name = "endereco_logradouro", nullable = false)
+    private String logradouro;
 
     @Column(name = "endereco_estado", nullable = false)
     private String estado;

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class EnderecoRequest {
     @NotBlank(message = "ENDEREÇO não pode ser nulo ou estar em branco")
-    private String nome;
+    private String logradouro;
 
     @NotBlank(message = "CIDADE não pode ser nulo ou estar em branco")
     private String cidade;

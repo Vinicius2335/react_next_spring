@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class EnderecoResponse {
-    private String nomeEndereco;
+    private String logradouro;
     private String cidade;
     private String estado;
     private String cep;

@@ -1,130 +1,53 @@
 package com.viniciusvieira.backend.util;
 
-import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaGerenciamentoRequest;
+import com.github.javafaker.Faker;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
+
 
 public abstract class PessoaCreator {
-    public static Pessoa mockPessoa(){
+    private static final Faker FAKER = new Faker(new Locale("pt_BR"));
+
+    public static Pessoa createPessoa(){
         return Pessoa.builder()
                 .id(1L)
-                .cep("01001-000")
+                .permissoes(new ArrayList<>())
                 .cpf("302.218.730-07")
-                .cidade(CidadeCreator.mockCidade())
-                .nome("Teste 01")
-                .senha("teste")
-                .email("teste@gmail.com")
-                .endereco("rua teste")
-                .permissoes(new ArrayList<>())
+                .email(FAKER.internet().emailAddress())
+                .nome(FAKER.name().fullName())
+                .endereco(EnderecoCreator.createEndereco())
+                .senha(FAKER.internet().password())
+                .dataCriacao(OffsetDateTime.now())
+                .dataAtualizacao(OffsetDateTime.now())
+                .codigoRecuperacaoSenha(FAKER.code().asin())
                 .build();
     }
 
-    public static Pessoa mockPessoaComCodigo(){
-        return Pessoa.builder()
-                .id(1L)
-                .cep("01001-000")
+    public static PessoaRequest createPessoaRequest(){
+        return PessoaRequest.builder()
+                .nome(FAKER.name().fullName())
+                .senha(FAKER.internet().password())
                 .cpf("302.218.730-07")
-                .cidade(CidadeCreator.mockCidade())
-                .nome("Teste 01")
-                .senha("teste")
-                .email("teste@gmail.com")
-                .endereco("rua teste")
-                .codigoRecuperacaoSenha("Teste")
-                .dataEnvioCodigo(LocalDateTime.now())
-                .permissoes(new ArrayList<>())
+                .nomePermissao("CLIENTE")
+                .email(FAKER.internet().emailAddress())
+                .endereco(EnderecoCreator.createEnderecoRequest())
                 .build();
     }
 
-    public static Pessoa mockPessoaToUpdate(OffsetDateTime dataCriacao) {
-        return Pessoa.builder()
-                .id(1L)
-                .cep("01001-002")
-                .cpf("791.419.531-69")
-                .cidade(CidadeCreator.mockCidade())
-                .nome("Teste Update")
-                .senha("update")
-                .email("update@gmail.com")
-                .endereco("rua teste update")
-                .dataCriacao(dataCriacao)
-                .permissoes(new ArrayList<>())
-                .build();
-    }
-
-    public static PessoaResponse mockPessoaResponse() {
+    public static PessoaResponse createPessoaResponse(Pessoa pessoa){
         return PessoaResponse.builder()
-                .cep("01001-000")
-                .cpf("302.218.730-07")
-                .nomeCidade("Cascavel")
-                .nome("Teste 01")
-                .senha("teste")
-                .email("teste@gmail.com")
-                .endereco("rua teste")
+                .endereco(EnderecoCreator.createEnderecoResponse(pessoa))
+                .nome(pessoa.getNome())
+                .cpf(pessoa.getCpf())
+                .email(pessoa.getEmail())
+                .dataCriacao(pessoa.getDataCriacao())
+                .dataAtualizacao(pessoa.getDataAtualizacao())
+                .senha(pessoa.getSenha())
                 .build();
     }
-
-    public static PessoaResponse mockPessoaResponseUpdate() {
-        return PessoaResponse.builder()
-                .cep("01001-002")
-                .cpf("791.419.531-69")
-                .nomeCidade("Cascavel")
-                .nome("Teste Update")
-                .senha("update")
-                .email("update@gmail.com")
-                .endereco("rua teste update")
-                .build();
-    }
-
-    public static PessoaRequest mockPessoaRequestToSave() {
-        return PessoaRequest.builder()
-                .cep("01001-000")
-                .cpf("302.218.730-07")
-                .nome("Teste 01")
-                .senha("teste")
-                .email("teste@gmail.com")
-                .endereco("rua teste")
-                .cidadeId(1L)
-                .nomePermissao(PermissaoCreator.mockPermissao().getNome())
-                .build();
-    }
-
-    public static PessoaGerenciamentoRequest mockPessoaGerenciamentoRequest(){
-        return PessoaGerenciamentoRequest.builder()
-                .email("teste@gmail.com")
-                .senha("teste")
-                .codigoParaRecuperarSenha("Teste")
-                .build();
-    }
-
-    public static PessoaRequest mockPessoaRequestToUpdate() {
-        return PessoaRequest.builder()
-                .cep("01001-002")
-                .cpf("791.419.531-69")
-                .nome("Teste Update")
-                .senha("update")
-                .email("update@gmail.com")
-                .endereco("rua teste update")
-                .cidadeId(1L)
-                .nomePermissao(PermissaoCreator.mockPermissao().getNome())
-                .build();
-    }
-
-    public static PessoaRequest mockInvalidPessoaRequest() {
-        return PessoaRequest.builder()
-                .cep(null)
-                .cpf(null)
-                .nome(null)
-                .senha(null)
-                .email(null)
-                .endereco(null)
-                .cidadeId(0L)
-                .nomePermissao(null)
-                .build();
-    }
-
 }
