@@ -3,7 +3,7 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.PessoaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
-import com.viniciusvieira.backend.domain.exception.NegocioException;
+import com.viniciusvieira.backend.domain.exception.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
@@ -17,10 +17,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,18 +43,20 @@ class CrudPessoaServiceTest {
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
 
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @Test
     void whenBuscarTodos_thenReturnAllPessoas() {
         // given
+        given(mockPessoaRepository.findAll()).willReturn(List.of(pessoa));
         // when
-        underTest.buscarTodos();
+        List<Pessoa> expected = underTest.buscarTodos();
         // then
         verify(mockPessoaRepository, times(1)).findAll();
+        assertThat(expected)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1)
+                .contains(pessoa);
     }
 
     @Test
@@ -139,6 +140,22 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    void givenUnregisteredEmailAndCodigo_whenBuscarPeloEmailECodigo_thenPessoaNaoEncontradaException() {
+        // given
+        String codigoRecuperacaoSenha = pessoa.getCodigoRecuperacaoSenha();
+        String email = pessoa.getEmail();
+        given(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString()))
+                .willReturn(Optional.empty());
+        // when
+        assertThatThrownBy(() -> underTest.buscarPeloEmailECodigo(email, codigoRecuperacaoSenha))
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO");
+        // then
+        verify(mockPessoaRepository, times(1))
+                .findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString());
+    }
+
+    @Test
     void givenPessoa_whenInserir_thenPessoaShouldBeInserted() {
         // given
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
@@ -160,7 +177,7 @@ class CrudPessoaServiceTest {
     }
 
     @Test
-    void givenPessoaWithCpfRegistered_whenInserir_thenThrowsNegocioException() {
+    void givenPessoaWithCpfRegistered_whenInserir_thenCpfAlreadyExistsException() {
         // given
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
         given(mockPermissaoService.buscarPeloNome("CLIENTE")).willReturn(PermissaoCreator.createPermissao());
@@ -168,7 +185,7 @@ class CrudPessoaServiceTest {
         given(mockPessoaRepository.findByCpf(pessoaRequest.getCpf())).willReturn(Optional.of(pessoa));
         // when
          assertThatThrownBy(() -> underTest.inserir(pessoaRequest))
-                 .isInstanceOf(NegocioException.class)
+                 .isInstanceOf(CpfAlreadyExistsException.class)
                          .hasMessageContaining("Já existe uma pessoa cadastrada com esse CPF");
         // then
         verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
@@ -278,10 +295,9 @@ class CrudPessoaServiceTest {
     @Test
     void givenUnregisteredIdPessoaAndIdPermissao_whenExcluirPermissao_thenPessoaNaoEncontradaException() {
         // given
-        Long id = pessoa.getId();
         given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.empty());
         // when
-        assertThatThrownBy(() -> underTest.excluirPermissao(1L, 1L))
+        assertThatThrownBy(() -> underTest.excluirPermissao(20L, 1L))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                 .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then

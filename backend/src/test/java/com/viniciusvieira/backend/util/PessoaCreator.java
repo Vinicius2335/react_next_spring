@@ -40,6 +40,17 @@ public abstract class PessoaCreator {
                 .build();
     }
 
+    public static PessoaRequest createInvalidPessoaRequest(){
+        return PessoaRequest.builder()
+                .nome(null)
+                .senha(null)
+                .cpf(null)
+                .nomePermissao(null)
+                .email(null)
+                .endereco(null)
+                .build();
+    }
+
     public static PessoaResponse createPessoaResponse(Pessoa pessoa){
         return PessoaResponse.builder()
                 .endereco(EnderecoCreator.createEnderecoResponse(pessoa))

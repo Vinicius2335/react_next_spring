@@ -3,7 +3,7 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.PessoaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
-import com.viniciusvieira.backend.domain.exception.NegocioException;
+import com.viniciusvieira.backend.domain.exception.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
@@ -35,7 +35,6 @@ public class CrudPessoaService {
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este ID"));
     }
 
-    // TEST
     public Pessoa buscarPeloEmailECodigo(String email, String codigo){
         return pessoaRepository.findByEmailAndCodigoRecuperacaoSenha(email, codigo)
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO"));
@@ -48,7 +47,7 @@ public class CrudPessoaService {
         boolean cpfEmUso = pessoaRepository.findByCpf(pessoaParaSalvar.getCpf()).isPresent();
 
         if (cpfEmUso){
-            throw new NegocioException("Já existe uma pessoa cadastrada com esse CPF");
+            throw new CpfAlreadyExistsException("Já existe uma pessoa cadastrada com esse CPF");
         }
 
         pessoaParaSalvar.adicionarPermissao(permissao);

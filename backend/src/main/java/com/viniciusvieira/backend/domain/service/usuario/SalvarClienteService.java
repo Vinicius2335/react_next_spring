@@ -3,6 +3,7 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.ClienteMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
+import com.viniciusvieira.backend.domain.exception.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
@@ -26,9 +27,8 @@ public class SalvarClienteService {
         Pessoa cliente = clienteMapper.toDomainPessoa(clienteRequest);
         boolean isCpfEmUso = pessoaRepository.findByCpf(cliente.getCpf()).isPresent();
 
-        // TODO - CpfAlreadyExistsException
         if (isCpfEmUso){
-            throw new NegocioException("Já existe uma pessoa cadastrada com esse CPF");
+            throw new CpfAlreadyExistsException("Já existe uma pessoa cadastrada com esse CPF");
         }
 
         Permissao permissaoEncontrada = crudPermissaoService.buscarPeloNome("CLIENTE");
