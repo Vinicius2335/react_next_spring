@@ -1,34 +1,23 @@
 package com.viniciusvieira.backend.domain.model.usuario;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.viniciusvieira.backend.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Data
 @Entity
 @Table(name = "permissao")
-public class Permissao {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Permissao extends BaseEntity {
     @Column(nullable = false)
     private String nome;
-
-    @CreationTimestamp
-    private OffsetDateTime dataCriacao;
-
-    @UpdateTimestamp
-    private OffsetDateTime dataAtualizacao;
 
     @ManyToMany(
             mappedBy = "permissoes",

@@ -68,6 +68,7 @@ public class CrudPessoaService {
         return pessoaMapper.toPessoaResponse(pessoaAlterada);
     }
 
+    // COMMENT - Não lembro mais qual é a ideia aki
     @Transactional
     public void alterarParaGerenciamento(Pessoa pessoa){
         pessoaRepository.saveAndFlush(pessoa);

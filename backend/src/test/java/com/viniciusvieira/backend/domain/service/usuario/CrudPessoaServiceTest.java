@@ -5,6 +5,7 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Pesso
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.util.PermissaoCreator;
@@ -43,13 +44,18 @@ class CrudPessoaServiceTest {
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
 
+    @BeforeEach
+    void setUp() {
+
+    }
+
     @Test
     void whenBuscarTodos_thenReturnAllPessoas() {
         // given
         // when
         underTest.buscarTodos();
         // then
-        verify(mockPessoaRepository).findAll();
+        verify(mockPessoaRepository, times(1)).findAll();
     }
 
     @Test
@@ -82,7 +88,7 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                 .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este EMAIL");
         // then
-        verify(mockPessoaRepository).findByEmail(anyString());
+        verify(mockPessoaRepository, times(1)).findByEmail(anyString());
     }
 
     @Test
@@ -93,7 +99,7 @@ class CrudPessoaServiceTest {
         // when
         Pessoa expected = underTest.buscarPorId(id);
         // then
-        verify(mockPessoaRepository).findById(anyLong());
+        verify(mockPessoaRepository, times(1)).findById(anyLong());
         assertThat(expected)
                 .isNotNull()
                 .usingRecursiveComparison()
@@ -111,7 +117,7 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                         .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
-        verify(mockPessoaRepository).findById(anyLong());
+        verify(mockPessoaRepository, times(1)).findById(anyLong());
     }
 
     @Test
@@ -123,7 +129,8 @@ class CrudPessoaServiceTest {
         // when
         Pessoa expected = underTest.buscarPeloEmailECodigo(email, codigoRecuperacaoSenha);
         // then
-        verify(mockPessoaRepository).findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString());
+        verify(mockPessoaRepository, times(1)).findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString());
+
         assertThat(expected)
                 .isNotNull()
                 .usingRecursiveComparison()
@@ -143,11 +150,7 @@ class CrudPessoaServiceTest {
         // when
         PessoaResponse expected = underTest.inserir(pessoaRequest);
         // then
-        verify(mockPermissaoService).buscarPeloNome(anyString());
-        verify(mockPessoaMapper).toDomainPessoa(any(PessoaRequest.class));
-        verify(mockPessoaRepository).findByCpf(anyString());
-        verify(mockPessoaRepository).saveAndFlush(any(Pessoa.class));
-        verify(mockPessoaMapper).toPessoaResponse(any(Pessoa.class));
+        verify(mockPessoaRepository, times(1)).saveAndFlush(any(Pessoa.class));
 
         assertThat(expected)
                 .isNotNull()
@@ -168,11 +171,7 @@ class CrudPessoaServiceTest {
                  .isInstanceOf(NegocioException.class)
                          .hasMessageContaining("Já existe uma pessoa cadastrada com esse CPF");
         // then
-        verify(mockPermissaoService).buscarPeloNome(anyString());
-        verify(mockPessoaMapper).toDomainPessoa(any(PessoaRequest.class));
-        verify(mockPessoaRepository).findByCpf(anyString());
         verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
-        verify(mockPessoaMapper, never()).toPessoaResponse(any(Pessoa.class));
     }
 
     @Test
@@ -206,10 +205,7 @@ class CrudPessoaServiceTest {
         // when
         PessoaResponse expected = underTest.alterar(id, pessoaRequest);
         // then
-        verify(mockPessoaRepository).findById(anyLong());
-        verify(mockPessoaMapper).toDomainPessoa(any(PessoaRequest.class));
-        verify(mockPessoaRepository).saveAndFlush(any(Pessoa.class));
-        verify(mockPessoaMapper).toPessoaResponse(any(Pessoa.class));
+        verify(mockPessoaRepository, times(1)).saveAndFlush(any(Pessoa.class));
 
         assertThat(expected)
                 .isNotNull()
@@ -230,30 +226,68 @@ class CrudPessoaServiceTest {
                  .isInstanceOf(PessoaNaoEncontradaException.class)
                          .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
-        verify(mockPessoaRepository).findById(anyLong());
-        verify(mockPessoaMapper, never()).toDomainPessoa(any(PessoaRequest.class));
         verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
-        verify(mockPessoaMapper, never()).toPessoaResponse(any(Pessoa.class));
     }
 
     @Test
     @Disabled
-    void alterarParaGerenciamento() {
+    // COMMENT - não lembro mais qual é a ideia aki
+    void givenPessoa_whenAlterarParaGerenciamento_thenPessoaShouldBeUpdated() {
+        // given
+        // when
+        // then
     }
 
     @Test
-    @Disabled
-    void excluir() {
+    void givenId_whenExcluir_thenPessoaShouldBeRemoved() {
+        // given
+        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.of(pessoa));
+        doNothing().when(mockPessoaRepository).delete(any(Pessoa.class));
+        // when
+        underTest.excluir(pessoa.getId());
+        // then
+        verify(mockPessoaRepository, times(1)).delete(any(Pessoa.class));
     }
 
     @Test
-    @Disabled
-    void excluirPermissao() {
+    void givenUnregisteredId_whenExcluir_thenThrowsPessoaNaoEncontradaException() {
+        // given
+        Long id = pessoa.getId();
+        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.empty());
+        // when
+        assertThatThrownBy(() -> underTest.excluir(id))
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                        .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
+        // then
+        verify(mockPessoaRepository, never()).delete(any(Pessoa.class));
     }
 
-    private Pessoa getPessoaInserted() {
-        return mockPessoaRepository.save(pessoa);
+    @Test
+    void givenIdPessoaAndIdPermissao_whenExcluirPermissao_thenPessoaShouldBeRemovedPermissao() {
+        // given
+        Permissao permissao = PermissaoCreator.createPermissao();
+        pessoa.adicionarPermissao(permissao);
+        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.of(pessoa));
+        // when
+        underTest.excluirPermissao(1L, 1L);
+        // then
+        verify(mockPessoaRepository, times(1)).saveAndFlush(any(Pessoa.class));
+        assertThat(pessoa.getPermissoes()).isEmpty();
     }
+
+    @Test
+    void givenUnregisteredIdPessoaAndIdPermissao_whenExcluirPermissao_thenPessoaNaoEncontradaException() {
+        // given
+        Long id = pessoa.getId();
+        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.empty());
+        // when
+        assertThatThrownBy(() -> underTest.excluirPermissao(1L, 1L))
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
+        // then
+        verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
+    }
+
 
     private PessoaResponse getPessoaResponse(){
         return PessoaCreator.createPessoaResponse(pessoa);

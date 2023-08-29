@@ -26,6 +26,7 @@ public abstract class PessoaCreator {
                 .dataAtualizacao(OffsetDateTime.now())
                 .codigoRecuperacaoSenha(FAKER.code().asin())
                 .build();
+
     }
 
     public static PessoaRequest createPessoaRequest(){

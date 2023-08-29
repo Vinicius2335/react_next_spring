@@ -20,6 +20,6 @@ public class CarrinhoDeCompraProdutoResponse {
     private BigDecimal valor;
     private int quantidade;
     private String observacao;
-    private OffsetDateTime dataCompra;
+    private OffsetDateTime dataCriacao;
     private OffsetDateTime dataAtualizacao;
 }

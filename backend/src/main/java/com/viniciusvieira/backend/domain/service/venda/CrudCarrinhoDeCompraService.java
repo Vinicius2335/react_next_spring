@@ -39,7 +39,7 @@ public class CrudCarrinhoDeCompraService {
         CarrinhoDeCompra cidadeEncontrada = buscarPeloId(id);
         CarrinhoDeCompra cidadeParaAlterar = carrinhoDeCompraMapper.toDomainCarrinhoDeCompra(cidadeRequest);
         cidadeParaAlterar.setId(cidadeEncontrada.getId());
-        cidadeParaAlterar.setDataCompra(cidadeEncontrada.getDataCompra());
+        cidadeParaAlterar.setDataCriacao(cidadeEncontrada.getDataCriacao());
 
         CarrinhoDeCompra cidadeAlterada = carrinhoCompraRepository.saveAndFlush(cidadeParaAlterar);
         return carrinhoDeCompraMapper.toCarrinhoDeCompraResponse(cidadeAlterada);

@@ -2,27 +2,23 @@ package com.viniciusvieira.backend.domain.model.usuario;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
+import com.viniciusvieira.backend.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Data
 @Entity
 @Table(name = "pessoa")
-public class Pessoa {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Pessoa extends BaseEntity {
 
     @Column(nullable = false)
     private String nome;
@@ -42,11 +38,6 @@ public class Pessoa {
     @Embedded
     private Endereco endereco;
 
-    @CreationTimestamp
-    private OffsetDateTime dataCriacao;
-
-    @UpdateTimestamp
-    private OffsetDateTime dataAtualizacao;
 
     // TEST - Campo agora é final
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)

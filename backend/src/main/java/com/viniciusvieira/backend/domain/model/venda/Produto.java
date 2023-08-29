@@ -1,28 +1,21 @@
 package com.viniciusvieira.backend.domain.model.venda;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.viniciusvieira.backend.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Data
 @Entity
 @Table(name = "produto")
-public class Produto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Produto extends BaseEntity {
     @Column(nullable = false)
     private int quantidade;
 
@@ -37,12 +30,6 @@ public class Produto {
 
     @Column(nullable = false)
     private BigDecimal valorVenda;
-
-    @CreationTimestamp
-    private OffsetDateTime dataCriacao;
-
-    @UpdateTimestamp
-    private OffsetDateTime dataAtualizacao;
 
     @ManyToOne
     @JoinColumn(name = "marca_id")
