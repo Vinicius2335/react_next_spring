@@ -1,5 +1,7 @@
 package com.viniciusvieira.backend.util;
 
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 
 import java.time.OffsetDateTime;
@@ -14,6 +16,20 @@ public abstract class PermissaoCreator {
                 .nome("CLIENTE")
                 .dataCriacao(OffsetDateTime.now())
                 .dataAtualizacao(OffsetDateTime.now())
+                .build();
+    }
+
+    public static PermissaoResponse createPermissaoResponse(){
+        return PermissaoResponse.builder()
+                .nome("CLIENTE")
+                .dataAtualizacao(OffsetDateTime.now())
+                .dataCriacao(OffsetDateTime.now())
+                .build();
+    }
+
+    public static PermissaoRequest createPermissaoRequest(){
+        return PermissaoRequest.builder()
+                .nome("CLIENTE")
                 .build();
     }
 }
