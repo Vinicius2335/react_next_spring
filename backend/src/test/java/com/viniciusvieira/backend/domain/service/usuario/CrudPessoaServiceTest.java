@@ -12,6 +12,7 @@ import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -45,9 +46,10 @@ class CrudPessoaServiceTest {
 
 
     @Test
+    @DisplayName("buscarTodos() return list pessoa")
     void whenBuscarTodos_thenReturnAllPessoas() {
         // given
-        given(mockPessoaRepository.findAll()).willReturn(List.of(pessoa));
+        perfectPathConfig();
         // when
         List<Pessoa> expected = underTest.buscarTodos();
         // then
@@ -60,10 +62,11 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPeloEmail() return pessoa")
     void givenEmail_whenBuscarPeloEmail_thenPessoaShouldBeFound() {
         // given
         String email = pessoa.getEmail();
-        given(mockPessoaRepository.findByEmail(email)).willReturn(Optional.of(pessoa));
+        perfectPathConfig();
         // when
         Pessoa expected = underTest.buscarPeloEmail(email);
         // then
@@ -80,10 +83,11 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPeloEmail() throws PessoaNaoEncontradaExecption when pessoa not found")
     void givenUnregisteredEmail_whenBuscarPeloEmail_thenThrowsPessoaNaoEncontradaException() {
         // given
         String email = pessoa.getEmail();
-        given(mockPessoaRepository.findByEmail(email)).willReturn(Optional.empty());
+        failPathConfig();
         // when
         assertThatThrownBy(() -> underTest.buscarPeloEmail(email))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
@@ -93,10 +97,11 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPorId() return pessoa")
     void givenId_whenBuscarPorId_thenPessoaShouldBeFound() {
         // given
         Long id = pessoa.getId();
-        given(mockPessoaRepository.findById(id)).willReturn(Optional.of(pessoa));
+        perfectPathConfig();
         // when
         Pessoa expected = underTest.buscarPorId(id);
         // then
@@ -109,10 +114,11 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPorId() throws PessoaNaoEncontradaException when pessoa not found")
     void givenUnregisteredId_whenBuscarPorId_thenThorwsPessoaNaoEncontradaException() {
         // given
         Long id = pessoa.getId();
-        given(mockPessoaRepository.findById(id)).willReturn(Optional.empty());
+        failPathConfig();
         // when
         assertThatThrownBy(() -> underTest.buscarPorId(id))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
@@ -122,11 +128,12 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPeloEmailECodigo() return pessoa")
     void givenEmailAndCodigo_whenBuscarPeloEmailECodigo_thenPessoaShouldBeFound() {
         // given
         String codigoRecuperacaoSenha = pessoa.getCodigoRecuperacaoSenha();
         String email = pessoa.getEmail();
-        given(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(email, codigoRecuperacaoSenha)).willReturn(Optional.of(pessoa));
+        perfectPathConfig();
         // when
         Pessoa expected = underTest.buscarPeloEmailECodigo(email, codigoRecuperacaoSenha);
         // then
@@ -140,12 +147,12 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPeloEmailECodigo() throws PessoaNaoEncontradaException when pessoa not found")
     void givenUnregisteredEmailAndCodigo_whenBuscarPeloEmailECodigo_thenPessoaNaoEncontradaException() {
         // given
         String codigoRecuperacaoSenha = pessoa.getCodigoRecuperacaoSenha();
         String email = pessoa.getEmail();
-        given(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString()))
-                .willReturn(Optional.empty());
+        failPathConfig();
         // when
         assertThatThrownBy(() -> underTest.buscarPeloEmailECodigo(email, codigoRecuperacaoSenha))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
@@ -156,14 +163,11 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("inserir() save pessoa and return pessoaResponse")
     void givenPessoa_whenInserir_thenPessoaShouldBeInserted() {
         // given
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
-        given(mockPermissaoService.buscarPeloNome("CLIENTE")).willReturn(PermissaoCreator.createPermissao());
-        given(mockPessoaMapper.toDomainPessoa(pessoaRequest)).willReturn(pessoa);
-        given(mockPessoaRepository.findByCpf(pessoaRequest.getCpf())).willReturn(Optional.empty());
-        given(mockPessoaRepository.saveAndFlush(pessoa)).willReturn(pessoa);
-        given(mockPessoaMapper.toPessoaResponse(pessoa)).willReturn(getPessoaResponse());
+        perfectPathConfig();
         // when
         PessoaResponse expected = underTest.inserir(pessoaRequest);
         // then
@@ -177,12 +181,11 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("buscarPeloEmailECodigo() throws CpfAlreadyExistsException when cpf is already registered")
     void givenPessoaWithCpfRegistered_whenInserir_thenCpfAlreadyExistsException() {
         // given
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
-        given(mockPermissaoService.buscarPeloNome("CLIENTE")).willReturn(PermissaoCreator.createPermissao());
-        given(mockPessoaMapper.toDomainPessoa(pessoaRequest)).willReturn(pessoa);
-        given(mockPessoaRepository.findByCpf(pessoaRequest.getCpf())).willReturn(Optional.of(pessoa));
+        failPathConfig();
         // when
          assertThatThrownBy(() -> underTest.inserir(pessoaRequest))
                  .isInstanceOf(CpfAlreadyExistsException.class)
@@ -195,9 +198,7 @@ class CrudPessoaServiceTest {
     void givenPessoa_whenToPessoaResponse_returnPessoaResponse(){
         // given
         PessoaResponse pessoaResponse = getPessoaResponse();
-        System.out.println("Response "+pessoaResponse);
-
-        when(mockPessoaMapper.toPessoaResponse(any())).thenReturn(pessoaResponse);
+        perfectPathConfig();
         // when
         PessoaResponse expected = mockPessoaMapper.toPessoaResponse(pessoa);
         System.out.println("expected "+expected);
@@ -210,15 +211,13 @@ class CrudPessoaServiceTest {
     }
 
     @Test
-    void givenPessoa_whenAlterar_thenPessoaShouldBeUpdated() {
+    @DisplayName("alterar() update pessoa and return pessoaResponse")
+    void givenIdAndPessoaRequest_whenAlterar_thenPessoaShouldBeUpdated() {
         // given
         Long id = 1L;
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
         pessoaRequest.setNome("Vinicius");
-        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.of(pessoa));
-        given(mockPessoaMapper.toDomainPessoa(pessoaRequest)).willReturn(pessoa);
-        given(mockPessoaRepository.saveAndFlush(pessoa)).willReturn(pessoa);
-        given(mockPessoaMapper.toPessoaResponse(pessoa)).willReturn(getPessoaResponse());
+        perfectPathConfig();
         // when
         PessoaResponse expected = underTest.alterar(id, pessoaRequest);
         // then
@@ -232,16 +231,33 @@ class CrudPessoaServiceTest {
     }
 
     @Test
-    void givenUnregisteredPessoa_whenAlterar_thenThrowsPessoaNaoEncontradaException() {
+    @DisplayName("alterar() throws PessoaNaoEncontradaException when pessoa not found")
+    void givenUnregisteredIdAndPessoaRequest_whenAlterar_thenThrowsPessoaNaoEncontradaException() {
         // given
         Long id = 99L;
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
         pessoaRequest.setNome("Vinicius");
-        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.empty());
+        failPathConfig();
         // when
          assertThatThrownBy(() -> underTest.alterar(id, pessoaRequest))
                  .isInstanceOf(PessoaNaoEncontradaException.class)
                          .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
+        // then
+        verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
+    }
+
+    @Test
+    @DisplayName("alterar() throws CpfAlreadyExistsException when cpf already exists")
+    void givenAlreadyRegisteredPessoaRequest_whenAlterar_thenThrowsCpfAlreadyExistsException() {
+        // given
+        Long id = 99L;
+        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
+        pessoaRequest.setNome("Vinicius");
+        failPathConfig();
+        // when
+        assertThatThrownBy(() -> underTest.alterar(id, pessoaRequest))
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
         verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
     }
@@ -256,10 +272,10 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("excluir() remove pessoa")
     void givenId_whenExcluir_thenPessoaShouldBeRemoved() {
         // given
-        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.of(pessoa));
-        doNothing().when(mockPessoaRepository).delete(any(Pessoa.class));
+        perfectPathConfig();
         // when
         underTest.excluir(pessoa.getId());
         // then
@@ -267,10 +283,11 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("excluir() throws PessoaNaoEncontradaException when pessoa not found")
     void givenUnregisteredId_whenExcluir_thenThrowsPessoaNaoEncontradaException() {
         // given
         Long id = pessoa.getId();
-        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.empty());
+        failPathConfig();
         // when
         assertThatThrownBy(() -> underTest.excluir(id))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
@@ -280,11 +297,12 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("excluirPermissao() remove permissao related a pessoa")
     void givenIdPessoaAndIdPermissao_whenExcluirPermissao_thenPessoaShouldBeRemovedPermissao() {
         // given
         Permissao permissao = PermissaoCreator.createPermissao();
         pessoa.adicionarPermissao(permissao);
-        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.of(pessoa));
+        perfectPathConfig();
         // when
         underTest.excluirPermissao(1L, 1L);
         // then
@@ -293,9 +311,10 @@ class CrudPessoaServiceTest {
     }
 
     @Test
+    @DisplayName("excluirPermissao() throws PessoaNaoEncontradaException when pessoa not found")
     void givenUnregisteredIdPessoaAndIdPermissao_whenExcluirPermissao_thenPessoaNaoEncontradaException() {
         // given
-        given(mockPessoaRepository.findById(anyLong())).willReturn(Optional.empty());
+        failPathConfig();
         // when
         assertThatThrownBy(() -> underTest.excluirPermissao(20L, 1L))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
@@ -304,8 +323,29 @@ class CrudPessoaServiceTest {
         verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
     }
 
-
     private PessoaResponse getPessoaResponse(){
         return PessoaCreator.createPessoaResponse(pessoa);
+    }
+
+    private void perfectPathConfig(){
+        lenient().when(mockPessoaRepository.findAll()).thenReturn(List.of(pessoa));
+        lenient().when(mockPessoaRepository.findByEmail(anyString())).thenReturn(Optional.of(pessoa));
+        lenient().when(mockPessoaRepository.findById(anyLong())).thenReturn(Optional.of(pessoa));
+        lenient().when(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString())).thenReturn(Optional.of(pessoa));
+        lenient().when(mockPermissaoService.buscarPeloNome(anyString())).thenReturn(PermissaoCreator.createPermissao());
+        lenient().when(mockPessoaMapper.toDomainPessoa(any(PessoaRequest.class))).thenReturn(pessoa);
+        lenient().when(mockPessoaRepository.findByCpf(anyString())).thenReturn(Optional.empty());
+        lenient().when(mockPessoaRepository.saveAndFlush(any(Pessoa.class))).thenReturn(pessoa);
+        lenient().when(mockPessoaMapper.toPessoaResponse(any(Pessoa.class))).thenReturn(getPessoaResponse());
+        lenient().doNothing().when(mockPessoaRepository).delete(any(Pessoa.class));
+    }
+
+    private void failPathConfig(){
+        lenient().when(mockPessoaRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        lenient().when(mockPessoaRepository.findById(anyLong())).thenReturn(Optional.empty());
+        lenient().when(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString())).thenReturn(Optional.empty());
+        lenient().when(mockPermissaoService.buscarPeloNome(anyString())).thenReturn(PermissaoCreator.createPermissao());
+        lenient().when(mockPessoaMapper.toDomainPessoa(any(PessoaRequest.class))).thenReturn(pessoa);
+        lenient().when(mockPessoaRepository.findByCpf(anyString())).thenReturn(Optional.of(pessoa));
     }
 }

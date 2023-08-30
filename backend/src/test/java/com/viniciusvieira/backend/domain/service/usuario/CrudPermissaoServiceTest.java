@@ -3,10 +3,12 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.PermissaoMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
+import com.viniciusvieira.backend.domain.exception.PermissaoAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
 import com.viniciusvieira.backend.util.PermissaoCreator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +34,12 @@ class CrudPermissaoServiceTest {
     private PermissaoMapper permissaoMapperMock;
 
     private final Permissao permissao = PermissaoCreator.createPermissao();
-    private final PermissaoResponse permissaoResponse = PermissaoCreator.createPermissaoResponse();
+    private PermissaoResponse permissaoResponse;
+
+    @BeforeEach
+    void setUp() {
+        permissaoResponse = PermissaoCreator.createPermissaoResponse(permissao);
+    }
 
     @Test
     @DisplayName("buscarTodos() return list permissao")
@@ -63,7 +70,7 @@ class CrudPermissaoServiceTest {
     }
 
     @Test
-    @DisplayName("buscarPeloId() throwns PermissaoNaoEncontradaException")
+    @DisplayName("buscarPeloId() throwns PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredId_WhenBuscarPeloId_thenThrowsPermissaoNaoEncontradaException() {
         // given
         long id = permissao.getId();
@@ -91,7 +98,7 @@ class CrudPermissaoServiceTest {
     }
 
     @Test
-    @DisplayName("buscarPeloNome() throwns PermissaoNaoEncontradaException")
+    @DisplayName("buscarPeloNome() throwns PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredNome_whenBuscarPeloNome_thenThrowsPermissaoNaoEncontradaException() {
         // given
         String nome = permissao.getNome();
@@ -111,6 +118,7 @@ class CrudPermissaoServiceTest {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
         perfectPathConfig();
+        lenient().when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.empty());
         // when
         PermissaoResponse expected = underTest.inserir(permissaoRequest);
         // then
@@ -121,11 +129,27 @@ class CrudPermissaoServiceTest {
     }
 
     @Test
+    @DisplayName("inserir() throws PermissaoAlreadyExistsException when permissao not found")
+    void givenPermissaoRequestWithAlrealyExistsNome_whenInserir_thenThrowsPermissaoAlreadyExistsException() {
+        // given
+        PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
+        lenient().when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.of(permissao));
+        // when
+        assertThatThrownBy(() -> underTest.inserir(permissaoRequest))
+                .isInstanceOf(PermissaoAlreadyExistsException.class)
+                        .hasMessageContaining("Já existe uma permissao cadastrada com esse NOME");
+        // then
+        verify(permissaoRepositoryMock, never()).saveAndFlush(any(Permissao.class));
+    }
+
+    @Test
     @DisplayName("alterar() update permissao")
     void givenIdAndPermissaoRequest_whenAlterar_thenPermissaoShouldBeUpdated() {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
+        permissaoRequest.setNome("FUNCIONARIO");
         perfectPathConfig();
+        when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.empty());
         // when
         PermissaoResponse expected = underTest.alterar(permissao.getId(), permissaoRequest);
         // then
@@ -136,7 +160,7 @@ class CrudPermissaoServiceTest {
     }
 
     @Test
-    @DisplayName("alterar() throws PermissaoNaoEncontradaException")
+    @DisplayName("alterar() throws PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredIdAndPermissaoRequest_whenAlterar_thenThrowsPermissaoNaoEncontradaException() {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
@@ -148,7 +172,22 @@ class CrudPermissaoServiceTest {
                         .hasMessageContaining("Permissão não cadastrada");
         // then
         verify(permissaoRepositoryMock, never()).saveAndFlush(any(Permissao.class));
+    }
 
+    @Test
+    @DisplayName("alterar() throws PermissaoAlreadyExistsException when permissao already exists")
+    void givenIdAndAlreadyExistsPermissaoRequest_whenAlterar_thenThrowsPermissaoAlreadyExistsException() {
+        // given
+        PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
+        Long id = permissao.getId();
+        when(permissaoRepositoryMock.findById(anyLong())).thenReturn(Optional.of(permissao));
+        when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.of(permissao));
+        // when
+        assertThatThrownBy(() -> underTest.alterar(id, permissaoRequest))
+                .isInstanceOf(PermissaoAlreadyExistsException.class)
+                .hasMessageContaining("Já existe uma permissao cadastrada com esse NOME: " +permissaoRequest.getNome());
+        // then
+        verify(permissaoRepositoryMock, never()).saveAndFlush(any(Permissao.class));
     }
 
     @Test
@@ -163,7 +202,7 @@ class CrudPermissaoServiceTest {
     }
 
     @Test
-    @DisplayName("excluir() throws PermissaoNaoEncontradaException")
+    @DisplayName("excluir() throws PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredId_whenExcluir_thenThrowsPermissaoNaoEncontradaException() {
         // given
         failPathConfig();

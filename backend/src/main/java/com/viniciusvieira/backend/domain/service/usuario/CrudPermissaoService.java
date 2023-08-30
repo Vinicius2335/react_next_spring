@@ -4,6 +4,7 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.PermissaoMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
+import com.viniciusvieira.backend.domain.exception.PermissaoAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
@@ -35,14 +36,26 @@ public class CrudPermissaoService {
 
     @Transactional
     public PermissaoResponse inserir(PermissaoRequest permissaoRequest) {
+        verifyIfPermissaoExistsByNome(permissaoRequest.getNome());
+
         Permissao permissaoParaInserir = permissaoMapper.toDomainPermissao(permissaoRequest);
         Permissao permissaoInserida = permissaoRepository.saveAndFlush(permissaoParaInserir);
         return permissaoMapper.toPermissaoResponse(permissaoInserida);
     }
-    
+
+    private void verifyIfPermissaoExistsByNome(String permissaoNome) {
+        boolean permissaoExists = permissaoRepository.findByNome(permissaoNome).isPresent();
+
+        if (permissaoExists){
+            throw new PermissaoAlreadyExistsException("Já existe uma permissao cadastrada com esse NOME: " + permissaoNome);
+        }
+    }
+
     @Transactional
     public PermissaoResponse alterar(Long id, PermissaoRequest permissaoRequest) {
         Permissao permissaoEncontrada = buscarPeloId(id);
+        verifyIfPermissaoExistsByNome(permissaoRequest.getNome());
+
         Permissao permissaoParaAlterar = permissaoMapper.toDomainPermissao(permissaoRequest);
         permissaoParaAlterar.setId(permissaoEncontrada.getId());
         permissaoParaAlterar.setDataCriacao(permissaoEncontrada.getDataCriacao());

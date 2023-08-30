@@ -142,6 +142,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
     }
 
+    @ExceptionHandler(PermissaoAlreadyExistsException.class)
+    public ResponseEntity<Object> handlePermissaoAlreadyExistsException(
+            PermissaoAlreadyExistsException ex,
+            WebRequest request
+    ){
+        HttpStatus status = HttpStatus.CONFLICT;
+        Problem body = createExceptionResponseBody(ex, status.value());
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
+
     private Problem createExceptionResponseBody(RuntimeException ex, Integer status){
         Problem problem = new Problem();
         problem.setTimestamp(OffsetDateTime.now());

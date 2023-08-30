@@ -28,6 +28,7 @@ public class PessoaRequest {
     @Email
     private String email;
 
+    // COMMENT - EXCLUIR DEPOIS
     @NotBlank(message = "SENHA não pode ser nulo ou em branco")
     private String senha;
 

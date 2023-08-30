@@ -16,6 +16,6 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "marca")
 public class Marca extends BaseEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nome;
 }

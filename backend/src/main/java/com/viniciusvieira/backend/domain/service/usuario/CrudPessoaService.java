@@ -44,11 +44,7 @@ public class CrudPessoaService {
     public PessoaResponse inserir(PessoaRequest pessoaRequest) {
         Permissao permissao = permissaoService.buscarPeloNome(pessoaRequest.getNomePermissao());
         Pessoa pessoaParaSalvar = pessoaMapper.toDomainPessoa(pessoaRequest);
-        boolean cpfEmUso = pessoaRepository.findByCpf(pessoaParaSalvar.getCpf()).isPresent();
-
-        if (cpfEmUso){
-            throw new CpfAlreadyExistsException("Já existe uma pessoa cadastrada com esse CPF");
-        }
+        verifyIfPessoaExistsByCpf(pessoaParaSalvar.getCpf());
 
         pessoaParaSalvar.adicionarPermissao(permissao);
         Pessoa pessoaSalva = pessoaRepository.saveAndFlush(pessoaParaSalvar);
@@ -56,9 +52,19 @@ public class CrudPessoaService {
         return pessoaMapper.toPessoaResponse(pessoaSalva);
     }
 
+    private void verifyIfPessoaExistsByCpf(String pessoaCpf) {
+        boolean cpfEmUso = pessoaRepository.findByCpf(pessoaCpf).isPresent();
+
+        if (cpfEmUso){
+            throw new CpfAlreadyExistsException("Já existe uma pessoa cadastrada com esse CPF");
+        }
+    }
+
     @Transactional
     public PessoaResponse alterar(Long id, PessoaRequest pessoaRequest) {
         Pessoa pessoaEncontrada = buscarPorId(id);
+        verifyIfPessoaExistsByCpf(pessoaRequest.getCpf());
+
         Pessoa pessoaParaAlterar = pessoaMapper.toDomainPessoa(pessoaRequest);
         pessoaParaAlterar.setId(pessoaEncontrada.getId());
         pessoaParaAlterar.setDataCriacao(pessoaEncontrada.getDataCriacao());

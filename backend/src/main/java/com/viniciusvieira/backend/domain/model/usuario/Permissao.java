@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "permissao")
 public class Permissao extends BaseEntity {
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String nome;
 
     @ManyToMany(

@@ -10,6 +10,7 @@ import com.viniciusvieira.backend.util.PessoaCreator;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("buscarTodos() return list pessoas")
     void givenURI_whenBuscarTodos_thenReturnListPessoasAndStatusOK() {
         Pessoa pessoaInserted = getPessoaInserted();
 
@@ -62,6 +64,7 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("inserir() return status CREATED")
     void givenPessoaRequest_whenInserir_thenReturnPessoaResponseAndStatusCREATED() {
         getPermissaoInserted();
 
@@ -78,7 +81,8 @@ class PessoaControllerIT {
     }
 
     @Test
-    void givenInvalidPessoaRequest_whenInserir_thenReturnPessoaAndStatusCREATED() {
+    @DisplayName("inserir() return status BAD_REQUEST when pessoa request have invalid fields")
+    void givenInvalidPessoaRequest_whenInserir_thenReturnPessoaAndStatusBAD_REQUEST() {
         getPermissaoInserted();
         PessoaRequest invalidPessoaRequest = PessoaCreator.createInvalidPessoaRequest();
 
@@ -94,7 +98,8 @@ class PessoaControllerIT {
     }
 
     @Test
-    void givenPessoaRequestWithCpfRegistered_whenInserir_thenReturnStatusCONFLICT() {
+    @DisplayName("inserir() return status CONFLICT when cpf already exists")
+    void givenPessoaRequestAlreadyRegistered_whenInserir_thenReturnStatusCONFLICT() {
         getPessoaInserted();
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
 
@@ -111,9 +116,11 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("alterar() return status OK when update pessoa")
     void givenPessoaRequest_whenAlterar_thenReturnPessoaResponseStatusOK() {
         Pessoa pessoaInserted = getPessoaInserted();
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
+        pessoaRequest.setCpf("011.173.038-45");
 
         given()
                 .body(pessoaRequest)
@@ -130,12 +137,13 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("alterar() retur BAD_REQUEST when pessoaRequest have invalid fields")
     void givenInvalidPessoaRequest_whenAlterar_thenReturnStatusBAD_REQUEST() {
         Pessoa pessoaInserted = getPessoaInserted();
-        PessoaRequest pessoaRequest = PessoaCreator.createInvalidPessoaRequest();
+        PessoaRequest invalidPessoaRequest = PessoaCreator.createInvalidPessoaRequest();
 
         given()
-                .body(pessoaRequest)
+                .body(invalidPessoaRequest)
                 .pathParam("id", pessoaInserted.getId())
                 .contentType(JSON)
                 .accept(JSON)
@@ -148,6 +156,26 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("alterar() retur CONFLICT when cpf already exists")
+    void givenAlreadyRegisteredPessoaRequest_whenAlterar_thenReturnStatusCONFLICT() {
+        Pessoa pessoaInserted = getPessoaInserted();
+        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
+
+        given()
+                .body(pessoaRequest)
+                .pathParam("id", pessoaInserted.getId())
+                .contentType(JSON)
+                .accept(JSON)
+                .log().all()
+        .when()
+                .put("/{id}")
+        .then()
+                .statusCode(HttpStatus.CONFLICT.value())
+                .log().body();
+    }
+
+    @Test
+    @DisplayName("excluirPermissao() return status NO_CONTENT when the pessoa relationship is deleted")
     void givenIdPessoaAndIdPermissao_whenExcluirPermissao_thenReturnStatusNO_CONTENT() {
         Pessoa pessoaInserted = getPessoaInserted();
 
@@ -163,6 +191,7 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("excluirPermissao() return status NOT_FOUND when pessoa not found")
     void givenUnregisteredIdPessoaAndIdPermissao_whenExcluirPermissao_thenReturnStatusNOT_FOUND() {
         getPessoaInserted();
 
@@ -180,6 +209,7 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("excluir() return status NO_CONTENT when pessoa is removed")
     void givenIdPessoa_whenExcluir_thenReturnStatusNO_CONTENT() {
         Pessoa pessoaInserted = getPessoaInserted();
 
@@ -194,6 +224,7 @@ class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("excluir() return status NOT_FOUND when pessoa not found")
     void givenUnregisteredIdPessoa_whenExcluir_thenReturnStatusNOT_FOUND() {
         getPessoaInserted();
 

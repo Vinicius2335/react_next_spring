@@ -19,17 +19,23 @@ public abstract class PermissaoCreator {
                 .build();
     }
 
-    public static PermissaoResponse createPermissaoResponse(){
+    public static PermissaoResponse createPermissaoResponse(Permissao permissao){
         return PermissaoResponse.builder()
-                .nome("CLIENTE")
-                .dataAtualizacao(OffsetDateTime.now())
-                .dataCriacao(OffsetDateTime.now())
+                .nome(permissao.getNome())
+                .dataAtualizacao(permissao.getDataAtualizacao())
+                .dataCriacao(permissao.getDataCriacao())
                 .build();
     }
 
     public static PermissaoRequest createPermissaoRequest(){
         return PermissaoRequest.builder()
                 .nome("CLIENTE")
+                .build();
+    }
+
+    public static PermissaoRequest createInvalidPermissaoRequest(){
+        return PermissaoRequest.builder()
+                .nome("")
                 .build();
     }
 }

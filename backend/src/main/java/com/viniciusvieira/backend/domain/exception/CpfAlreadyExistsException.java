@@ -1,6 +1,11 @@
 package com.viniciusvieira.backend.domain.exception;
 
+import java.io.Serial;
+
 public class CpfAlreadyExistsException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -565957658568674909L;
 
     public CpfAlreadyExistsException(String message) {
         super(message);

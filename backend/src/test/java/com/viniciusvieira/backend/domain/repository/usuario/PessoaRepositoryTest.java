@@ -3,6 +3,7 @@ package com.viniciusvieira.backend.domain.repository.usuario;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -22,6 +23,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("saveAndFlush() save pessoa")
     void givenPessoa_whenSaveAndFlush_thenPessoaShouldBeInserted(){
         // given
         // when
@@ -35,6 +37,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("findById() return optional pessoa")
     void givenId_whenFindById_thenPessoaShouldBeFound(){
         // given
         Pessoa pessoaInserted = getPessoaInserted();
@@ -49,6 +52,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("findById() return empty optional when not found")
     void givenUnregisteredId_whenFindById_thenPessoaShouldBeNotFound(){
         // given
         // when
@@ -58,6 +62,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("delete() remove pessoa")
     void givenPessoa_whenDelete_thenPessoaShouldBeRemoved(){
         // given
         Pessoa pessoaInserted = getPessoaInserted();
@@ -69,6 +74,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("findByCpf() return optional pessoa")
     void givenCpf_whenFindByCpf_thenPessoaShouldBeFound() {
         // given
         Pessoa saveInserted = getPessoaInserted();
@@ -84,6 +90,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("findById() return empty optional when not found")
     void givenUnregisteredCpf_whenFindByCpf_thenPessoaShouldBeNotFound() {
         // given
         // when
@@ -94,6 +101,7 @@ class PessoaRepositoryTest {
 
 
     @Test
+    @DisplayName("findByEmail() return optiona pessoa")
     void givenEmail_whenFindByEmail_thenPessoaShouldBeFound() {
         // given
         Pessoa pessoaInserted = getPessoaInserted();
@@ -108,6 +116,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("findByEmail() return empty optional")
     void givenUnregisteredEmail_whenFindByEmail_thenPessoaShouldBeNotFound() {
         // given
         // when
@@ -117,6 +126,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("FindByEmailAndCodigoRecuperacaoSenha() return optiona pessoa")
     void givenEmailAndCodigoRecuperacaoSenha_whenFindByEmailAndCodigoRecuperacaoSenha_thenPessoaShouldBeFound() {
         // given
         Pessoa pessoaInserted = getPessoaInserted();
@@ -131,6 +141,7 @@ class PessoaRepositoryTest {
     }
 
     @Test
+    @DisplayName("FindByEmailAndCodigoRecuperacaoSenha() return empty optional")
     void givenUnregisteredEmailAndCodigoRecuperacaoSenha_whenFindByEmailAndCodigoRecuperacaoSenha_thenPessoaShouldBeNotFound() {
         // given
         // when

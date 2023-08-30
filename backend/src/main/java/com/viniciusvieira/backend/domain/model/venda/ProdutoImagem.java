@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "imagens")
 public class ProdutoImagem extends BaseEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nome;
 
     @ManyToOne
