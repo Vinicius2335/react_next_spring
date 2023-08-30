@@ -3,7 +3,8 @@ package com.viniciusvieira.backend.domain.service.venda;
 import com.viniciusvieira.backend.api.mapper.venda.CategoriaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.venda.CategoriaResponse;
-import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradoException;
+import com.viniciusvieira.backend.domain.exception.CategoriaAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.venda.Categoria;
 import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
 import jakarta.transaction.Transactional;
@@ -24,19 +25,31 @@ public class CrudCategoriaService {
 
     public Categoria buscarPeloId(Long id) {
         return categoriaRepository.findById(id)
-                .orElseThrow(() -> new CategoriaNaoEncontradoException("Categoria não cadastrada"));
+                .orElseThrow(() -> new CategoriaNaoEncontradaException("Categoria não cadastrada"));
     }
 
     @Transactional
     public CategoriaResponse inserir(CategoriaRequest categoriaRequest) {
+        verifyIfCategoriaExistsByNome(categoriaRequest.getNome());
+
         Categoria categoriaParaInserir = categoriaMapper.toDomainCategoria(categoriaRequest);
         Categoria categoriaInserida = categoriaRepository.saveAndFlush(categoriaParaInserir);
         return categoriaMapper.toCategoriaResponse(categoriaInserida);
     }
 
+    private void verifyIfCategoriaExistsByNome(String categoriaNome) {
+        boolean categoriaExists = categoriaRepository.findByNome(categoriaNome).isPresent();
+
+        if (categoriaExists){
+            throw new CategoriaAlreadyExistsException("Já existe uma categoria cadastrada com o NOME: " + categoriaNome);
+        }
+    }
+
     @Transactional
     public CategoriaResponse alterar(Long id, CategoriaRequest categoriaRequest) {
         Categoria categoriaEncontrada = buscarPeloId(id);
+        verifyIfCategoriaExistsByNome(categoriaRequest.getNome());
+
         Categoria categoriaParaAlterar = categoriaMapper.toDomainCategoria(categoriaRequest);
         categoriaParaAlterar.setId(categoriaEncontrada.getId());
         categoriaParaAlterar.setDataCriacao(categoriaEncontrada.getDataCriacao());

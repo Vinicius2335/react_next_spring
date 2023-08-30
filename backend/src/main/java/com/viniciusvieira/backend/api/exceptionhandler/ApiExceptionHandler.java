@@ -54,9 +54,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
     }
 
-    @ExceptionHandler(CategoriaNaoEncontradoException.class)
+    @ExceptionHandler(CategoriaNaoEncontradaException.class)
     public ResponseEntity<Object> handleCategoriaNaoEncontradoException(
-            CategoriaNaoEncontradoException ex,
+            CategoriaNaoEncontradaException ex,
             WebRequest request
     ){
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -145,6 +145,28 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(PermissaoAlreadyExistsException.class)
     public ResponseEntity<Object> handlePermissaoAlreadyExistsException(
             PermissaoAlreadyExistsException ex,
+            WebRequest request
+    ){
+        HttpStatus status = HttpStatus.CONFLICT;
+        Problem body = createExceptionResponseBody(ex, status.value());
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(MarcaAlreadyExistsException.class)
+    public ResponseEntity<Object> handleMarcaAlreadyExistsException(
+            MarcaAlreadyExistsException ex,
+            WebRequest request
+    ){
+        HttpStatus status = HttpStatus.CONFLICT;
+        Problem body = createExceptionResponseBody(ex, status.value());
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(CategoriaAlreadyExistsException.class)
+    public ResponseEntity<Object> handleCategoriaAlreadyExistsException(
+            CategoriaAlreadyExistsException ex,
             WebRequest request
     ){
         HttpStatus status = HttpStatus.CONFLICT;

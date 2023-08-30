@@ -1,9 +1,10 @@
-package com.viniciusvieira.backend.integration.usuario;
+package com.viniciusvieira.backend.integration.venda;
 
-import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
-import com.viniciusvieira.backend.domain.model.usuario.Permissao;
-import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
-import com.viniciusvieira.backend.util.PermissaoCreator;
+
+import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaRequest;
+import com.viniciusvieira.backend.domain.model.venda.Categoria;
+import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
+import com.viniciusvieira.backend.util.CategoriaCreator;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,31 +22,30 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 
-
 @ExtendWith(SpringExtension.class)
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PermissaoControllerIT {
+class CategoriaControllerIT {
     @LocalServerPort
     private int port;
-
+    
     @Autowired
-    private PermissaoRepository permissaoRepository;
+    private CategoriaRepository categoriaRepository;
 
-    private final Permissao permissao = PermissaoCreator.createPermissao();
+    private final Categoria categoria = CategoriaCreator.createCategoria();
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        RestAssured.basePath = "/api/permissoes";
+        RestAssured.basePath = "/api/categorias";
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     @Test
-    @DisplayName("busucarTodos() return list permissoes and status OK")
-    void givenPermissoesURI_wheBuscarTodos_thenReturnListPermissoesAndStatusOK() {
-        Permissao permissaoInserted = getPermissaoInserted();
+    @DisplayName("busucarTodos() return list categorias and status OK")
+    void givenCategoriaURI_wheBuscarTodos_thenReturnListCategoriasAndStatusOK() {
+        Categoria categoriaInserted = getCategoriaInserted();
         given()
                 .contentType(JSON)
                 .accept(JSON)
@@ -54,26 +54,26 @@ class PermissaoControllerIT {
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("$", Matchers.hasSize(1))
-                .body("[0].nome", Matchers.equalTo(permissaoInserted.getNome()));
+                .body("[0].nome", Matchers.equalTo(categoriaInserted.getNome()));
     }
 
     @Test
-    @DisplayName("buscarPeloId() return permissao and status OK")
-    void givenId_whenBuscarPeloId__thenReturnPermissaoAndStatusOK() {
-        Permissao permissaoInserted = getPermissaoInserted();
+    @DisplayName("buscarPeloId() return categoria and status OK")
+    void givenId_whenBuscarPeloId__thenReturnCategoriaAndStatusOK() {
+        Categoria categoriaInserted = getCategoriaInserted();
         given()
-                .pathParam("id", permissaoInserted.getId())
+                .pathParam("id", categoriaInserted.getId())
                 .contentType(JSON)
                 .accept(JSON)
         .when()
                 .get("/{id}")
         .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("nome", Matchers.equalTo(permissaoInserted.getNome()));
+                .body("nome", Matchers.equalTo(categoriaInserted.getNome()));
     }
 
     @Test
-    @DisplayName("buscarPeloId() return status NOT_FOUND when permissao not found")
+    @DisplayName("buscarPeloId() return status NOT_FOUND when categoria not found")
     void givenUnregisteredId_whenBuscarPeloId__thenStatusNOT_FOUND() {
         given()
                 .pathParam("id",99)
@@ -83,32 +83,32 @@ class PermissaoControllerIT {
                 .get("/{id}")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("title", Matchers.equalTo("Permissão não cadastrada"))
+                .body("title", Matchers.equalTo("Categoria não cadastrada"))
                 .log().body();
     }
 
     @Test
-    @DisplayName("inserir() insert permissao and return status CREATED")
-    void givenPermissaoRequest_whenInserir_thenStatusCREATED() {
-        PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
+    @DisplayName("inserir() insert categoria and return status CREATED")
+    void givenCategoriaRequest_whenInserir_thenStatusCREATED() {
+        CategoriaRequest categoriaRequest = CategoriaCreator.createCategoriaRequest();
         given()
-                .body(permissaoRequest)
+                .body(categoriaRequest)
                 .contentType(JSON)
                 .accept(JSON)
         .when()
                 .post()
         .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("nome", Matchers.equalTo(permissaoRequest.getNome()));
+                .body("nome", Matchers.equalTo(categoriaRequest.getNome()));
     }
 
     @Test
-    @DisplayName("inserir() return status CONFLICT when permissao already registered")
-    void givenPermissaoRequestAlreadyRegistered_whenInserir_thenStatusCONFLICT() {
-        getPermissaoInserted();
-        PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
+    @DisplayName("inserir() return status CONFLICT when categoria already registered")
+    void givenCategoriaRequestAlreadyRegistered_whenInserir_thenStatusCONFLICT() {
+        getCategoriaInserted();
+        CategoriaRequest categoriaRequest = CategoriaCreator.createCategoriaRequest();
         given()
-                .body(permissaoRequest)
+                .body(categoriaRequest)
                 .contentType(JSON)
                 .accept(JSON)
         .when()
@@ -119,11 +119,11 @@ class PermissaoControllerIT {
     }
 
     @Test
-    @DisplayName("inserir() return status BAD_REQUEST when permissaoRequest have invalid fields")
-    void givenInvalidPermissaoRequest_whenInserir_thenStatusBAD_REQUEST() {
-        PermissaoRequest invalidPermissaoRequest = PermissaoCreator.createInvalidPermissaoRequest();
+    @DisplayName("inserir() return status BAD_REQUEST when categoriaRequest have invalid fields")
+    void givenInvalidCategoriaRequest_whenInserir_thenStatusBAD_REQUEST() {
+        CategoriaRequest invalidCategoriaRequest = CategoriaCreator.createInvalidCategoriaRequest();
         given()
-                .body(invalidPermissaoRequest)
+                .body(invalidCategoriaRequest)
                 .contentType(JSON)
                 .accept(JSON)
         .when()
@@ -134,14 +134,14 @@ class PermissaoControllerIT {
     }
 
     @Test
-    @DisplayName("alterar() update permissao and return status OK")
-    void givenPermissaoRequest_whenAlterar_thenStatusOK() {
-        getPermissaoInserted();
-        PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
-        permissaoRequest.setNome("FUNCIONARIO");
+    @DisplayName("alterar() update categoria and return status OK")
+    void givenCategoriaRequest_whenAlterar_thenStatusOK() {
+        getCategoriaInserted();
+        CategoriaRequest categoriaRequest = CategoriaCreator.createCategoriaRequest();
+        categoriaRequest.setNome("Samsung");
 
         given()
-                .body(permissaoRequest)
+                .body(categoriaRequest)
                 .pathParam("id", 1)
                 .contentType(JSON)
                 .accept(JSON)
@@ -149,32 +149,33 @@ class PermissaoControllerIT {
                 .put("/{id}")
         .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("nome", Matchers.equalTo(permissaoRequest.getNome()));
+                .body("nome", Matchers.equalTo(categoriaRequest.getNome()));
     }
 
     @Test
-    @DisplayName("alterar() return status CONFLICT when permissao already registered")
-    void givenPermissaoRequestAlreadyRegistered_whenAlterar_thenStatusCONFLICT() {
-        getPermissaoInserted();
-        PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
+    @DisplayName("alterar() return status CONFLICT when categoria already registered")
+    void givenCategoriaRequestAlreadyRegistered_whenAlterar_thenStatusCONFLICT() {
+        getCategoriaInserted();
+        CategoriaRequest categoriaRequest = CategoriaCreator.createCategoriaRequest();
         given()
-                .body(permissaoRequest)
+                .body(categoriaRequest)
                 .pathParam("id", 1)
                 .contentType(JSON)
                 .accept(JSON)
-        .when()
+                .when()
                 .put("/{id}")
-        .then()
+                .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .log().all();
     }
 
     @Test
-    @DisplayName("alterar() return status BAD_REQUEST when permissaoRequest have invalid fields")
-    void givenInvalidPermissaoRequest_whenAlterar_thenStatusBAD_REQUEST() {
-        PermissaoRequest invalidPermissaoRequest = PermissaoCreator.createInvalidPermissaoRequest();
+    @DisplayName("alterar() return status BAD_REQUEST when categoriaRequest have invalid fields")
+    void givenInvalidCategoriaRequest_whenAlterar_thenStatusBAD_REQUEST() {
+        getCategoriaInserted();
+        CategoriaRequest invalidCategoriaRequest = CategoriaCreator.createInvalidCategoriaRequest();
         given()
-                .body(invalidPermissaoRequest)
+                .body(invalidCategoriaRequest)
                 .pathParam("id", 1)
                 .contentType(JSON)
                 .accept(JSON)
@@ -186,11 +187,11 @@ class PermissaoControllerIT {
     }
 
     @Test
-    @DisplayName("excluir() remove permissao")
+    @DisplayName("excluir() remove categoria")
     void givenId_whenExcluir_thenStatusNO_CONTENT() {
-        getPermissaoInserted();
+        getCategoriaInserted();
         given()
-                .pathParam("id", permissao.getId())
+                .pathParam("id", categoria.getId())
                 .contentType(JSON)
                 .accept(JSON)
         .when()
@@ -200,21 +201,22 @@ class PermissaoControllerIT {
     }
 
     @Test
-    @DisplayName("excluir() Throws PermissaoNaoEncontradaException when permissao not found")
+    @DisplayName("excluir() Throws CategoriaNaoEncontradaException when categoria not found")
     void givenUnregisteredId_whenExcluir_thenStatusNOT_FOUND() {
         given()
-                .pathParam("id", permissao.getId())
+                .pathParam("id", categoria.getId())
                 .contentType(JSON)
                 .accept(JSON)
         .when()
                 .delete("/{id}")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .body("title", Matchers.equalTo("Permissão não cadastrada"))
+                .body("title", Matchers.equalTo("Categoria não cadastrada"))
                 .log().all();
     }
 
-    private Permissao getPermissaoInserted(){
-        return permissaoRepository.saveAndFlush(permissao);
+    private Categoria getCategoriaInserted(){
+        return categoriaRepository.saveAndFlush(categoria);
     }
+
 }
