@@ -1,7 +1,7 @@
 package com.viniciusvieira.backend.domain.model.usuario;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.usuario.PermissaoNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,7 +39,6 @@ public class Pessoa extends BaseEntity {
     private Endereco endereco;
 
 
-    // TEST - Campo agora é final
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "pessoa_permissao",

@@ -3,7 +3,7 @@ package com.viniciusvieira.backend.domain.service.venda;
 import com.viniciusvieira.backend.api.mapper.venda.ProdutoMapper;
 import com.viniciusvieira.backend.api.representation.model.request.venda.ProdutoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;
-import com.viniciusvieira.backend.domain.exception.ProdutoNaoEncontradoException;
+import com.viniciusvieira.backend.domain.exception.venda.ProdutoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.venda.Produto;
 import com.viniciusvieira.backend.domain.repository.venda.ProdutoRepository;
 import jakarta.transaction.Transactional;

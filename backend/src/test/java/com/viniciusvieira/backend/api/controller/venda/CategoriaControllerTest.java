@@ -2,8 +2,8 @@ package com.viniciusvieira.backend.api.controller.venda;
 
 import com.viniciusvieira.backend.api.representation.model.request.venda.CategoriaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.venda.CategoriaResponse;
-import com.viniciusvieira.backend.domain.exception.CategoriaAlreadyExistsException;
-import com.viniciusvieira.backend.domain.exception.CategoriaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.venda.CategoriaAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.venda.CategoriaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.venda.Categoria;
 import com.viniciusvieira.backend.domain.service.venda.CrudCategoriaService;
 import com.viniciusvieira.backend.util.CategoriaCreator;

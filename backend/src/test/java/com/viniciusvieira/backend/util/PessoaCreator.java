@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.util;
 
 import com.github.javafaker.Faker;
+import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaGerenciamentoRequest;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
@@ -24,7 +25,6 @@ public abstract class PessoaCreator {
                 .senha(FAKER.internet().password())
                 .dataCriacao(OffsetDateTime.now())
                 .dataAtualizacao(OffsetDateTime.now())
-                .codigoRecuperacaoSenha(FAKER.code().asin())
                 .build();
 
     }
@@ -60,6 +60,14 @@ public abstract class PessoaCreator {
                 .dataCriacao(pessoa.getDataCriacao())
                 .dataAtualizacao(pessoa.getDataAtualizacao())
                 .senha(pessoa.getSenha())
+                .build();
+    }
+
+    public static PessoaGerenciamentoRequest createPessoaGerenciamentoRequest(Pessoa pessoa){
+        return PessoaGerenciamentoRequest.builder()
+                .codigoParaRecuperarSenha(pessoa.getCodigoRecuperacaoSenha())
+                .email(pessoa.getEmail())
+                .senha(pessoa.getEmail())
                 .build();
     }
 }

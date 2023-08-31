@@ -1,4 +1,4 @@
-package com.viniciusvieira.backend.domain.exception;
+package com.viniciusvieira.backend.domain.exception.usuario;
 
 import java.io.Serial;
 

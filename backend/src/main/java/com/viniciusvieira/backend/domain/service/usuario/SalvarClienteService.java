@@ -3,8 +3,7 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.ClienteMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
-import com.viniciusvieira.backend.domain.exception.CpfAlreadyExistsException;
-import com.viniciusvieira.backend.domain.exception.NegocioException;
+import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
@@ -35,19 +34,23 @@ public class SalvarClienteService {
         cliente.adicionarPermissao(permissaoEncontrada);
         Pessoa clienteSalvo = pessoaRepository.saveAndFlush(cliente);
 
-        // enviando email
-        // COMMENT -- Comentado para testes
-        //Map<String, Object> propriedades = new HashMap<>();
-        //propriedades.put("nome", clienteSalvo.getNome());
-        //propriedades.put("mensagem", "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
-        //
-        //emailService.sendEmailTemplate(
-        //        clienteSalvo.getEmail(),
-        //        "Cadastro na Loja Tabajara",
-        //        propriedades
-        //);
+        sendEmail(clienteSalvo);
 
         return clienteMapper.toPessoaResponse(clienteSalvo);
+    }
+
+    private void sendEmail(Pessoa clienteSalvo) {
+        // enviando email
+        // COMMENT -- Comentado para testes
+        Map<String, Object> propriedades = new HashMap<>();
+        propriedades.put("nome", clienteSalvo.getNome());
+        propriedades.put("mensagem", "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
+
+        emailService.sendEmailTemplate(
+                clienteSalvo.getEmail(),
+                "Cadastro na Loja Sakai",
+                propriedades
+        );
     }
 
     // TODO - fazer o alterar
@@ -55,6 +58,6 @@ public class SalvarClienteService {
 }
 
 /*
-//        emailService.sendEmailSimples(clienteSalvo.getEmail(), "Cadastro na Loja Tabajara",
-//        "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail")
+        emailService.sendEmailSimples(clienteSalvo.getEmail(), "Cadastro na Loja Tabajara",
+        "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail")
  */

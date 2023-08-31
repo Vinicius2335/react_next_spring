@@ -2,8 +2,8 @@ package com.viniciusvieira.backend.api.controller.usuario;
 
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PermissaoRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PermissaoResponse;
-import com.viniciusvieira.backend.domain.exception.PermissaoAlreadyExistsException;
-import com.viniciusvieira.backend.domain.exception.PermissaoNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.usuario.PermissaoAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.usuario.PermissaoNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.service.usuario.CrudPermissaoService;
 import com.viniciusvieira.backend.util.PermissaoCreator;

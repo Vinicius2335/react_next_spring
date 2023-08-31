@@ -25,10 +25,6 @@
 
 ## Cascade Delete
 
-- Estado
-  - Cidade
-    - Pessoa
-
 - Marca
   - Produto
     - Imagens (fazer) 
@@ -37,7 +33,6 @@
   - Produto
     - Imagens (fazer)
     - CarrinhoDeCompraProduto
-    
 
 
 - criado mas não foi implementado nos controllers ou testado
@@ -49,4 +44,3 @@
 - CrudCarrinhoDeCompraProdutoService
 - CarrinhoDeCompraProdutoController
 - CascadeService
-- EmailService

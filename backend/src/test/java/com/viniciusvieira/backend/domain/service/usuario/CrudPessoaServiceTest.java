@@ -3,14 +3,13 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.PessoaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
-import com.viniciusvieira.backend.domain.exception.CpfAlreadyExistsException;
-import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.usuario.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,11 +34,11 @@ class CrudPessoaServiceTest {
     private CrudPessoaService underTest;
 
     @Mock
-    private PessoaRepository mockPessoaRepository;
+    private PessoaRepository pessoaRepositoryMock;
     @Mock
-    private PessoaMapper mockPessoaMapper;
+    private PessoaMapper pessoaMapperMock;
     @Mock
-    private CrudPermissaoService mockPermissaoService;
+    private CrudPermissaoService permissaoServiceMock;
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
 
@@ -53,7 +51,7 @@ class CrudPessoaServiceTest {
         // when
         List<Pessoa> expected = underTest.buscarTodos();
         // then
-        verify(mockPessoaRepository, times(1)).findAll();
+        verify(pessoaRepositoryMock, times(1)).findAll();
         assertThat(expected)
                 .isNotNull()
                 .isNotEmpty()
@@ -71,7 +69,7 @@ class CrudPessoaServiceTest {
         Pessoa expected = underTest.buscarPeloEmail(email);
         // then
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(mockPessoaRepository, times(1)).findByEmail(captor.capture());
+        verify(pessoaRepositoryMock, times(1)).findByEmail(captor.capture());
         String captorEmailValue = captor.getValue();
 
         assertThat(expected)
@@ -93,7 +91,7 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                 .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este EMAIL");
         // then
-        verify(mockPessoaRepository, times(1)).findByEmail(anyString());
+        verify(pessoaRepositoryMock, times(1)).findByEmail(anyString());
     }
 
     @Test
@@ -105,7 +103,7 @@ class CrudPessoaServiceTest {
         // when
         Pessoa expected = underTest.buscarPorId(id);
         // then
-        verify(mockPessoaRepository, times(1)).findById(anyLong());
+        verify(pessoaRepositoryMock, times(1)).findById(anyLong());
         assertThat(expected)
                 .isNotNull()
                 .usingRecursiveComparison()
@@ -124,7 +122,7 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                         .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
-        verify(mockPessoaRepository, times(1)).findById(anyLong());
+        verify(pessoaRepositoryMock, times(1)).findById(anyLong());
     }
 
     @Test
@@ -137,7 +135,7 @@ class CrudPessoaServiceTest {
         // when
         Pessoa expected = underTest.buscarPeloEmailECodigo(email, codigoRecuperacaoSenha);
         // then
-        verify(mockPessoaRepository, times(1)).findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString());
+        verify(pessoaRepositoryMock, times(1)).findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString());
 
         assertThat(expected)
                 .isNotNull()
@@ -158,7 +156,7 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                 .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO");
         // then
-        verify(mockPessoaRepository, times(1))
+        verify(pessoaRepositoryMock, times(1))
                 .findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString());
     }
 
@@ -171,7 +169,7 @@ class CrudPessoaServiceTest {
         // when
         PessoaResponse expected = underTest.inserir(pessoaRequest);
         // then
-        verify(mockPessoaRepository, times(1)).saveAndFlush(any(Pessoa.class));
+        verify(pessoaRepositoryMock, times(1)).saveAndFlush(any(Pessoa.class));
 
         assertThat(expected)
                 .isNotNull()
@@ -191,7 +189,7 @@ class CrudPessoaServiceTest {
                  .isInstanceOf(CpfAlreadyExistsException.class)
                          .hasMessageContaining("Já existe uma pessoa cadastrada com esse CPF");
         // then
-        verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
+        verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
     @Test
@@ -200,7 +198,7 @@ class CrudPessoaServiceTest {
         PessoaResponse pessoaResponse = getPessoaResponse();
         perfectPathConfig();
         // when
-        PessoaResponse expected = mockPessoaMapper.toPessoaResponse(pessoa);
+        PessoaResponse expected = pessoaMapperMock.toPessoaResponse(pessoa);
         System.out.println("expected "+expected);
         // then
         assertThat(expected)
@@ -221,7 +219,7 @@ class CrudPessoaServiceTest {
         // when
         PessoaResponse expected = underTest.alterar(id, pessoaRequest);
         // then
-        verify(mockPessoaRepository, times(1)).saveAndFlush(any(Pessoa.class));
+        verify(pessoaRepositoryMock, times(1)).saveAndFlush(any(Pessoa.class));
 
         assertThat(expected)
                 .isNotNull()
@@ -243,7 +241,7 @@ class CrudPessoaServiceTest {
                  .isInstanceOf(PessoaNaoEncontradaException.class)
                          .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
-        verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
+        verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
     @Test
@@ -259,16 +257,16 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                 .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
-        verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
+        verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
     @Test
-    @Disabled
-    // COMMENT - não lembro mais qual é a ideia aki
     void givenPessoa_whenAlterarParaGerenciamento_thenPessoaShouldBeUpdated() {
         // given
         // when
+        underTest.alterarParaGerenciamento(pessoa);
         // then
+        verify(pessoaRepositoryMock, times(1)).saveAndFlush(any(Pessoa.class));
     }
 
     @Test
@@ -279,7 +277,7 @@ class CrudPessoaServiceTest {
         // when
         underTest.excluir(pessoa.getId());
         // then
-        verify(mockPessoaRepository, times(1)).delete(any(Pessoa.class));
+        verify(pessoaRepositoryMock, times(1)).delete(any(Pessoa.class));
     }
 
     @Test
@@ -293,7 +291,7 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                         .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
-        verify(mockPessoaRepository, never()).delete(any(Pessoa.class));
+        verify(pessoaRepositoryMock, never()).delete(any(Pessoa.class));
     }
 
     @Test
@@ -306,7 +304,7 @@ class CrudPessoaServiceTest {
         // when
         underTest.excluirPermissao(1L, 1L);
         // then
-        verify(mockPessoaRepository, times(1)).saveAndFlush(any(Pessoa.class));
+        verify(pessoaRepositoryMock, times(1)).saveAndFlush(any(Pessoa.class));
         assertThat(pessoa.getPermissoes()).isEmpty();
     }
 
@@ -320,7 +318,7 @@ class CrudPessoaServiceTest {
                 .isInstanceOf(PessoaNaoEncontradaException.class)
                 .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
-        verify(mockPessoaRepository, never()).saveAndFlush(any(Pessoa.class));
+        verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
     private PessoaResponse getPessoaResponse(){
@@ -328,24 +326,24 @@ class CrudPessoaServiceTest {
     }
 
     private void perfectPathConfig(){
-        lenient().when(mockPessoaRepository.findAll()).thenReturn(List.of(pessoa));
-        lenient().when(mockPessoaRepository.findByEmail(anyString())).thenReturn(Optional.of(pessoa));
-        lenient().when(mockPessoaRepository.findById(anyLong())).thenReturn(Optional.of(pessoa));
-        lenient().when(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString())).thenReturn(Optional.of(pessoa));
-        lenient().when(mockPermissaoService.buscarPeloNome(anyString())).thenReturn(PermissaoCreator.createPermissao());
-        lenient().when(mockPessoaMapper.toDomainPessoa(any(PessoaRequest.class))).thenReturn(pessoa);
-        lenient().when(mockPessoaRepository.findByCpf(anyString())).thenReturn(Optional.empty());
-        lenient().when(mockPessoaRepository.saveAndFlush(any(Pessoa.class))).thenReturn(pessoa);
-        lenient().when(mockPessoaMapper.toPessoaResponse(any(Pessoa.class))).thenReturn(getPessoaResponse());
-        lenient().doNothing().when(mockPessoaRepository).delete(any(Pessoa.class));
+        lenient().when(pessoaRepositoryMock.findAll()).thenReturn(List.of(pessoa));
+        lenient().when(pessoaRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(pessoa));
+        lenient().when(pessoaRepositoryMock.findById(anyLong())).thenReturn(Optional.of(pessoa));
+        lenient().when(pessoaRepositoryMock.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString())).thenReturn(Optional.of(pessoa));
+        lenient().when(permissaoServiceMock.buscarPeloNome(anyString())).thenReturn(PermissaoCreator.createPermissao());
+        lenient().when(pessoaMapperMock.toDomainPessoa(any(PessoaRequest.class))).thenReturn(pessoa);
+        lenient().when(pessoaRepositoryMock.findByCpf(anyString())).thenReturn(Optional.empty());
+        lenient().when(pessoaRepositoryMock.saveAndFlush(any(Pessoa.class))).thenReturn(pessoa);
+        lenient().when(pessoaMapperMock.toPessoaResponse(any(Pessoa.class))).thenReturn(getPessoaResponse());
+        lenient().doNothing().when(pessoaRepositoryMock).delete(any(Pessoa.class));
     }
 
     private void failPathConfig(){
-        lenient().when(mockPessoaRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-        lenient().when(mockPessoaRepository.findById(anyLong())).thenReturn(Optional.empty());
-        lenient().when(mockPessoaRepository.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString())).thenReturn(Optional.empty());
-        lenient().when(mockPermissaoService.buscarPeloNome(anyString())).thenReturn(PermissaoCreator.createPermissao());
-        lenient().when(mockPessoaMapper.toDomainPessoa(any(PessoaRequest.class))).thenReturn(pessoa);
-        lenient().when(mockPessoaRepository.findByCpf(anyString())).thenReturn(Optional.of(pessoa));
+        lenient().when(pessoaRepositoryMock.findByEmail(anyString())).thenReturn(Optional.empty());
+        lenient().when(pessoaRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
+        lenient().when(pessoaRepositoryMock.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString())).thenReturn(Optional.empty());
+        lenient().when(permissaoServiceMock.buscarPeloNome(anyString())).thenReturn(PermissaoCreator.createPermissao());
+        lenient().when(pessoaMapperMock.toDomainPessoa(any(PessoaRequest.class))).thenReturn(pessoa);
+        lenient().when(pessoaRepositoryMock.findByCpf(anyString())).thenReturn(Optional.of(pessoa));
     }
 }

@@ -1,6 +1,11 @@
 package com.viniciusvieira.backend.api.exceptionhandler;
 
 import com.viniciusvieira.backend.domain.exception.*;
+import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.usuario.PermissaoAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.usuario.PermissaoNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.usuario.PessoaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.venda.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -170,6 +175,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request
     ){
         HttpStatus status = HttpStatus.CONFLICT;
+        Problem body = createExceptionResponseBody(ex, status.value());
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(CreateTemplateException.class)
+    public ResponseEntity<Object> handleCreateTemplateException(
+            CreateTemplateException ex,
+            WebRequest request
+    ){
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         Problem body = createExceptionResponseBody(ex, status.value());
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);

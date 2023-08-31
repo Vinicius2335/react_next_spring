@@ -3,7 +3,7 @@ package com.viniciusvieira.backend.domain.service.venda;
 import com.viniciusvieira.backend.api.mapper.venda.CarrinhoDeCompraMapper;
 import com.viniciusvieira.backend.api.representation.model.request.venda.CarrinhoDeCompraRequest;
 import com.viniciusvieira.backend.api.representation.model.response.venda.CarrinhoDeCompraResponse;
-import com.viniciusvieira.backend.domain.exception.CarrinhoDeCompraNaoEncontradoException;
+import com.viniciusvieira.backend.domain.exception.venda.CarrinhoDeCompraNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
 import com.viniciusvieira.backend.domain.repository.venda.CarrinhoCompraRepository;
 import jakarta.transaction.Transactional;

@@ -29,13 +29,11 @@ public class Permissao extends BaseEntity {
     @ToString.Exclude
     private List<Pessoa> pessoas = new ArrayList<>();
 
-    // TEST
     public void addNewPessoa(Pessoa pessoa){
         this.getPessoas().add(pessoa);
         pessoa.getPermissoes().add(this);
     }
 
-    // TEST - verificar se o removeIf funciona como eu quero
     public void removePessoa(Pessoa pessoa){
         getPessoas().removeIf(pessoa1 -> pessoa1.getId().equals(pessoa.getId()));
         pessoa.getPermissoes().remove(this);

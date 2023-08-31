@@ -1,7 +1,9 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.viniciusvieira.backend.domain.exception.CreateTemplateException;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
-import freemarker.template.Configuration;
+import freemarker.core.ParseException;
+import freemarker.template.*;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,7 +11,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import java.io.IOException;
 import java.util.Map;
 
 @Service
@@ -17,11 +21,12 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    // configuration do freemarker
     @Autowired
-    private Configuration fmConfiguration;
+    private FreeMarkerConfigurer freemarkerConfigurer;
 
-    public void sendEmailSimples(String destinatario, String titulo, String mensagem){
+    private static final String ERROR_MESSAGE = "Erro ao tentar enviar um email ao cliente cadastrado";
+
+    public void sendEmailSimples(String destinatario, String titulo, String mensagem) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
 
@@ -31,37 +36,39 @@ public class EmailService {
 
             javaMailSender.send(message);
         } catch (Exception ex) {
-            throw new NegocioException("Erro ao tentar enviar um email ao cliente cadastrado", ex);
+            throw new NegocioException(ERROR_MESSAGE, ex);
         }
     }
 
-    public void sendEmailTemplate(String destinatario, String titulo, Map<String, Object> propriedades){
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
+    // COMMENT - Baeldung
+    public void sendEmailTemplate(String destinatario, String titulo, Map<String, Object> propriedades) {
         try {
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
+            Template freemarkerTemplate = freemarkerConfigurer.getConfiguration()
+                    .getTemplate("email-recuperacao-codigo.ftl");
+            String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerTemplate, propriedades);
 
-            message.setSubject(titulo);
-            message.setTo(destinatario);
-            mimeMessage.setText(getConteudoTemplate(propriedades));
+            sendHtmlMessage(destinatario, titulo, htmlBody);
 
-            javaMailSender.send(message.getMimeMessage());
+        } catch (TemplateException | TemplateNotFoundException | ParseException | MalformedTemplateNameException e) {
+            throw new CreateTemplateException("Erro ao tentar criar o template para o envio de email.", e);
+        } catch (IOException e) {
+            throw new CreateTemplateException("Erro ao tentar encontrar o template para o envio de email.", e);
+        }
+    }
+
+    // COMMENT - Baeldung
+    private void sendHtmlMessage(String to, String subject, String htmlBody) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true);
+            javaMailSender.send(message);
 
         } catch (Exception ex) {
-            throw new NegocioException("Erro ao tentar enviar um email ao cliente cadastrado", ex);
+            throw new NegocioException(ERROR_MESSAGE, ex);
         }
     }
 
-    private String getConteudoTemplate(Map<String, Object> model){
-        StringBuffer content = new StringBuffer();
-
-        try {
-            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(fmConfiguration
-                    .getTemplate("email-recuperacao-codigo.flth"), model));
-
-        } catch (Exception ex) {
-            throw new NegocioException("Erro ao tentar Criar um email a partir de um template", ex);
-        }
-        return content.toString();
-    }
 }

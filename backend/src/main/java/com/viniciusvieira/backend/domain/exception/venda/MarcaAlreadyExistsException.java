@@ -1,4 +1,4 @@
-package com.viniciusvieira.backend.domain.exception;
+package com.viniciusvieira.backend.domain.exception.venda;
 
 import java.io.Serial;
 

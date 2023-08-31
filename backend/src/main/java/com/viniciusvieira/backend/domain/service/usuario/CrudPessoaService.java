@@ -3,8 +3,8 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.PessoaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
-import com.viniciusvieira.backend.domain.exception.CpfAlreadyExistsException;
-import com.viniciusvieira.backend.domain.exception.PessoaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.usuario.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
@@ -73,7 +73,7 @@ public class CrudPessoaService {
         return pessoaMapper.toPessoaResponse(pessoaAlterada);
     }
 
-    // COMMENT - Não lembro mais qual é a ideia aki
+    // COMMENT - Altera pessoa para realizar o gerenciamento sobre a senha
     @Transactional
     public void alterarParaGerenciamento(Pessoa pessoa){
         pessoaRepository.saveAndFlush(pessoa);

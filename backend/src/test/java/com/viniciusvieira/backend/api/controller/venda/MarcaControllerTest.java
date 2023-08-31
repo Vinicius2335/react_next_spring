@@ -2,8 +2,8 @@ package com.viniciusvieira.backend.api.controller.venda;
 
 import com.viniciusvieira.backend.api.representation.model.request.venda.MarcaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.venda.MarcaResponse;
-import com.viniciusvieira.backend.domain.exception.MarcaAlreadyExistsException;
-import com.viniciusvieira.backend.domain.exception.MarcaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.exception.venda.MarcaAlreadyExistsException;
+import com.viniciusvieira.backend.domain.exception.venda.MarcaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.venda.Marca;
 import com.viniciusvieira.backend.domain.service.venda.CrudMarcaService;
 import com.viniciusvieira.backend.util.MarcaCreator;
