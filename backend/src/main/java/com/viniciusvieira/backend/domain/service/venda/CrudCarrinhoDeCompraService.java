@@ -24,7 +24,7 @@ public class CrudCarrinhoDeCompraService {
 
     public CarrinhoDeCompra buscarPeloId(Long id) {
         return carrinhoCompraRepository.findById(id)
-                .orElseThrow(() -> new CarrinhoDeCompraNaoEncontradoException("CarrinhoDeCompra não cadastrada"));
+                .orElseThrow(() -> new CarrinhoDeCompraNaoEncontradoException("CarrinhoDeCompra não cadastrado"));
     }
 
     @Transactional

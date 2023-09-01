@@ -30,7 +30,7 @@ class ProdutoControllerTest {
     private static final String PRODUTO_NOT_FOUND = "Produto não encontrada";
 
     @InjectMocks
-    private ProdutoController undertTest;
+    private ProdutoController underTest;
 
     @Mock
     private CrudProdutoService crudProdutoServiceMock;
@@ -43,7 +43,7 @@ class ProdutoControllerTest {
         // given
         given(crudProdutoServiceMock.buscarTodos()).willReturn(List.of(produto));
         // when
-        ResponseEntity<List<Produto>> expected = undertTest.buscarTodos();
+        ResponseEntity<List<Produto>> expected = underTest.buscarTodos();
         // then
         verify(crudProdutoServiceMock, times(1)).buscarTodos();
         assertThat(expected.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -61,13 +61,44 @@ class ProdutoControllerTest {
         ProdutoResponse produtoResponse = ProdutoCreator.createProdutoResponse(produto);
         given(crudProdutoServiceMock.inserir(any(ProdutoRequest.class))).willReturn(produtoResponse);
         // when
-        ResponseEntity<ProdutoResponse> expected = undertTest.inserir(produtoRequest);
+        ResponseEntity<ProdutoResponse> expected = underTest.inserir(produtoRequest);
         // then
         verify(crudProdutoServiceMock, times(1)).inserir(any(ProdutoRequest.class));
         assertThat(expected.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(expected.getBody())
                 .isNotNull()
                 .isEqualTo(produtoResponse);
+    }
+
+    @Test
+    @DisplayName("buscarPorId() return produto")
+    void givenId_whenbuscarPorId_thenProdutoShouldBeFound() {
+        // given
+        given(crudProdutoServiceMock.buscarPorId(anyLong())).willReturn(produto);
+        // when
+        ResponseEntity<Produto> expected = underTest.buscarPorId(1L);
+        // then
+        verify(crudProdutoServiceMock, times(1)).buscarPorId(anyLong());
+        assertThat(expected.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(expected.getBody())
+                .isNotNull()
+                .isEqualTo(produto);
+    }
+
+    @Test
+    @DisplayName("buscarPorId() Throws ProdutoNaoEncontradoException when produto not found by id")
+    void givenUnregisteredId_whenBuscarPorId_thenThrowsProdutoNaoEncontradoException() {
+        // given
+        ProdutoRequest produtoRequest = ProdutoCreator.createProdutoRequest(produto);
+        doThrow(new ProdutoNaoEncontradoException(PRODUTO_NOT_FOUND)).when(crudProdutoServiceMock)
+                .alterar(anyLong(), any(ProdutoRequest.class));
+        // when
+        assertThatThrownBy(() -> underTest.alterar(1L, produtoRequest))
+                .isInstanceOf(ProdutoNaoEncontradoException.class)
+                .hasMessageContaining(PRODUTO_NOT_FOUND);
+        // then
+        verify(crudProdutoServiceMock, times(1))
+                .alterar(anyLong(), any(ProdutoRequest.class));
     }
 
     @Test
@@ -85,7 +116,7 @@ class ProdutoControllerTest {
         ProdutoResponse produtoResponse = ProdutoCreator.createProdutoResponse(produto);
         given(crudProdutoServiceMock.alterar(anyLong(), any(ProdutoRequest.class))).willReturn(produtoResponse);
         // when
-        ResponseEntity<ProdutoResponse> expected = undertTest.alterar(1L, produtoRequest);
+        ResponseEntity<ProdutoResponse> expected = underTest.alterar(1L, produtoRequest);
         // then
         verify(crudProdutoServiceMock, times(1))
                 .alterar(anyLong(), any(ProdutoRequest.class));
@@ -100,11 +131,10 @@ class ProdutoControllerTest {
     void givenUnregisteredProdutoRequest_whenAlterar_thenThrowsProdutoNaoEncontradoException() {
         // given
         ProdutoRequest produtoRequest = ProdutoCreator.createProdutoRequest(produto);
-        ProdutoResponse produtoResponse = ProdutoCreator.createProdutoResponse(produto);
         doThrow(new ProdutoNaoEncontradoException(PRODUTO_NOT_FOUND)).when(crudProdutoServiceMock)
                 .alterar(anyLong(), any(ProdutoRequest.class));
         // when
-        assertThatThrownBy(() -> undertTest.alterar(1L, produtoRequest))
+        assertThatThrownBy(() -> underTest.alterar(1L, produtoRequest))
                 .isInstanceOf(ProdutoNaoEncontradoException.class)
                         .hasMessageContaining(PRODUTO_NOT_FOUND);
         // then
@@ -125,7 +155,7 @@ class ProdutoControllerTest {
         // given
         doNothing().when(crudProdutoServiceMock).excluir(anyLong());
         // when
-        ResponseEntity<Void> expected = undertTest.excluir(1L);
+        ResponseEntity<Void> expected = underTest.excluir(1L);
         // then
         verify(crudProdutoServiceMock, times(1)).excluir(anyLong());
         assertThat(expected.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
@@ -139,7 +169,7 @@ class ProdutoControllerTest {
         doThrow(new ProdutoNaoEncontradoException(PRODUTO_NOT_FOUND))
                 .when(crudProdutoServiceMock).excluir(anyLong());
         // when
-        assertThatThrownBy(() -> undertTest.excluir(1L))
+        assertThatThrownBy(() -> underTest.excluir(1L))
                 .isInstanceOf(ProdutoNaoEncontradoException.class)
                 .hasMessageContaining(PRODUTO_NOT_FOUND);
         // then

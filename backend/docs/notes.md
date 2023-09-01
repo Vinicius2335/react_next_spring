@@ -39,8 +39,4 @@
 
 # Testes
 
-- PessoaGerenciamentoController
-- CarrinhoDeCompraProdutoRepository
-- CrudCarrinhoDeCompraProdutoService
-- CarrinhoDeCompraProdutoController
 - CascadeService

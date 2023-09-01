@@ -22,6 +22,6 @@ public class CarrinhoDeCompraResponse {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private PessoaResponse pessoa;
 
-    private OffsetDateTime dataCompra;
+    private OffsetDateTime dataCriacao;
     private OffsetDateTime dataAtualizacao;
 }

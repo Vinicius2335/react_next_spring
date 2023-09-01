@@ -24,6 +24,11 @@ public class CarrinhoDeCompraController {
         return ResponseEntity.ok(crudCarrinhoDeCompraService.buscarTodos());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CarrinhoDeCompra> buscarPeloId(@PathVariable Long id){
+        return ResponseEntity.ok(crudCarrinhoDeCompraService.buscarPeloId(id));
+    }
+
     @PostMapping
     public ResponseEntity<CarrinhoDeCompraResponse> inserir(@RequestBody @Valid CarrinhoDeCompraRequest estadoRequest){
         return ResponseEntity

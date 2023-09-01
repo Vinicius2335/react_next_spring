@@ -7,13 +7,9 @@ import com.viniciusvieira.backend.domain.exception.venda.ProdutoNaoEncontradoExc
 import com.viniciusvieira.backend.domain.model.venda.Produto;
 import com.viniciusvieira.backend.domain.repository.venda.ProdutoRepository;
 import com.viniciusvieira.backend.util.ProdutoCreator;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -42,8 +38,8 @@ class CrudProdutoServiceTest {
     private static final String PRODUTO_NOT_FOUND = "Produto não encontrada";
 
     @Test
-    @DisplayName("buscarTodos() return list of pessoa")
-    void whenBuscarTodos_thenPessoasShouldBeFound() {
+    @DisplayName("buscarTodos() return list of produto")
+    void whenBuscarTodos_thenProdutosShouldBeFound() {
         // given
         given(produtoRepositoryMock.findAll()).willReturn(List.of(produto));
         // when
@@ -57,8 +53,8 @@ class CrudProdutoServiceTest {
     }
 
     @Test
-    @DisplayName("buscarPorId() return pessoa by id")
-    void givenId_whenBuscarPorId_thenPessoaShoudBeFound() {
+    @DisplayName("buscarPorId() return produto by id")
+    void givenId_whenBuscarPorId_thenProdutoShoudBeFound() {
         // given
         buscarPorIdConfig();
         // then
