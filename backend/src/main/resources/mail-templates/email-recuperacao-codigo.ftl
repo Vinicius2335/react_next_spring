@@ -5,7 +5,6 @@
     </head>
     <body>
       <h3>Olá, ${nome}</h3>
-      <br />
       <p>${mensagem}</p> <br />
 
       <p>Regards,</p>

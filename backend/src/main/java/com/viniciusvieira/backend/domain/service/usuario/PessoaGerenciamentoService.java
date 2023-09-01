@@ -32,10 +32,10 @@ public class PessoaGerenciamentoService {
         Pessoa pessoaEncontrada = crudPessoaService.buscarPeloEmailECodigo(pessoaGerenciamentoRequest.getEmail(),
                 pessoaGerenciamentoRequest.getCodigoParaRecuperarSenha());
 
-        long diferenca = ChronoUnit.MINUTES.between(LocalDateTime.now(), pessoaEncontrada.getDataEnvioCodigo());
+        long diferenca = ChronoUnit.MINUTES.between(pessoaEncontrada.getDataEnvioCodigo(), LocalDateTime.now());
 
         // validade do código de recuperação é de 15min
-        if (diferenca <= 15){
+        if (diferenca >= 0 && diferenca <= 15){
             // TODO - depois de adicionar o spring security é necessário criptografar a senha
             pessoaEncontrada.setSenha(pessoaGerenciamentoRequest.getSenha());
             pessoaEncontrada.setCodigoRecuperacaoSenha(null);

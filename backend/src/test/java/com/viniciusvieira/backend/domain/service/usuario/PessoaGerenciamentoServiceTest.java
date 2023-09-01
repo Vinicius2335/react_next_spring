@@ -7,19 +7,16 @@ import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.service.EmailService;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class PessoaGerenciamentoServiceTest {
     @InjectMocks
     private PessoaGerenciamentoService underTest;
@@ -38,11 +35,13 @@ class PessoaGerenciamentoServiceTest {
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
 
-    private LocalDateTime data = LocalDateTime.now();
+    private final LocalDateTime data = LocalDateTime.now();
 
     @BeforeEach
     void setUp() {
-        System.out.println(data);
+        try (MockedStatic<LocalDateTime> dateTimeMockedStatic = Mockito.mockStatic(LocalDateTime.class)) {
+            dateTimeMockedStatic.when(LocalDateTime::now).thenReturn(data);
+        }
     }
 
     @Test
@@ -93,8 +92,50 @@ class PessoaGerenciamentoServiceTest {
 
     @Test
     @DisplayName("alterarSenha() update pessoa")
-    @Disabled
     void givenPessoaGerencioamentoRequest_whenAlterarSenha_thenPessoaShouldBeUpdate() {
-      // Muito dificil testas LocalDateTime.now()
+        // given
+        given(crudPessoaServiceMock.buscarPeloEmailECodigo(anyString(), anyString())).willReturn(pessoa);
+        doNothing().when(crudPessoaServiceMock).alterarParaGerenciamento(any(Pessoa.class));
+        pessoa.setDataEnvioCodigo(data);
+        pessoa.setCodigoRecuperacaoSenha("teste");
+        PessoaGerenciamentoRequest pessoaGerenciamentoRequest = PessoaCreator.createPessoaGerenciamentoRequest(pessoa);
+        // when
+        underTest.alterarSenha(pessoaGerenciamentoRequest);
+        // then
+        verify(crudPessoaServiceMock, times(1)).alterarParaGerenciamento(any(Pessoa.class));
+    }
+
+    @Test
+    @DisplayName("alterarSenha() Throws PessoaNaoEncontradaException when not found pessoa by email and codigo")
+    void givenUnregisteredPessoaGerencioamentoRequest_whenAlterarSenha_thenThrowsPessoaNaoEncontradaException() {
+        // given
+        doThrow(new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO"))
+                .when(crudPessoaServiceMock).buscarPeloEmailECodigo(anyString(), anyString());
+        pessoa.setDataEnvioCodigo(data);
+        pessoa.setCodigoRecuperacaoSenha("teste");
+        PessoaGerenciamentoRequest pessoaGerenciamentoRequest = PessoaCreator.createPessoaGerenciamentoRequest(pessoa);
+        // when
+        assertThatThrownBy(() -> underTest.alterarSenha(pessoaGerenciamentoRequest))
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                        .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO");
+        // then
+        verify(crudPessoaServiceMock, never()).alterarParaGerenciamento(any(Pessoa.class));
+    }
+
+    @Test
+    @DisplayName("alterarSenha() Throws NegocioException when dataEnvioCodigo expired")
+    void givenPessoaGerencioamentoRequest_whenAlterarSenha_thenThrowsNegocioException() {
+        // given
+        LocalDateTime localDateTime = data.plusHours(2);
+        pessoa.setDataEnvioCodigo(localDateTime);
+        pessoa.setCodigoRecuperacaoSenha("teste");
+        given(crudPessoaServiceMock.buscarPeloEmailECodigo(anyString(), anyString())).willReturn(pessoa);
+        PessoaGerenciamentoRequest pessoaGerenciamentoRequest = PessoaCreator.createPessoaGerenciamentoRequest(pessoa);
+        // when
+        assertThatThrownBy(() -> underTest.alterarSenha(pessoaGerenciamentoRequest))
+                .isInstanceOf(NegocioException.class)
+                .hasMessageContaining("Tempo expirado, solicite um novo código");
+        // then
+        verify(crudPessoaServiceMock, never()).alterarParaGerenciamento(any(Pessoa.class));
     }
 }
