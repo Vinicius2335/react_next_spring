@@ -1,5 +1,6 @@
 package com.viniciusvieira.backend;
 
+import com.github.javafaker.Faker;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -66,5 +68,24 @@ class RandomTests {
 
     private LocalDate convertToLocalDate(Date date){
         return LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+    @Test
+    void faker() {
+        Faker faker = new Faker(new Locale("pt_BR"));
+        assertDoesNotThrow(() -> {
+            double digit = faker.number().randomDouble(2, 10, 99);
+            String name = faker.commerce().productName();
+            String price = faker.commerce().price(10, 99);
+            String department = faker.commerce().department();
+            String paragraph = faker.lorem().paragraph();
+            String sentence = faker.lorem().sentence();
+            System.out.println(digit);
+            System.out.println(name);
+            System.out.println(price);
+            System.out.println(department);
+            System.out.println(paragraph);
+            System.out.println(sentence);
+        });
     }
 }

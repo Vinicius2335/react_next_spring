@@ -24,7 +24,7 @@ public class CrudProdutoService {
 
     public Produto buscarPorId(Long id){
         return produtoRepository.findById(id)
-                .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto não encontrada"));
+                .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto não encontrado"));
     }
 
     @Transactional
@@ -55,14 +55,14 @@ public class CrudProdutoService {
     public void excluirTodosProdutosRelacionadosMarcaId(Long marcaId){
         List<Produto> produtos = produtoRepository.findAllProdutosByMarcaId(marcaId);
         if (!produtos.isEmpty()){
-            produtos.forEach(produtoRepository::delete);
+            produtoRepository.deleteAll(produtos);
         }
     }
 
     public void excluirTodosProdutosRelacionadosCategoriaId(Long categoriaId){
         List<Produto> produtos = produtoRepository.findAllProdutosByCategoriaId(categoriaId);
         if (!produtos.isEmpty()){
-            produtos.forEach(produtoRepository::delete);
+            produtoRepository.deleteAll(produtos);
         }
     }
 }

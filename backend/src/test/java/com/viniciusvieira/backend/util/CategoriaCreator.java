@@ -16,6 +16,15 @@ public abstract class CategoriaCreator {
                 .build();
     }
 
+    public static Categoria createOtherCategoria(){
+        return Categoria.builder()
+                .id(2L)
+                .nome("Roupa")
+                .dataAtualizacao(OffsetDateTime.now())
+                .dataCriacao(OffsetDateTime.now())
+                .build();
+    }
+
     public static CategoriaRequest createCategoriaRequest(){
         return CategoriaRequest.builder()
                 .nome("Eletrônico")

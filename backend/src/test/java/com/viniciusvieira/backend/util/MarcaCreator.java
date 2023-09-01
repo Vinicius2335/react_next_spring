@@ -16,6 +16,15 @@ public abstract class MarcaCreator {
                 .build();
     }
 
+    public static Marca createOtherMarca(){
+        return Marca.builder()
+                .id(2L)
+                .nome("Intel")
+                .dataAtualizacao(OffsetDateTime.now())
+                .dataCriacao(OffsetDateTime.now())
+                .build();
+    }
+
     public static MarcaRequest createMarcaRequest(){
         return MarcaRequest.builder()
                 .nome("Avell")

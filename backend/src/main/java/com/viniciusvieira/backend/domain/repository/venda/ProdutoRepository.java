@@ -13,6 +13,12 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query("from Produto p join fetch p.marca m where m.id = :id")
     List<Produto> findAllProdutosByMarcaId(@Param("id") Long marcaId);
 
+    // COMMENT - mesma coisa que em cima
+    List<Produto> findProdutosByMarcaId(Long marcaId);
+
     @Query("from Produto p join fetch p.categoria c where c.id = :id")
     List<Produto> findAllProdutosByCategoriaId(@Param("id") Long categoriaId);
+
+    // COMMENT - mesma coisa que em cima
+    List<Produto> findProdutosByCategoriaId(Long categoriaId);
 }

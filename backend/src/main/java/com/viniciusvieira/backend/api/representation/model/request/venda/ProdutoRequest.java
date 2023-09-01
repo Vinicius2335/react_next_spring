@@ -35,8 +35,10 @@ public class ProdutoRequest {
     private BigDecimal valorVenda;
 
     @Valid
+    @NotNull(message = "MARCA não pode ser nulo")
     private MarcaId marca;
 
     @Valid
+    @NotNull(message = "CATEGORIA não pode ser nulo")
     private CategoriaId categoria;
 }
