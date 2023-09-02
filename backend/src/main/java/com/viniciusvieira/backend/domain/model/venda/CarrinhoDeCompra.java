@@ -18,7 +18,7 @@ public class CarrinhoDeCompra extends BaseEntity {
     @Column(nullable = false)
     private String situacao;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String observacao;
 
     // 1 pessoa possue 0 ou * carrinho de compra

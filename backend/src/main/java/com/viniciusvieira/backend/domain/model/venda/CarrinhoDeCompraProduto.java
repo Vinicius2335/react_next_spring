@@ -22,6 +22,7 @@ public class CarrinhoDeCompraProduto extends BaseEntity {
     @Column(nullable = false)
     private int quantidade;
 
+    @Column(columnDefinition = "TEXT")
     private String observacao;
 
     @ManyToOne

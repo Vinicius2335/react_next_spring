@@ -1,6 +1,5 @@
 package com.viniciusvieira.backend.domain.service;
 
-import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
 import com.viniciusvieira.backend.domain.service.venda.CrudCategoriaService;
 import com.viniciusvieira.backend.domain.service.venda.CrudMarcaService;
 import com.viniciusvieira.backend.domain.service.venda.CrudProdutoService;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class CascadeDeleteService {
-    private final CrudPessoaService crudPessoaService;
     private final CrudMarcaService crudMarcaService;
     private final CrudCategoriaService crudCategoriaService;
     private final CrudProdutoService crudProdutoService;

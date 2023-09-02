@@ -61,7 +61,6 @@ class PessoaGerenciamentoServiceTest {
     @DisplayName("solicitarCodigo() throws PessoaNaoEncontradaException when pessoa not found by email")
     void givenUnregisteredEmail_whenSolicitarCodigo_thenThrowsPessoaNaoEncontradaException() {
         // given
-        given(crudPessoaServiceMock.buscarPeloEmail(anyString())).willReturn(pessoa);
         doThrow(new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL"))
                 .when(crudPessoaServiceMock).buscarPeloEmail(anyString());
         String email = pessoa.getEmail();

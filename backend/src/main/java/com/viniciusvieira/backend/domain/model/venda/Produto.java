@@ -22,7 +22,7 @@ public class Produto extends BaseEntity {
     @Column(nullable = false)
     private String descricaoCurta;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String descricaoDetalhada;
 
     @Column(nullable = false)

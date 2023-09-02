@@ -35,7 +35,7 @@ class CrudProdutoServiceTest {
     private ProdutoMapper produtoMapperMock;
 
     private final Produto produto = ProdutoCreator.createProduto();
-    private static final String PRODUTO_NOT_FOUND = "Produto não encontrada";
+    private static final String PRODUTO_NOT_FOUND = "Produto não encontrado";
 
     @Test
     @DisplayName("buscarTodos() return list of produto")

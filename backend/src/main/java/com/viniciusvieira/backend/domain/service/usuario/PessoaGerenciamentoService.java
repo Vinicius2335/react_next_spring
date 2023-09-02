@@ -19,6 +19,7 @@ public class PessoaGerenciamentoService {
 
     public void solicitarCodigo(String email){
         Pessoa pessoa = crudPessoaService.buscarPeloEmail(email);
+
         pessoa.setCodigoRecuperacaoSenha(gerarCodigoParaRecuperarSenha());
         pessoa.setDataEnvioCodigo(LocalDateTime.now());
         crudPessoaService.alterarParaGerenciamento(pessoa);

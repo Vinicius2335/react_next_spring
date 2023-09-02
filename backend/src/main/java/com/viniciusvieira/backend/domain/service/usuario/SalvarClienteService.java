@@ -23,13 +23,9 @@ public class SalvarClienteService {
     private final EmailService emailService;
 
     public PessoaResponse inserirCliente(ClienteRequest clienteRequest){
+        verifyIfCpfAlreadyExists(clienteRequest.getCpf());
+
         Pessoa cliente = clienteMapper.toDomainPessoa(clienteRequest);
-        boolean isCpfEmUso = pessoaRepository.findByCpf(cliente.getCpf()).isPresent();
-
-        if (isCpfEmUso){
-            throw new CpfAlreadyExistsException("Já existe uma pessoa cadastrada com esse CPF");
-        }
-
         Permissao permissaoEncontrada = crudPermissaoService.buscarPeloNome("CLIENTE");
         cliente.adicionarPermissao(permissaoEncontrada);
         Pessoa clienteSalvo = pessoaRepository.saveAndFlush(cliente);
@@ -37,6 +33,14 @@ public class SalvarClienteService {
         sendEmail(clienteSalvo);
 
         return clienteMapper.toPessoaResponse(clienteSalvo);
+    }
+
+    private void verifyIfCpfAlreadyExists(String cpf){
+        boolean isCpfEmUso = pessoaRepository.findByCpf(cpf).isPresent();
+
+        if (isCpfEmUso){
+            throw new CpfAlreadyExistsException("Já existe uma pessoa cadastrada com esse CPF");
+        }
     }
 
     private void sendEmail(Pessoa clienteSalvo) {

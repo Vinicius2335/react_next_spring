@@ -17,12 +17,11 @@ public abstract class ClienteCreator {
     }
 
     public static ClienteRequest createInvalidClienteRequest(){
-        Faker faker = createFaker();
         return ClienteRequest.builder()
-                .cpf("152.497.740-32")
-                .email(faker.internet().emailAddress())
-                .nome(faker.name().fullName())
-                .endereco(EnderecoCreator.createEnderecoRequest())
+                .cpf(null)
+                .email(null)
+                .nome(null)
+                .endereco(null)
                 .build();
     }
 

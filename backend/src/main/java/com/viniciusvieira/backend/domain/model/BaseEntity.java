@@ -21,8 +21,10 @@ public class BaseEntity {
     private Long id;
 
     @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP")
     private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP")
     private OffsetDateTime dataAtualizacao;
 }

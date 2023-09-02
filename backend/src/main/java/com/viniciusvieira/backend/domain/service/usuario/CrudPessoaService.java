@@ -43,9 +43,9 @@ public class CrudPessoaService {
     @Transactional
     public PessoaResponse inserir(PessoaRequest pessoaRequest) {
         Permissao permissao = permissaoService.buscarPeloNome(pessoaRequest.getNomePermissao());
-        Pessoa pessoaParaSalvar = pessoaMapper.toDomainPessoa(pessoaRequest);
-        verifyIfPessoaExistsByCpf(pessoaParaSalvar.getCpf());
+        verifyIfPessoaExistsByCpf(pessoaRequest.getCpf());
 
+        Pessoa pessoaParaSalvar = pessoaMapper.toDomainPessoa(pessoaRequest);
         pessoaParaSalvar.adicionarPermissao(permissao);
         Pessoa pessoaSalva = pessoaRepository.saveAndFlush(pessoaParaSalvar);
 

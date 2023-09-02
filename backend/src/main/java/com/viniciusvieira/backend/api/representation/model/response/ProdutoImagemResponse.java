@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProdutoImagemResponse {

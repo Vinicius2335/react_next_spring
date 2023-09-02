@@ -52,7 +52,6 @@ class SalvarClienteServiceTest {
         when(pessoaRepositoryMock.saveAndFlush(any(Pessoa.class))).thenReturn(cliente);
         doNothing().when(emailServiceMock).sendEmailTemplate(anyString(), anyString(), anyMap());
         when(clienteMapperMock.toPessoaResponse(any(Pessoa.class))).thenReturn(pessoaResponse);
-
     }
 
     @Test

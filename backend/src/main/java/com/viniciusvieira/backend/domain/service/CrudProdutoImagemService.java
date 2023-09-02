@@ -74,8 +74,8 @@ public class CrudProdutoImagemService {
     }
 
     private boolean deletandoImagemArmazenada(ProdutoImagem produtoImagem, Path diretorioDeImagens){
-        try(DirectoryStream<Path> stream = Files.newDirectoryStream(diretorioDeImagens)){
-            for (Path path : stream){
+        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(diretorioDeImagens)){
+            for (Path path : directoryStream){
                 if (path.getFileName().toString().equals(produtoImagem.getNome())){
                     return Files.deleteIfExists(path);
                 }

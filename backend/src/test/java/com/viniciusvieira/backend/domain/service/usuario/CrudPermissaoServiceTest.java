@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,7 +46,7 @@ class CrudPermissaoServiceTest {
     @DisplayName("buscarTodos() return list permissao")
     void whenBuscarTodos_thenReturnListPermissao() {
         // given
-        perfectPathConfig();
+        given(permissaoRepositoryMock.findAll()).willReturn(List.of(permissao));
         // when
         List<Permissao> expected = underTest.buscarTodos();
         // then
@@ -59,7 +60,7 @@ class CrudPermissaoServiceTest {
     @DisplayName("buscarPeloId() return permissao")
     void givenId_WhenBuscarPeloId_thenPermissaoShouldBeFound() {
         // given
-        perfectPathConfig();
+        findByIdConfig();
         // when
         Permissao expected = underTest.buscarPeloId(permissao.getId());
         // then
@@ -69,12 +70,16 @@ class CrudPermissaoServiceTest {
                 .isEqualTo(permissao);
     }
 
+    private void findByIdConfig(){
+        given(permissaoRepositoryMock.findById(anyLong())).willReturn(Optional.of(permissao));
+    }
+
     @Test
     @DisplayName("buscarPeloId() throwns PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredId_WhenBuscarPeloId_thenThrowsPermissaoNaoEncontradaException() {
         // given
         long id = permissao.getId();
-        failPathConfig();
+        findByIdEmptyConfig();
         // when
         assertThatThrownBy(() -> underTest.buscarPeloId(id))
                 .isInstanceOf(PermissaoNaoEncontradaException.class)
@@ -83,11 +88,15 @@ class CrudPermissaoServiceTest {
         verify(permissaoRepositoryMock, times(1)).findById(anyLong());
     }
 
+    private void findByIdEmptyConfig(){
+        given(permissaoRepositoryMock.findById(anyLong())).willReturn(Optional.empty());
+    }
+
     @Test
     @DisplayName("buscarPeloNome() return permissao")
     void givenNome_whenBuscarPeloNome_thenPermissaoShouldBeFound() {
         // given
-        perfectPathConfig();
+        findByNomeConfig();
         // when
         Permissao expected = underTest.buscarPeloNome(permissao.getNome());
         // then
@@ -97,19 +106,26 @@ class CrudPermissaoServiceTest {
                 .isEqualTo(permissao);
     }
 
+    private void findByNomeConfig(){
+        given(permissaoRepositoryMock.findByNome(anyString())).willReturn(Optional.of(permissao));
+    }
+
     @Test
     @DisplayName("buscarPeloNome() throwns PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredNome_whenBuscarPeloNome_thenThrowsPermissaoNaoEncontradaException() {
         // given
         String nome = permissao.getNome();
-        failPathConfig();
+        findByNomeEmptyConfig();
         // when
         assertThatThrownBy(() -> underTest.buscarPeloNome(nome))
                 .isInstanceOf(PermissaoNaoEncontradaException.class)
                         .hasMessageContaining("Permissão não encontrada");
         // then
         verify(permissaoRepositoryMock, times(1)).findByNome(anyString());
+    }
 
+    private void findByNomeEmptyConfig(){
+        given(permissaoRepositoryMock.findByNome(anyString())).willReturn(Optional.empty());
     }
 
     @Test
@@ -117,8 +133,7 @@ class CrudPermissaoServiceTest {
     void givenPermissaoRequest_whenInserir_thenPermissaoShouldBeInserted() {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
-        perfectPathConfig();
-        lenient().when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.empty());
+        inserirConfig();
         // when
         PermissaoResponse expected = underTest.inserir(permissaoRequest);
         // then
@@ -128,12 +143,23 @@ class CrudPermissaoServiceTest {
                 .isEqualTo(permissaoResponse);
     }
 
+    private void inserirConfig(){
+        findByNomeEmptyConfig();
+        mockValidSave();
+    }
+
+    private void mockValidSave() {
+        given(permissaoMapperMock.toDomainPermissao(any(PermissaoRequest.class))).willReturn(permissao);
+        given(permissaoRepositoryMock.saveAndFlush(any(Permissao.class))).willReturn(permissao);
+        given(permissaoMapperMock.toPermissaoResponse(any(Permissao.class))).willReturn(permissaoResponse);
+    }
+
     @Test
-    @DisplayName("inserir() throws PermissaoAlreadyExistsException when permissao not found")
+    @DisplayName("inserir() throws PermissaoAlreadyExistsException when nome permissao in use")
     void givenPermissaoRequestWithAlrealyExistsNome_whenInserir_thenThrowsPermissaoAlreadyExistsException() {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
-        lenient().when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.of(permissao));
+        findByNomeConfig();
         // when
         assertThatThrownBy(() -> underTest.inserir(permissaoRequest))
                 .isInstanceOf(PermissaoAlreadyExistsException.class)
@@ -148,8 +174,7 @@ class CrudPermissaoServiceTest {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
         permissaoRequest.setNome("FUNCIONARIO");
-        perfectPathConfig();
-        when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.empty());
+        alterarConfig();
         // when
         PermissaoResponse expected = underTest.alterar(permissao.getId(), permissaoRequest);
         // then
@@ -159,13 +184,19 @@ class CrudPermissaoServiceTest {
                 .isEqualTo(permissaoResponse);
     }
 
+    private void alterarConfig(){
+        findByIdConfig();
+        findByNomeEmptyConfig();
+        mockValidSave();
+    }
+
     @Test
     @DisplayName("alterar() throws PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredIdAndPermissaoRequest_whenAlterar_thenThrowsPermissaoNaoEncontradaException() {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
         Long id = permissao.getId();
-        failPathConfig();
+        findByIdEmptyConfig();
         // when
         assertThatThrownBy(() -> underTest.alterar(id, permissaoRequest))
                 .isInstanceOf(PermissaoNaoEncontradaException.class)
@@ -180,8 +211,8 @@ class CrudPermissaoServiceTest {
         // given
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
         Long id = permissao.getId();
-        when(permissaoRepositoryMock.findById(anyLong())).thenReturn(Optional.of(permissao));
-        when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.of(permissao));
+        findByIdConfig();
+        findByNomeConfig();
         // when
         assertThatThrownBy(() -> underTest.alterar(id, permissaoRequest))
                 .isInstanceOf(PermissaoAlreadyExistsException.class)
@@ -194,18 +225,23 @@ class CrudPermissaoServiceTest {
     @DisplayName("excluir() remove permissao")
     void givenId_whenExcluir_thenPermissaoShouldBeRemoved() {
         // given
-        perfectPathConfig();
+        excluirConfig();
         // when
         underTest.excluir(permissao.getId());
         // then
         verify(permissaoRepositoryMock, times(1)).delete(any(Permissao.class));
     }
 
+    private void excluirConfig(){
+        findByIdConfig();
+        doNothing().when(permissaoRepositoryMock).delete(any(Permissao.class));
+    }
+
     @Test
     @DisplayName("excluir() throws PermissaoNaoEncontradaException when permissao not found")
     void givenUnregisteredId_whenExcluir_thenThrowsPermissaoNaoEncontradaException() {
         // given
-        failPathConfig();
+        findByIdEmptyConfig();
         Long id = permissao.getId();
         // when
         assertThatThrownBy(() -> underTest.excluir(id))
@@ -213,21 +249,5 @@ class CrudPermissaoServiceTest {
                         .hasMessageContaining("são não cadastrada");
         // then
         verify(permissaoRepositoryMock, never()).delete(any(Permissao.class));
-    }
-
-    private void perfectPathConfig(){
-        lenient().when(permissaoRepositoryMock.findAll()).thenReturn(List.of(permissao));
-        lenient().when(permissaoRepositoryMock.findById(anyLong())).thenReturn(Optional.of(permissao));
-        lenient().when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.of(permissao));
-        lenient().when(permissaoMapperMock.toDomainPermissao(any(PermissaoRequest.class))).thenReturn(permissao);
-        lenient().when(permissaoRepositoryMock.saveAndFlush(any(Permissao.class))).thenReturn(permissao);
-        lenient().when(permissaoMapperMock.toPermissaoResponse(any(Permissao.class)))
-                .thenReturn(permissaoResponse);
-        lenient().doNothing().when(permissaoRepositoryMock).delete(any(Permissao.class));
-    }
-
-    private void failPathConfig(){
-        lenient().when(permissaoRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
-        lenient().when(permissaoRepositoryMock.findByNome(anyString())).thenReturn(Optional.empty());
     }
 }
