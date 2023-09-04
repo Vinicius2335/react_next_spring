@@ -23,7 +23,8 @@ import React, { useCallback, useEffect, useState } from "react"
 import ModalDelete from "./ModalDelete"
 import ModalSalvar from "./ModalSalvar"
 import dayjs from "dayjs"
-import { ToastContainer, toast } from "react-toastify"
+import { toast } from "react-toastify"
+
 
 export type DataTypePermissao = {
   [key: string]: any
@@ -402,19 +403,6 @@ export default function TablePermissoes() {
         isOpen={deleteModal.isOpen}
         onOpenChange={deleteModal.onOpenChange}
         onConfirmar={onConfirmarDelete}
-      />
-
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
       />
     </>
   )

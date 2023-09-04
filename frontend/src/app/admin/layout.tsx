@@ -3,10 +3,25 @@
 import Footer from "@/components/layout/Footer"
 import { Navbar } from "@/components/layout/Navbar"
 import { Sidebar } from "@/components/layout/Sidebar"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+
       <Navbar />
       <main className="relative container mt-8 mx-auto max-w-7xl z-10 min-h-[calc(100vh_-_64px_-_108px)] flex-grow">
         <div className="grid grid-cols-12">
