@@ -56,10 +56,10 @@ export default function Home() {
           </CardBody>
 
           <CardFooter className="flex items-center justify-end gap-2">
-            <Button  onClick={onCancel} color="default" variant="flat">
+            <Button  onClick={onCancel} color="default" variant="flat" className="hover:bg-default-300">
               Close
             </Button>
-            <Button onClick={onSignIn} color="primary">
+            <Button onClick={onSignIn} color="primary" className="hover:bg-primary-200">
               Sign in
             </Button>
           </CardFooter>
