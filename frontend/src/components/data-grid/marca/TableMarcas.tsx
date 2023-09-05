@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { PermissaoService } from "@/services/PermissaoService"
 import {
   Button,
   Input,
@@ -24,9 +23,10 @@ import ModalSalvar from "./ModalSalvar"
 import dayjs from "dayjs"
 import { toast } from "react-toastify"
 import { capitalize } from "@/services/utils"
+import { MarcaService } from "@/services/MarcaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
 
-export type DataTypePermissao = {
+export type DataTypeMarca = {
   [key: string]: any
   id: number
   nome: string
@@ -34,7 +34,7 @@ export type DataTypePermissao = {
   dataAtualizacao: string
 }
 
-export default function TablePermissoes() {
+export default function TableMarcas() {
   let columns = [
     { name: "ID", uid: "id", sortable: true },
     { name: "NOME", uid: "nome", sortable: true },
@@ -57,21 +57,21 @@ export default function TablePermissoes() {
     direction: "ascending"
   })
 
-  const [data, setData] = useState<DataTypePermissao[]>([])
-  const [permissao, setPermissao] = useState<DataTypePermissao>({} as DataTypePermissao)
-  const [nomePermissao, setNomePermissao] = useState("")
-  const text = "permissão"
-  const permissaoService = PermissaoService
+  const [data, setData] = useState<DataTypeMarca[]>([])
+  const [marca, setMarca] = useState<DataTypeMarca>({} as DataTypeMarca)
+  const [nomeMarca, setNomeMarca] = useState("")
+  const text = "marca"
+  const marcaService = MarcaService
 
   const editModal = useDisclosure()
   const addModal = useDisclosure()
   const deleteModal = useDisclosure()
 
   function carregaDados() {
-    permissaoService
+    marcaService
       .getAll()
       .then(data => {
-        if (data.length == 0) {
+        if(data.length == 0){
           setIsEmptyContent(true)
         }
         setIsLoading(false)
@@ -88,24 +88,24 @@ export default function TablePermissoes() {
     carregaDados()
   }, [])
 
-  function onEdit(item: DataTypePermissao) {
-    setNomePermissao(item.nome)
-    setPermissao(item)
+  function onEdit(item: DataTypeMarca) {
+    setNomeMarca(item.nome)
+    setMarca(item)
     editModal.onOpen()
   }
 
   function onSalvarEdit() {
-    let entityToEdit = permissao
-    entityToEdit.nome = nomePermissao
+    let entityToEdit = marca
+    entityToEdit.nome = nomeMarca
 
     if (entityToEdit.id !== null) {
-      permissaoService
+      marcaService
         .alterar(entityToEdit, entityToEdit.id)
         .then(() => {
           toast.success(`${capitalize(text)} editada com sucesso!`)
           carregaDados()
-          setPermissao({} as DataTypePermissao)
-          setNomePermissao("")
+          setMarca({} as DataTypeMarca)
+          setNomeMarca("")
         })
         .catch(() => {
           toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
@@ -113,20 +113,20 @@ export default function TablePermissoes() {
     }
   }
 
-  function onDelete(item: DataTypePermissao) {
-    setPermissao(item)
+  function onDelete(item: DataTypeMarca) {
+    setMarca(item)
     deleteModal.onOpen()
   }
 
   function onConfirmarDelete() {
-    let entityToDelete = permissao
-    permissaoService
+    let entityToDelete = marca
+    marcaService
       .delete(entityToDelete.id)
       .then(() => {
         toast.success(`${capitalize(text)} deletada com sucesso!`)
         carregaDados()
-        setPermissao({} as DataTypePermissao)
-        setNomePermissao("")
+        setMarca({} as DataTypeMarca)
+        setNomeMarca("")
         deleteModal.onClose()
       })
       .catch(() => {
@@ -136,16 +136,16 @@ export default function TablePermissoes() {
   }
 
   function onSalvarAdd() {
-    let entityToAdd: Partial<DataTypePermissao> = {
-      nome: nomePermissao
+    let entityToAdd: Partial<DataTypeMarca> = {
+      nome: nomeMarca
     }
 
-    permissaoService
+    marcaService
       .inserir(entityToAdd)
       .then(() => {
         toast.success(`${capitalize(text)} criada com sucesso!`)
         carregaDados()
-        setNomePermissao("")
+        setNomeMarca("")
       })
       .catch(() => {
         toast.error(`Erro ao tentar salvar ${text}, tente novamente mais tarde!`)
@@ -182,9 +182,9 @@ export default function TablePermissoes() {
 
   // ------ TUDO RELACIONADO COM A ORDENAÇAO DAS LINHAS ------
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: DataTypePermissao, b: DataTypePermissao) => {
-      const first = a[sortDescriptor.column as keyof DataTypePermissao] as number
-      const second = b[sortDescriptor.column as keyof DataTypePermissao] as number
+    return [...items].sort((a: DataTypeMarca, b: DataTypeMarca) => {
+      const first = a[sortDescriptor.column as keyof DataTypeMarca] as number
+      const second = b[sortDescriptor.column as keyof DataTypeMarca] as number
       const cmp = first < second ? -1 : first > second ? 1 : 0
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp
@@ -192,7 +192,7 @@ export default function TablePermissoes() {
   }, [sortDescriptor, items])
 
   // ------ TUDO RELACIONADO COM A RENDERIZAÇAO DAS COLUNAS ------
-  const renderCell = React.useCallback((item: DataTypePermissao, columnKey: React.Key) => {
+  const renderCell = React.useCallback((item: DataTypeMarca, columnKey: React.Key) => {
     const cellValue = item[columnKey]
 
     switch (columnKey) {
@@ -397,16 +397,16 @@ export default function TablePermissoes() {
       <ModalSalvar
         isOpen={editModal.isOpen}
         onOpenChange={editModal.onOpenChange}
-        nomePermissao={nomePermissao}
-        onSetNome={setNomePermissao}
+        nomeMarca={nomeMarca}
+        onSetNome={setNomeMarca}
         onSalvarPressed={onSalvarEdit}
       />
 
       <ModalSalvar
         isOpen={addModal.isOpen}
         onOpenChange={addModal.onOpenChange}
-        nomePermissao={nomePermissao}
-        onSetNome={setNomePermissao}
+        nomeMarca={nomeMarca}
+        onSetNome={setNomeMarca}
         onSalvarPressed={onSalvarAdd}
       />
 
@@ -414,7 +414,7 @@ export default function TablePermissoes() {
         isOpen={deleteModal.isOpen}
         onOpenChange={deleteModal.onOpenChange}
         onConfirmar={onConfirmarDelete}
-        entity="permissão"
+        entity="marca"
       />
     </>
   )

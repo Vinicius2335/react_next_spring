@@ -5,9 +5,15 @@ interface ModalDeleteProps {
   isOpen: boolean
   onOpenChange: () => void
   onConfirmar: () => void
+  entity: string
 }
 
-export default function ModalDelete({ isOpen, onOpenChange, onConfirmar }: ModalDeleteProps) {
+export default function ModalDeleteGeneric({
+  isOpen,
+  onOpenChange,
+  onConfirmar,
+  entity
+}: ModalDeleteProps) {
   return (
     <>
       <Modal
@@ -29,7 +35,7 @@ export default function ModalDelete({ isOpen, onOpenChange, onConfirmar }: Modal
                 <div className="flex items-center flex-col text-center">
                   <Warning size={40} className="mb-4" />
                   <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                    Tem certeza de que deseja excluir esta permissão?
+                    {`Tem certeza de que deseja excluir esta ${entity}?`}
                   </h3>
                 </div>
               </ModalBody>

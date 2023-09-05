@@ -45,18 +45,18 @@ export const SIDEBAR_ITEMS: MenuItemType[] = [
     label: "Cadastros",
     items: [
       {
-        href: "/pai",
-        label: "Pai",
+        href: "/admin/cadastros/permissoes",
+        label: "Permissão",
         icon: <Envelope className="sidebar-icon" />
       },
       {
-        href: "/mae",
-        label: "Mae",
+        href: "/admin/cadastros/marcas",
+        label: "Marca",
         icon: <PencilSimple className="sidebar-icon" />
       },
       {
-        href: "/cachorro",
-        label: "Cachorro",
+        href: "/admin/cadastros/categorias",
+        label: "Categoria",
         icon: <Coffee className="sidebar-icon" />
       }
     ]
