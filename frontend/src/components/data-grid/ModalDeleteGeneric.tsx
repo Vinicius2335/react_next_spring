@@ -35,7 +35,7 @@ export default function ModalDeleteGeneric({
                 <div className="flex items-center flex-col text-center">
                   <Warning size={40} className="mb-4" />
                   <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                    {`Tem certeza de que deseja excluir esta ${entity}?`}
+                    {`Tem certeza de que deseja excluir esta ${entity} ?`}
                   </h3>
                 </div>
               </ModalBody>

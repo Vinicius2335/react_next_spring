@@ -7,34 +7,84 @@ import {
   ModalFooter,
   ModalHeader
 } from "@nextui-org/react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { PermissaoService } from '@/services/PermissaoService';
+import { capitalize } from "@/services/utils";
+import { toast } from "react-toastify";
+import React from "react";
+import { DataTypePermissao } from "@/models/permissao";
 
 interface ModalSalvarProps {
   isOpen: boolean
   onOpenChange: () => void
-  nomePermissao: string
-  onSetNome: (nome: string) => void
+  permissao: DataTypePermissao
   onSalvarPressed: () => void
 }
 
 export default function ModalSalvar({
   isOpen,
   onOpenChange,
-  nomePermissao,
-  onSetNome,
-  onSalvarPressed
+  onSalvarPressed,
+  permissao
 }: ModalSalvarProps) {
   const [invalido, setInvalido] = useState(true)
+  const [permissaoNome, setPermissaoNome] = useState("")
+  const permissaoService: PermissaoService = new PermissaoService()
+  const text = "permissão"
 
   const validateNome = useMemo(() => {
-    if (nomePermissao !== "") {
+    if (permissaoNome !== "") {
       setInvalido(false)
       return "valid"
     } else {
       setInvalido(true)
       return "invalid"
     }
-  }, [nomePermissao])
+  }, [permissaoNome])
+
+  useEffect(() => {
+    setPermissaoNome(permissao.nome)
+  }, [permissao])
+
+  function onSalvar() {
+    let entityToEdit = permissao
+    entityToEdit.nome = permissaoNome
+
+    if (typeof entityToEdit.id !== "undefined" && entityToEdit.id != 0) {
+      permissaoService
+        .alterar(entityToEdit, entityToEdit.id)
+        .then(() => {
+          toast.success(`${capitalize(text)} editada com sucesso!`)
+          reset()
+          onSalvarPressed()
+        })
+        .catch(() => {
+          toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
+          reset()
+        })
+    } else {
+      let entityToAdd: Partial<DataTypePermissao> = {
+        nome: permissaoNome
+      }
+  
+      permissaoService
+        .inserir(entityToAdd)
+        .then(() => {
+          toast.success(`${capitalize(text)} criada com sucesso!`)
+          reset()
+          onSalvarPressed()
+        })
+        .catch(() => {
+          toast.error(`Erro ao tentar salvar ${text}, tente novamente mais tarde!`)
+          reset()
+        })
+    }
+  }
+
+  function reset(){
+    setPermissaoNome("")
+    setInvalido(true)
+  }
 
   return (
     <>
@@ -46,6 +96,7 @@ export default function ModalSalvar({
         size="md"
         backdrop="blur"
       >
+
         <ModalContent>
           {onClose => (
             <>
@@ -54,10 +105,10 @@ export default function ModalSalvar({
                 <Input
                   autoFocus
                   label="Nome"
-                  placeholder="Digite o nome da permissão"
+                  placeholder="Digite um nome para permissão..."
                   variant="bordered"
-                  value={nomePermissao}
-                  onValueChange={e => onSetNome(e)}
+                  value={permissaoNome}
+                  onValueChange={e => setPermissaoNome(e)}
                   color={validateNome === "invalid" ? "danger" : "success"}
                   errorMessage={validateNome === "invalid" && "Porfavor insira um nome"}
                   validationState={validateNome}
@@ -79,7 +130,7 @@ export default function ModalSalvar({
                   color="success"
                   onPress={onClose}
                   className="hover:bg-success-200 hover:text-white"
-                  onClick={onSalvarPressed}
+                  onClick={onSalvar}
                   isDisabled={invalido}
                 >
                   Salvar

@@ -25,14 +25,8 @@ import { toast } from "react-toastify"
 import { capitalize } from "@/services/utils"
 import { MarcaService } from "@/services/MarcaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
+import { DataTypeMarca } from "@/models/marca"
 
-export type DataTypeMarca = {
-  [key: string]: any
-  id: number
-  nome: string
-  dataCriacao: string
-  dataAtualizacao: string
-}
 
 export default function TableMarcas() {
   let columns = [
@@ -61,7 +55,7 @@ export default function TableMarcas() {
   const [marca, setMarca] = useState<DataTypeMarca>({} as DataTypeMarca)
   const [nomeMarca, setNomeMarca] = useState("")
   const text = "marca"
-  const marcaService = MarcaService
+  const marcaService = new MarcaService()
 
   const editModal = useDisclosure()
   const addModal = useDisclosure()

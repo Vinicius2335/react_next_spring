@@ -25,14 +25,7 @@ import { toast } from "react-toastify"
 import { capitalize } from "@/services/utils"
 import { CategoriaService } from "@/services/CategoriaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
-
-export type DataTypeCategoria = {
-  [key: string]: any
-  id: number
-  nome: string
-  dataCriacao: string
-  dataAtualizacao: string
-}
+import { DataTypeCategoria, createEmptyCategoria } from "@/models/categoria"
 
 export default function TableCategorias() {
   let columns = [
@@ -50,21 +43,19 @@ export default function TableCategorias() {
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>("all")
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all")
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = React.useState(1)
   const hasSearchFilter = Boolean(filterValue)
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "id",
     direction: "ascending"
   })
 
-  const [data, setData] = useState<DataTypeCategoria[]>([])
-  const [categoria, setCategoria] = useState<DataTypeCategoria>({} as DataTypeCategoria)
-  const [nomeCategoria, setNomeCategoria] = useState("")
+  const [data, setData] = React.useState<DataTypeCategoria[]>([])
+  const [categoria, setCategoria] = React.useState<DataTypeCategoria>(createEmptyCategoria())
   const text = "categoria"
-  const categoriaService = CategoriaService
+  const categoriaService = new CategoriaService()
 
-  const editModal = useDisclosure()
-  const addModal = useDisclosure()
+  const salvarModal = useDisclosure()
   const deleteModal = useDisclosure()
 
   function carregaDados() {
@@ -89,28 +80,8 @@ export default function TableCategorias() {
   }, [])
 
   function onEdit(item: DataTypeCategoria) {
-    setNomeCategoria(item.nome)
     setCategoria(item)
-    editModal.onOpen()
-  }
-
-  function onSalvarEdit() {
-    let entityToEdit = categoria
-    entityToEdit.nome = nomeCategoria
-
-    if (entityToEdit.id !== null) {
-      categoriaService
-        .alterar(entityToEdit, entityToEdit.id)
-        .then(() => {
-          toast.success(`${capitalize(text)} editada com sucesso!`)
-          carregaDados()
-          setCategoria({} as DataTypeCategoria)
-          setNomeCategoria("")
-        })
-        .catch(() => {
-          toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
-        })
-    }
+    salvarModal.onOpen()
   }
 
   function onDelete(item: DataTypeCategoria) {
@@ -125,31 +96,19 @@ export default function TableCategorias() {
       .then(() => {
         toast.success(`${capitalize(text)} deletada com sucesso!`)
         carregaDados()
-        setCategoria({} as DataTypeCategoria)
-        setNomeCategoria("")
+        setCategoria(createEmptyCategoria())
         deleteModal.onClose()
       })
       .catch(() => {
         toast.error(`Erro ao tentar deletar ${text}, tente novamente mais tarde!`)
+        setCategoria(createEmptyCategoria())
         deleteModal.onClose()
       })
   }
 
-  function onSalvarAdd() {
-    let entityToAdd: Partial<DataTypeCategoria> = {
-      nome: nomeCategoria
-    }
-
-    categoriaService
-      .inserir(entityToAdd)
-      .then(() => {
-        toast.success(`${capitalize(text)} criada com sucesso!`)
-        carregaDados()
-        setNomeCategoria("")
-      })
-      .catch(() => {
-        toast.error(`Erro ao tentar salvar ${text}, tente novamente mais tarde!`)
-      })
+  function onAdd() {
+    setCategoria(createEmptyCategoria())
+    salvarModal.onOpen()
   }
 
   // ------ TUDO RELACIONADO COM O HEADER DA TABELA ------
@@ -285,7 +244,7 @@ export default function TableCategorias() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button onClick={addModal.onOpen} color="primary" endContent={<Plus />}>
+            <Button onClick={onAdd} color="primary" endContent={<Plus />}>
               Add New
             </Button>
           </div>
@@ -393,21 +352,12 @@ export default function TableCategorias() {
         </TableBody>
       </Table>
 
-      {/* ------ MODAIS & ALERTS------ */}
+      {/* ------ MODAIS ------ */}
       <ModalSalvar
-        isOpen={editModal.isOpen}
-        onOpenChange={editModal.onOpenChange}
-        nomeCategoria={nomeCategoria}
-        onSetNome={setNomeCategoria}
-        onSalvarPressed={onSalvarEdit}
-      />
-
-      <ModalSalvar
-        isOpen={addModal.isOpen}
-        onOpenChange={addModal.onOpenChange}
-        nomeCategoria={nomeCategoria}
-        onSetNome={setNomeCategoria}
-        onSalvarPressed={onSalvarAdd}
+        isOpen={salvarModal.isOpen}
+        onOpenChange={salvarModal.onOpenChange}
+        categoria={categoria}
+        onSalvarPressed={carregaDados}
       />
 
       <ModalDeleteGeneric

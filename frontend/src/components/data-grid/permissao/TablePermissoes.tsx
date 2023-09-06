@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
+import { DataTypePermissao, createEmptyPermissao } from "@/models/permissao"
 import { PermissaoService } from "@/services/PermissaoService"
+import { capitalize } from "@/services/utils"
 import {
   Button,
   Input,
@@ -19,20 +21,13 @@ import {
   useDisclosure
 } from "@nextui-org/react"
 import { MagnifyingGlass, PencilSimpleLine, Plus, Trash } from "@phosphor-icons/react"
-import React, { useCallback, useEffect, useState } from "react"
-import ModalSalvar from "./ModalSalvar"
 import dayjs from "dayjs"
+import React, { useCallback, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { capitalize } from "@/services/utils"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
+import ModalSalvar from "./ModalSalvar"
 
-export type DataTypePermissao = {
-  [key: string]: any
-  id: number
-  nome: string
-  dataCriacao: string
-  dataAtualizacao: string
-}
+
 
 export default function TablePermissoes() {
   let columns = [
@@ -58,13 +53,12 @@ export default function TablePermissoes() {
   })
 
   const [data, setData] = useState<DataTypePermissao[]>([])
-  const [permissao, setPermissao] = useState<DataTypePermissao>({} as DataTypePermissao)
-  const [nomePermissao, setNomePermissao] = useState("")
+  const emptyEntity = createEmptyPermissao()
+  const [permissao, setPermissao] = useState<DataTypePermissao>(emptyEntity)
   const text = "permissão"
-  const permissaoService = PermissaoService
+  const permissaoService = new PermissaoService()
 
-  const editModal = useDisclosure()
-  const addModal = useDisclosure()
+  const salvarModal = useDisclosure()
   const deleteModal = useDisclosure()
 
   function carregaDados() {
@@ -89,28 +83,8 @@ export default function TablePermissoes() {
   }, [])
 
   function onEdit(item: DataTypePermissao) {
-    setNomePermissao(item.nome)
     setPermissao(item)
-    editModal.onOpen()
-  }
-
-  function onSalvarEdit() {
-    let entityToEdit = permissao
-    entityToEdit.nome = nomePermissao
-
-    if (entityToEdit.id !== null) {
-      permissaoService
-        .alterar(entityToEdit, entityToEdit.id)
-        .then(() => {
-          toast.success(`${capitalize(text)} editada com sucesso!`)
-          carregaDados()
-          setPermissao({} as DataTypePermissao)
-          setNomePermissao("")
-        })
-        .catch(() => {
-          toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
-        })
-    }
+    salvarModal.onOpen()
   }
 
   function onDelete(item: DataTypePermissao) {
@@ -125,8 +99,7 @@ export default function TablePermissoes() {
       .then(() => {
         toast.success(`${capitalize(text)} deletada com sucesso!`)
         carregaDados()
-        setPermissao({} as DataTypePermissao)
-        setNomePermissao("")
+        setPermissao(emptyEntity)
         deleteModal.onClose()
       })
       .catch(() => {
@@ -135,21 +108,9 @@ export default function TablePermissoes() {
       })
   }
 
-  function onSalvarAdd() {
-    let entityToAdd: Partial<DataTypePermissao> = {
-      nome: nomePermissao
-    }
-
-    permissaoService
-      .inserir(entityToAdd)
-      .then(() => {
-        toast.success(`${capitalize(text)} criada com sucesso!`)
-        carregaDados()
-        setNomePermissao("")
-      })
-      .catch(() => {
-        toast.error(`Erro ao tentar salvar ${text}, tente novamente mais tarde!`)
-      })
+  function onAdd(){
+    setPermissao(emptyEntity)
+    salvarModal.onOpen()
   }
 
   // ------ TUDO RELACIONADO COM O HEADER DA TABELA ------
@@ -285,7 +246,7 @@ export default function TablePermissoes() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button onClick={addModal.onOpen} color="primary" endContent={<Plus />}>
+            <Button onClick={onAdd} color="primary" endContent={<Plus />}>
               Add New
             </Button>
           </div>
@@ -395,20 +356,22 @@ export default function TablePermissoes() {
 
       {/* ------ MODAIS & ALERTS------ */}
       <ModalSalvar
-        isOpen={editModal.isOpen}
-        onOpenChange={editModal.onOpenChange}
-        nomePermissao={nomePermissao}
-        onSetNome={setNomePermissao}
-        onSalvarPressed={onSalvarEdit}
+        isOpen={salvarModal.isOpen}
+        onOpenChange={salvarModal.onOpenChange}
+        //nomePermissao={nomePermissao}
+        //onSetNome={setNomePermissao}
+        onSalvarPressed={carregaDados}
+        permissao={permissao}
       />
 
-      <ModalSalvar
+      {/* <ModalSalvar
         isOpen={addModal.isOpen}
         onOpenChange={addModal.onOpenChange}
-        nomePermissao={nomePermissao}
-        onSetNome={setNomePermissao}
-        onSalvarPressed={onSalvarAdd}
-      />
+        //nomePermissao={nomePermissao}
+        //onSetNome={setNomePermissao}
+        onSalvarPressed={carregaDados}
+        permissao={{} as DataTypePermissao}
+      /> */}
 
       <ModalDeleteGeneric
         isOpen={deleteModal.isOpen}
