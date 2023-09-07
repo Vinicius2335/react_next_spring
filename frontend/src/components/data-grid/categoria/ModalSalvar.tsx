@@ -1,6 +1,6 @@
 "use client"
 
-import { DataTypeCategoria, createCategoria } from "@/models/categoria"
+import { DataTypeCategoria, createCategoria, createEmptyCategoria } from "@/models/categoria"
 import { CategoriaService } from "@/services/CategoriaService"
 import { capitalize } from "@/services/utils"
 import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react"
@@ -78,12 +78,19 @@ export default function ModalSalvar({
 
   React.useEffect(() => {
     formik.initialValues.nome = categoria.nome
-    if(formik.initialValues.nome){
-      formik.errors.nome = undefined
-    } else {
-      formik.errors.nome = ""
-    }
+    // if(formik.initialValues.nome){
+    //   formik.errors.nome = undefined
+    // } else {
+    //   formik.errors.nome = ""
+    // }
   }, [categoria])
+
+  function onClose(){
+    categoria = createEmptyCategoria()
+    formik.resetForm()
+    console.log("onClose")
+    console.log(categoria)
+  }
 
   return (
     <>
@@ -94,6 +101,7 @@ export default function ModalSalvar({
         scrollBehavior="inside"
         size="md"
         backdrop="blur"
+        onClose={onClose}
       >
         <ModalContent>
           {onClose => (
@@ -130,6 +138,7 @@ export default function ModalSalvar({
                     <Button
                       color="success"
                       type="submit"
+                      variant="shadow"
                       className="hover:bg-success-200 hover:text-white"
                       onClick={onSalvarPressed}
                       onPress={onClose}

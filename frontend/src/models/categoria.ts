@@ -28,3 +28,13 @@ export function createEmptyCategoria(){
 
   return categoria
 }
+
+export function getColumns(){
+  return [
+    { name: "ID", uid: "id", sortable: true },
+    { name: "NOME", uid: "nome", sortable: true },
+    { name: "DATA CRIAÇÃO", uid: "dataCriacao" },
+    { name: "DATA ATUALIZAÇÃO", uid: "dataAtualizacao" },
+    { name: "ACTIONS", uid: "actions" }
+  ]
+}

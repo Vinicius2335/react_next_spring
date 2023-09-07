@@ -49,7 +49,7 @@ export default function ModalDeleteGeneric({
                 >
                   Cancelar
                 </Button>
-                <Button color="danger" onPress={onConfirmar} className="hover:bg-danger-200">
+                <Button color="danger" variant="shadow" onPress={onConfirmar} className="hover:bg-danger-200">
                   Confirmar
                 </Button>
               </ModalFooter>

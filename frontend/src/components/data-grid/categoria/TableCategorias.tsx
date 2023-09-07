@@ -25,16 +25,10 @@ import { toast } from "react-toastify"
 import { capitalize } from "@/services/utils"
 import { CategoriaService } from "@/services/CategoriaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
-import { DataTypeCategoria, createEmptyCategoria } from "@/models/categoria"
+import { DataTypeCategoria, createEmptyCategoria, getColumns } from "@/models/categoria"
 
 export default function TableCategorias() {
-  let columns = [
-    { name: "ID", uid: "id", sortable: true },
-    { name: "NOME", uid: "nome", sortable: true },
-    { name: "DATA CRIAÇÃO", uid: "dataCriacao" },
-    { name: "DATA ATUALIZAÇÃO", uid: "dataAtualizacao" },
-    { name: "ACTIONS", uid: "actions" }
-  ]
+  let columns = getColumns()
 
   const [isLoading, setIsLoading] = React.useState(true)
   const [isEmptyContent, setIsEmptyContent] = React.useState(false)
