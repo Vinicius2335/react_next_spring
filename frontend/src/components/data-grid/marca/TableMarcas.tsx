@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
+import { DataTypeMarca, createEmptyMarca, getColumnsMarca } from "@/models/marca"
+import { MarcaService } from "@/services/MarcaService"
+import { capitalize } from "@/services/utils"
 import {
   Button,
   Input,
@@ -18,30 +21,14 @@ import {
   useDisclosure
 } from "@nextui-org/react"
 import { MagnifyingGlass, PencilSimpleLine, Plus, Trash } from "@phosphor-icons/react"
-import React, { useCallback, useEffect, useState } from "react"
-import ModalSalvar from "./ModalSalvar"
 import dayjs from "dayjs"
+import React, { useCallback, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { capitalize } from "@/services/utils"
-import { MarcaService } from "@/services/MarcaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
-
-export type DataTypeMarca = {
-  [key: string]: any
-  id: number
-  nome: string
-  dataCriacao: string
-  dataAtualizacao: string
-}
+import ModalSalvar from "./ModalSalvar"
 
 export default function TableMarcas() {
-  let columns = [
-    { name: "ID", uid: "id", sortable: true },
-    { name: "NOME", uid: "nome", sortable: true },
-    { name: "DATA CRIAÇÃO", uid: "dataCriacao" },
-    { name: "DATA ATUALIZAÇÃO", uid: "dataAtualizacao" },
-    { name: "ACTIONS", uid: "actions" }
-  ]
+  let columns = getColumnsMarca()
 
   const [isLoading, setIsLoading] = React.useState(true)
   const [isEmptyContent, setIsEmptyContent] = React.useState(false)
@@ -58,13 +45,11 @@ export default function TableMarcas() {
   })
 
   const [data, setData] = useState<DataTypeMarca[]>([])
-  const [marca, setMarca] = useState<DataTypeMarca>({} as DataTypeMarca)
-  const [nomeMarca, setNomeMarca] = useState("")
+  const [marca, setMarca] = useState<DataTypeMarca>(createEmptyMarca())
   const text = "marca"
-  const marcaService = MarcaService
+  const marcaService = new MarcaService()
 
-  const editModal = useDisclosure()
-  const addModal = useDisclosure()
+  const salvarModal = useDisclosure()
   const deleteModal = useDisclosure()
 
   function carregaDados() {
@@ -89,28 +74,8 @@ export default function TableMarcas() {
   }, [])
 
   function onEdit(item: DataTypeMarca) {
-    setNomeMarca(item.nome)
     setMarca(item)
-    editModal.onOpen()
-  }
-
-  function onSalvarEdit() {
-    let entityToEdit = marca
-    entityToEdit.nome = nomeMarca
-
-    if (entityToEdit.id !== null) {
-      marcaService
-        .alterar(entityToEdit, entityToEdit.id)
-        .then(() => {
-          toast.success(`${capitalize(text)} editada com sucesso!`)
-          carregaDados()
-          setMarca({} as DataTypeMarca)
-          setNomeMarca("")
-        })
-        .catch(() => {
-          toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
-        })
-    }
+    salvarModal.onOpen()
   }
 
   function onDelete(item: DataTypeMarca) {
@@ -125,8 +90,7 @@ export default function TableMarcas() {
       .then(() => {
         toast.success(`${capitalize(text)} deletada com sucesso!`)
         carregaDados()
-        setMarca({} as DataTypeMarca)
-        setNomeMarca("")
+        setMarca(createEmptyMarca())
         deleteModal.onClose()
       })
       .catch(() => {
@@ -135,21 +99,9 @@ export default function TableMarcas() {
       })
   }
 
-  function onSalvarAdd() {
-    let entityToAdd: Partial<DataTypeMarca> = {
-      nome: nomeMarca
-    }
-
-    marcaService
-      .inserir(entityToAdd)
-      .then(() => {
-        toast.success(`${capitalize(text)} criada com sucesso!`)
-        carregaDados()
-        setNomeMarca("")
-      })
-      .catch(() => {
-        toast.error(`Erro ao tentar salvar ${text}, tente novamente mais tarde!`)
-      })
+  function onAdd(){
+    setMarca(createEmptyMarca())
+    salvarModal.onOpen()
   }
 
   // ------ TUDO RELACIONADO COM O HEADER DA TABELA ------
@@ -285,7 +237,7 @@ export default function TableMarcas() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button onClick={addModal.onOpen} color="primary" endContent={<Plus />}>
+            <Button onClick={onAdd} color="primary" variant="shadow" endContent={<Plus />}>
               Add New
             </Button>
           </div>
@@ -393,21 +345,12 @@ export default function TableMarcas() {
         </TableBody>
       </Table>
 
-      {/* ------ MODAIS & ALERTS------ */}
+      {/* ------ MODAIS ------ */}
       <ModalSalvar
-        isOpen={editModal.isOpen}
-        onOpenChange={editModal.onOpenChange}
-        nomeMarca={nomeMarca}
-        onSetNome={setNomeMarca}
-        onSalvarPressed={onSalvarEdit}
-      />
-
-      <ModalSalvar
-        isOpen={addModal.isOpen}
-        onOpenChange={addModal.onOpenChange}
-        nomeMarca={nomeMarca}
-        onSetNome={setNomeMarca}
-        onSalvarPressed={onSalvarAdd}
+        isOpen={salvarModal.isOpen}
+        onOpenChange={salvarModal.onOpenChange}
+        marca={marca}
+        onSalvarPressed={carregaDados}
       />
 
       <ModalDeleteGeneric
