@@ -1,4 +1,4 @@
-import { DataTypeMarca } from "@/components/data-grid/marca/TableMarcas"
+import { DataTypeMarca } from "@/models/marca"
 import { BaseService } from "./BaseService"
 
 

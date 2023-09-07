@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { DataTypeMarca, createEmptyMarca, getColumnsMarca } from "@/models/marca"
-import { MarcaService } from "@/services/MarcaService"
 import { capitalize } from "@/services/utils"
 import {
   Button,
@@ -26,9 +24,11 @@ import React, { useCallback, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
 import ModalSalvar from "./ModalSalvar"
+import { DataTypePessoa, createEmptyPessoa, getColumnsPessoa } from "@/models/pessoa"
+import { PessoaService } from "../../../services/PessoaService"
 
-export default function TableMarcas() {
-  let columns = getColumnsMarca()
+export default function TablePessoas() {
+  let columns = getColumnsPessoa()
 
   const [isLoading, setIsLoading] = React.useState(true)
   const [isEmptyContent, setIsEmptyContent] = React.useState(false)
@@ -44,19 +44,19 @@ export default function TableMarcas() {
     direction: "ascending"
   })
 
-  const [data, setData] = useState<DataTypeMarca[]>([])
-  const [marca, setMarca] = useState<DataTypeMarca>(createEmptyMarca())
-  const text = "marca"
-  const marcaService = new MarcaService()
+  const [data, setData] = useState<DataTypePessoa[]>([])
+  const [pessoa, setPessoa] = useState<DataTypePessoa>(createEmptyPessoa())
+  const text = "pessoa"
+  const pessoaService = new PessoaService()
 
   const salvarModal = useDisclosure()
   const deleteModal = useDisclosure()
 
   function carregaDados() {
-    marcaService
+    pessoaService
       .getAll()
       .then(data => {
-        if(data.length == 0){
+        if (data.length == 0) {
           setIsEmptyContent(true)
         }
         setIsLoading(false)
@@ -73,24 +73,24 @@ export default function TableMarcas() {
     carregaDados()
   }, [])
 
-  function onEdit(item: DataTypeMarca) {
-    setMarca(item)
+  function onEdit(item: DataTypePessoa) {
+    setPessoa(item)
     salvarModal.onOpen()
   }
 
-  function onDelete(item: DataTypeMarca) {
-    setMarca(item)
+  function onDelete(item: DataTypePessoa) {
+    setPessoa(item)
     deleteModal.onOpen()
   }
 
   function onConfirmarDelete() {
-    let entityToDelete = marca
-    marcaService
+    let entityToDelete = pessoa
+    pessoaService
       .delete(entityToDelete.id)
       .then(() => {
         toast.success(`${capitalize(text)} deletada com sucesso!`)
         carregaDados()
-        setMarca(createEmptyMarca())
+        setPessoa(createEmptyPessoa())
         deleteModal.onClose()
       })
       .catch(() => {
@@ -99,8 +99,8 @@ export default function TableMarcas() {
       })
   }
 
-  function onAdd(){
-    setMarca(createEmptyMarca())
+  function onAdd() {
+    setPessoa(createEmptyPessoa())
     salvarModal.onOpen()
   }
 
@@ -134,9 +134,9 @@ export default function TableMarcas() {
 
   // ------ TUDO RELACIONADO COM A ORDENAÇAO DAS LINHAS ------
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: DataTypeMarca, b: DataTypeMarca) => {
-      const first = a[sortDescriptor.column as keyof DataTypeMarca] as number
-      const second = b[sortDescriptor.column as keyof DataTypeMarca] as number
+    return [...items].sort((a: DataTypePessoa, b: DataTypePessoa) => {
+      const first = a[sortDescriptor.column as keyof DataTypePessoa] as number
+      const second = b[sortDescriptor.column as keyof DataTypePessoa] as number
       const cmp = first < second ? -1 : first > second ? 1 : 0
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp
@@ -144,7 +144,7 @@ export default function TableMarcas() {
   }, [sortDescriptor, items])
 
   // ------ TUDO RELACIONADO COM A RENDERIZAÇAO DAS COLUNAS ------
-  const renderCell = React.useCallback((item: DataTypeMarca, columnKey: React.Key) => {
+  const renderCell = React.useCallback((item: DataTypePessoa, columnKey: React.Key) => {
     const cellValue = item[columnKey]
 
     switch (columnKey) {
@@ -170,18 +170,24 @@ export default function TableMarcas() {
           </div>
         )
 
-      case "dataCriacao":
+      case "cep":
         return (
-          <div>
-            <p>{dayjs(item.dataCriacao).format("DD/MM/YYYY HH:mm")}</p>
-          </div>
+          <p>{item.endereco.cep}</p>
         )
 
-      case "dataAtualizacao":
+        case "logradouro":
         return (
-          <div>
-            <p>{dayjs(item.dataAtualizacao).format("DD/MM/YYYY HH:mm")}</p>
-          </div>
+          <p>{item.endereco.logradouro}</p>
+        )
+
+      case "cidade":
+        return (
+          <p>{item.endereco.cidade}</p>
+        )
+
+        case "estado":
+        return (
+          <p>{item.endereco.estado}</p>
         )
       default:
         return cellValue
@@ -298,6 +304,7 @@ export default function TableMarcas() {
     ) : null
   }, [selectedKeys, items.length, page, pages, hasSearchFilter])
 
+  // ------ TABELA ------
   return (
     <>
       <Table
@@ -350,15 +357,15 @@ export default function TableMarcas() {
         isOpen={salvarModal.isOpen}
         onOpenChange={salvarModal.onOpenChange}
         onClose={salvarModal.onClose}
-        marca={marca}
         onSalvarPressed={carregaDados}
+        pessoa={pessoa}
       />
 
       <ModalDeleteGeneric
         isOpen={deleteModal.isOpen}
         onOpenChange={deleteModal.onOpenChange}
         onConfirmar={onConfirmarDelete}
-        entity="marca"
+        entity="permissão"
       />
     </>
   )

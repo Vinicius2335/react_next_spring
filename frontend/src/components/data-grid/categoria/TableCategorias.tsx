@@ -350,6 +350,7 @@ export default function TableCategorias() {
       <ModalSalvar
         isOpen={salvarModal.isOpen}
         onOpenChange={salvarModal.onOpenChange}
+        onClose={salvarModal.onClose}
         categoria={categoria}
         onSalvarPressed={carregaDados}
       />

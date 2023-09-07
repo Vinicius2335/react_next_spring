@@ -139,7 +139,6 @@ export default function ModalSalvar({
                       variant="shadow"
                       className="hover:bg-success-200 hover:text-white"
                       onClick={onSalvarPressed}
-                      onPress={onClose}
                       isDisabled={!formik.isValid}
                     >
                       Salvar
