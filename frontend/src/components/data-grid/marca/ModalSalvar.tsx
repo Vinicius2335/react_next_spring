@@ -1,20 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DataTypeMarca, createEmptyMarca } from "@/models/marca";
-import { DataTypePermissao } from "@/models/permissao";
-import { MarcaService } from "@/services/MarcaService";
-import { capitalize } from "@/services/utils";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader
-} from "@nextui-org/react";
-import { useFormik } from "formik";
-import React from "react";
-import { toast } from "react-toastify";
-import * as yup from "yup";
+import { DataTypeMarca, createEmptyMarca } from "@/models/marca"
+import { DataTypePermissao } from "@/models/permissao"
+import { MarcaService } from "@/services/MarcaService"
+import { capitalize } from "@/services/utils"
+import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react"
+import { useFormik } from "formik"
+import React from "react"
+import { toast } from "react-toastify"
+import * as yup from "yup"
 
 interface ModalSalvarProps {
   isOpen: boolean
@@ -85,7 +78,7 @@ export default function ModalSalvar({
     formik.initialValues.nome = marca.nome
   }, [marca])
 
-  function onCloseModal(){
+  function onCloseModal() {
     marca = createEmptyMarca()
     formik.resetForm()
     onClose()

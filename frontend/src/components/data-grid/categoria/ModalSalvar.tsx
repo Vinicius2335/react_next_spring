@@ -79,7 +79,7 @@ export default function ModalSalvar({
     formik.initialValues.nome = categoria.nome
   }, [categoria])
 
-  function onCloseModal(){
+  function onCloseModal() {
     categoria = createEmptyCategoria()
     formik.resetForm()
     onClose()

@@ -171,24 +171,16 @@ export default function TablePessoas() {
         )
 
       case "cep":
-        return (
-          <p>{item.endereco.cep}</p>
-        )
+        return <p>{item.endereco.cep}</p>
 
-        case "logradouro":
-        return (
-          <p>{item.endereco.logradouro}</p>
-        )
+      case "logradouro":
+        return <p>{item.endereco.logradouro}</p>
 
       case "cidade":
-        return (
-          <p>{item.endereco.cidade}</p>
-        )
+        return <p>{item.endereco.cidade}</p>
 
-        case "estado":
-        return (
-          <p>{item.endereco.estado}</p>
-        )
+      case "estado":
+        return <p>{item.endereco.estado}</p>
       default:
         return cellValue
     }

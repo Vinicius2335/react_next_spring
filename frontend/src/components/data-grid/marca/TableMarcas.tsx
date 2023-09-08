@@ -56,7 +56,7 @@ export default function TableMarcas() {
     marcaService
       .getAll()
       .then(data => {
-        if(data.length == 0){
+        if (data.length == 0) {
           setIsEmptyContent(true)
         }
         setIsLoading(false)
@@ -99,7 +99,7 @@ export default function TableMarcas() {
       })
   }
 
-  function onAdd(){
+  function onAdd() {
     setMarca(createEmptyMarca())
     salvarModal.onOpen()
   }

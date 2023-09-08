@@ -1,19 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DataTypePermissao, createEmptyPermissao } from '@/models/permissao';
-import { PermissaoService } from "@/services/PermissaoService";
-import { capitalize } from "@/services/utils";
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader
-} from "@nextui-org/react";
-import { useFormik } from "formik";
-import React from "react";
-import { toast } from "react-toastify";
-import * as yup from "yup";
+import { DataTypePermissao, createEmptyPermissao } from "@/models/permissao"
+import { PermissaoService } from "@/services/PermissaoService"
+import { capitalize } from "@/services/utils"
+import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react"
+import { useFormik } from "formik"
+import React from "react"
+import { toast } from "react-toastify"
+import * as yup from "yup"
 
 interface ModalSalvarProps {
   isOpen: boolean
@@ -21,7 +14,6 @@ interface ModalSalvarProps {
   onClose: () => void
   permissao: DataTypePermissao
   onSalvarPressed: () => void
-
 }
 
 const validationSchema = yup.object({
@@ -85,7 +77,7 @@ export default function ModalSalvar({
     formik.initialValues.nome = permissao.nome
   }, [permissao])
 
-  function onCloseModal(){
+  function onCloseModal() {
     permissao = createEmptyPermissao()
     formik.resetForm()
     onClose()
