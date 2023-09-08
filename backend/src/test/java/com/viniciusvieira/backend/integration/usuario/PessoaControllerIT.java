@@ -38,6 +38,7 @@ class PessoaControllerIT {
     private PermissaoRepository permissaoRepository;
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
+    private final Permissao permissao = PermissaoCreator.createPermissao();
 
     @BeforeEach
     void setUp() {
@@ -60,7 +61,39 @@ class PessoaControllerIT {
                 .statusCode(HttpStatus.OK.value())
                 .body("$", Matchers.hasSize(1))
                 .body("[0].cpf", Matchers.equalTo(pessoaInserted.getCpf()));
+    }
 
+    @Test
+    @DisplayName("buscarPermissoes() return list permissoes")
+    void givenID_whenBuscarPermissoes_thenReturnListPermissoesAndStatusOK() {
+        getPessoaInserted();
+
+        given()
+                .pathParam("id", 1)
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .get("/{id}/permissoes")
+        .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("$", Matchers.hasSize(1))
+                .body("[0].nome", Matchers.equalTo(permissao.getNome()))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("buscarPermissoes() return status NOT_FOUND when pessoa not found")
+    void givenUnregisteredID_whenBuscarPermissoes_thenReturnStatusNOT_FOUND() {
+        given()
+                .pathParam("id", 1)
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .get("/{id}/permissoes")
+        .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("title", Matchers.equalTo("Não existe nenhuma pessoa cadastrada com este ID"))
+                .log().all();
     }
 
     @Test
@@ -137,7 +170,25 @@ class PessoaControllerIT {
     }
 
     @Test
-    @DisplayName("alterar() retur BAD_REQUEST when pessoaRequest have invalid fields")
+    @DisplayName("alterar() return NOT_FOUND when pessoa not found by id")
+    void givenUntegisteredId_whenAlterar_thenReturnStatusNOT_FOUND() {
+        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
+
+        given()
+                .body(pessoaRequest)
+                .pathParam("id", 1)
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .put("/{id}")
+        .then()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body("title", Matchers.equalTo("Não existe nenhuma pessoa cadastrada com este ID"))
+                .log().body();
+    }
+
+    @Test
+    @DisplayName("alterar() return BAD_REQUEST when pessoaRequest have invalid fields")
     void givenInvalidPessoaRequest_whenAlterar_thenReturnStatusBAD_REQUEST() {
         Pessoa pessoaInserted = getPessoaInserted();
         PessoaRequest invalidPessoaRequest = PessoaCreator.createInvalidPessoaRequest();
@@ -246,6 +297,6 @@ class PessoaControllerIT {
     }
 
     private Permissao getPermissaoInserted(){
-        return permissaoRepository.saveAndFlush(PermissaoCreator.createPermissao());
+        return permissaoRepository.saveAndFlush(permissao);
     }
 }

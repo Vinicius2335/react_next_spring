@@ -1,66 +1,63 @@
-2023-09-07 11:41:09,726 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
-2023-09-07 11:41:09,781 INFO o.s.b.StartupInfoLogger [restartedMain] Starting BackendApplication using Java 17.0.1 with PID 10080 (F:\java_projetos\spring-projeto\lojaVirtual\backend\target\classes started by Cliente in F:\java_projetos\spring-projeto\lojaVirtual\backend)
-2023-09-07 11:41:09,837 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.1.0, Spring v6.0.9
-2023-09-07 11:41:09,840 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
-2023-09-07 11:41:09,926 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-09-07 11:41:09,927 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-09-07 11:41:12,196 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-09-07 11:41:12,386 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 173 ms. Found 8 JPA repository interfaces.
-2023-09-07 11:41:13,932 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8080 (http)
-2023-09-07 11:41:14,007 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
-2023-09-07 11:41:14,009 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
-2023-09-07 11:41:14,009 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.8]
-2023-09-07 11:41:14,211 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
-2023-09-07 11:41:14,215 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 4284 ms
-2023-09-07 11:41:14,667 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-09-07 11:41:14,778 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 6.2.2.Final
-2023-09-07 11:41:14,783 INFO o.h.c.Environment [restartedMain] HHH000406: Using bytecode reflection optimizer
-2023-09-07 11:41:15,151 INFO o.h.b.i.BytecodeProviderInitiator [restartedMain] HHH000021: Bytecode provider name : bytebuddy
-2023-09-07 11:41:15,599 INFO o.s.o.j.p.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
-2023-09-07 11:41:15,628 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
-2023-09-07 11:41:16,277 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@282ce60e
-2023-09-07 11:41:16,280 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
-2023-09-07 11:41:16,504 INFO o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH035001: Using dialect: org.hibernate.dialect.MySQLDialect, version: 8.0.34
-2023-09-07 11:41:17,573 INFO o.h.b.i.BytecodeProviderInitiator [restartedMain] HHH000021: Bytecode provider name : bytebuddy
-2023-09-07 11:41:18,956 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-09-07 11:41:19,501 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-09-07 11:41:21,238 INFO o.s.d.j.r.q.QueryEnhancerFactory [restartedMain] Hibernate is in classpath; If applicable, HQL parser will be used.
-2023-09-07 11:41:22,212 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-09-07 11:41:22,755 WARN o.s.b.a.f.FreeMarkerAutoConfiguration [restartedMain] Cannot find template location(s): [classpath:/templates/] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.check-template-location=false)
-2023-09-07 11:41:22,897 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
-2023-09-07 11:41:22,916 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
-2023-09-07 11:41:22,947 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port(s): 8080 (http) with context path ''
-2023-09-07 11:41:22,974 INFO o.s.b.StartupInfoLogger [restartedMain] Started BackendApplication in 14.133 seconds (process running for 16.134)
-2023-09-07 11:41:49,120 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-09-07 11:41:49,121 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2023-09-07 11:41:49,123 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 2 ms
-2023-09-07 15:54:05,513 WARN o.s.w.s.h.AbstractHandlerExceptionResolver [http-nio-8080-exec-9] Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse> com.viniciusvieira.backend.api.controller.usuario.PessoaController.inserir(com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest) with 4 errors: [Field error in object 'pessoaRequest' on field 'senha': rejected value [null]; codes [NotBlank.pessoaRequest.senha,NotBlank.senha,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.senha,senha]; arguments []; default message [senha]]; default message [SENHA não pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'cpf': rejected value [null]; codes [NotBlank.pessoaRequest.cpf,NotBlank.cpf,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.cpf,cpf]; arguments []; default message [cpf]]; default message [CPF não pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'nomePermissao': rejected value [null]; codes [NotBlank.pessoaRequest.nomePermissao,NotBlank.nomePermissao,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.nomePermissao,nomePermissao]; arguments []; default message [nomePermissao]]; default message [NOME da Permissao nao pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'email': rejected value [null]; codes [NotBlank.pessoaRequest.email,NotBlank.email,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.email,email]; arguments []; default message [email]]; default message [EMAIL não pode ser nulo ou em branco]] ]
-2023-09-07 15:58:11,024 WARN o.s.w.s.h.AbstractHandlerExceptionResolver [http-nio-8080-exec-1] Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse> com.viniciusvieira.backend.api.controller.usuario.PessoaController.inserir(com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest) with 4 errors: [Field error in object 'pessoaRequest' on field 'email': rejected value [null]; codes [NotBlank.pessoaRequest.email,NotBlank.email,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.email,email]; arguments []; default message [email]]; default message [EMAIL não pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'nomePermissao': rejected value [null]; codes [NotBlank.pessoaRequest.nomePermissao,NotBlank.nomePermissao,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.nomePermissao,nomePermissao]; arguments []; default message [nomePermissao]]; default message [NOME da Permissao nao pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'senha': rejected value [null]; codes [NotBlank.pessoaRequest.senha,NotBlank.senha,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.senha,senha]; arguments []; default message [senha]]; default message [SENHA não pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'cpf': rejected value [null]; codes [NotBlank.pessoaRequest.cpf,NotBlank.cpf,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.cpf,cpf]; arguments []; default message [cpf]]; default message [CPF não pode ser nulo ou em branco]] ]
-2023-09-07 15:59:02,802 WARN o.s.w.s.h.AbstractHandlerExceptionResolver [http-nio-8080-exec-3] Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse> com.viniciusvieira.backend.api.controller.usuario.PessoaController.inserir(com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest) with 4 errors: [Field error in object 'pessoaRequest' on field 'senha': rejected value [null]; codes [NotBlank.pessoaRequest.senha,NotBlank.senha,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.senha,senha]; arguments []; default message [senha]]; default message [SENHA não pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'cpf': rejected value [null]; codes [NotBlank.pessoaRequest.cpf,NotBlank.cpf,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.cpf,cpf]; arguments []; default message [cpf]]; default message [CPF não pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'nomePermissao': rejected value [null]; codes [NotBlank.pessoaRequest.nomePermissao,NotBlank.nomePermissao,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.nomePermissao,nomePermissao]; arguments []; default message [nomePermissao]]; default message [NOME da Permissao nao pode ser nulo ou em branco]] [Field error in object 'pessoaRequest' on field 'email': rejected value [null]; codes [NotBlank.pessoaRequest.email,NotBlank.email,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.email,email]; arguments []; default message [email]]; default message [EMAIL não pode ser nulo ou em branco]] ]
-2023-09-07 16:10:06,222 WARN o.s.w.s.h.AbstractHandlerExceptionResolver [http-nio-8080-exec-1] Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse> com.viniciusvieira.backend.api.controller.usuario.PessoaController.inserir(com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest): [Field error in object 'pessoaRequest' on field 'nomePermissao': rejected value [null]; codes [NotBlank.pessoaRequest.nomePermissao,NotBlank.nomePermissao,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [pessoaRequest.nomePermissao,nomePermissao]; arguments []; default message [nomePermissao]]; default message [NOME da Permissao nao pode ser nulo ou em branco]] ]
-2023-09-07 18:22:17,181 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-6] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:23:10,183 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-9] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:25:42,561 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-1] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:25:43,091 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-2] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:25:43,283 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-3] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:02,387 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-4] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:07,466 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-5] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:14,614 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-6] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:18,950 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-7] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:19,309 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-8] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:27,024 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-9] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:29,554 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-10] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:31,259 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-1] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:26:48,095 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-3] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:28:24,743 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-7] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:43:37,998 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-2] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:47:05,349 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-3] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:47:05,431 WARN o.s.w.s.h.AbstractHandlerExceptionResolver [http-nio-8080-exec-4] Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.lang.String` from Object value (token `JsonToken.START_OBJECT`)]
-2023-09-07 18:49:15,728 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-8] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:49:59,869 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-3] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:52:01,837 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-6] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 18:59:48,906 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-10] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 19:00:52,991 DEBUG o.h.s.r.i.ResultsHelper [http-nio-8080-exec-5] Collection fully initialized: [com.viniciusvieira.backend.domain.model.usuario.Pessoa.permissoes#1]
-2023-09-07 19:03:07,980 INFO o.s.o.j.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
-2023-09-07 19:03:07,993 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
-2023-09-07 19:03:08,007 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2023-09-08 13:41:02,598 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-09-08 13:41:02,675 INFO o.s.b.StartupInfoLogger [main] Starting PessoaControllerIT using Java 17.0.1 with PID 920 (started by Cliente in F:\java_projetos\spring-projeto\lojaVirtual\backend)
+2023-09-08 13:41:02,680 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.1.0, Spring v6.0.9
+2023-09-08 13:41:02,682 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2023-09-08 13:41:04,281 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-08 13:41:04,459 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 163 ms. Found 8 JPA repository interfaces.
+2023-09-08 13:41:04,631 INFO o.s.b.t.a.j.TestDatabaseAutoConfiguration$EmbeddedDataSourceBeanFactoryPostProcessor [main] Replacing 'dataSource' DataSource bean with embedded version
+2023-09-08 13:41:05,454 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 0 (http)
+2023-09-08 13:41:05,472 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-auto-1"]
+2023-09-08 13:41:05,474 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2023-09-08 13:41:05,475 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.8]
+2023-09-08 13:41:05,652 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2023-09-08 13:41:05,663 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 2573 ms
+2023-09-08 13:41:05,782 INFO o.s.j.d.e.EmbeddedDatabaseFactory [main] Starting embedded database: url='jdbc:h2:mem:6088d6de-d376-4bb6-8065-669eba07761a;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2023-09-08 13:41:06,186 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-08 13:41:06,278 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.2.2.Final
+2023-09-08 13:41:06,282 INFO o.h.c.Environment [main] HHH000406: Using bytecode reflection optimizer
+2023-09-08 13:41:06,554 INFO o.h.b.i.BytecodeProviderInitiator [main] HHH000021: Bytecode provider name : bytebuddy
+2023-09-08 13:41:06,816 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-09-08 13:41:06,928 INFO o.h.e.j.d.i.DialectFactoryImpl [main] HHH035001: Using dialect: org.hibernate.dialect.H2Dialect, version: 2.1.214
+2023-09-08 13:41:07,462 INFO o.h.b.i.BytecodeProviderInitiator [main] HHH000021: Bytecode provider name : bytebuddy
+2023-09-08 13:41:09,137 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-08 13:41:09,287 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-08 13:41:10,941 INFO o.s.d.j.r.q.QueryEnhancerFactory [main] Hibernate is in classpath; If applicable, HQL parser will be used.
+2023-09-08 13:41:11,793 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-08 13:41:12,599 WARN o.s.b.a.f.FreeMarkerAutoConfiguration [main] Cannot find template location(s): [classpath:/templates/] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.check-template-location=false)
+2023-09-08 13:41:12,718 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-auto-1"]
+2023-09-08 13:41:12,771 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 62899 (http) with context path ''
+2023-09-08 13:41:12,791 INFO o.s.b.StartupInfoLogger [main] Started PessoaControllerIT in 10.732 seconds (process running for 13.183)
+2023-09-08 13:41:12,904 INFO o.a.j.l.DirectJDKLog [main] Pausing ProtocolHandler ["http-nio-auto-1"]
+2023-09-08 13:41:12,905 INFO o.a.j.l.DirectJDKLog [main] Stopping service [Tomcat]
+2023-09-08 13:41:12,916 INFO o.a.j.l.DirectJDKLog [main] Stopping ProtocolHandler ["http-nio-auto-1"]
+2023-09-08 13:41:12,919 INFO o.a.j.l.DirectJDKLog [main] Destroying ProtocolHandler ["http-nio-auto-1"]
+2023-09-08 13:41:12,928 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-09-08 13:41:13,047 INFO o.s.b.StartupInfoLogger [main] Starting PessoaControllerIT using Java 17.0.1 with PID 920 (started by Cliente in F:\java_projetos\spring-projeto\lojaVirtual\backend)
+2023-09-08 13:41:13,049 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.1.0, Spring v6.0.9
+2023-09-08 13:41:13,051 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2023-09-08 13:41:13,678 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-08 13:41:13,787 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 108 ms. Found 8 JPA repository interfaces.
+2023-09-08 13:41:13,863 INFO o.s.b.t.a.j.TestDatabaseAutoConfiguration$EmbeddedDataSourceBeanFactoryPostProcessor [main] Replacing 'dataSource' DataSource bean with embedded version
+2023-09-08 13:41:14,087 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 0 (http)
+2023-09-08 13:41:14,089 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-auto-2"]
+2023-09-08 13:41:14,090 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2023-09-08 13:41:14,092 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.8]
+2023-09-08 13:41:14,183 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2023-09-08 13:41:14,183 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1124 ms
+2023-09-08 13:41:14,210 INFO o.s.j.d.e.EmbeddedDatabaseFactory [main] Starting embedded database: url='jdbc:h2:mem:d69753e3-b8ef-4341-8c2c-845b0352d396;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2023-09-08 13:41:14,453 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-08 13:41:14,470 INFO o.h.b.i.BytecodeProviderInitiator [main] HHH000021: Bytecode provider name : bytebuddy
+2023-09-08 13:41:14,470 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-09-08 13:41:14,472 INFO o.h.e.j.d.i.DialectFactoryImpl [main] HHH035001: Using dialect: org.hibernate.dialect.H2Dialect, version: 2.1.214
+2023-09-08 13:41:14,589 INFO o.h.b.i.BytecodeProviderInitiator [main] HHH000021: Bytecode provider name : bytebuddy
+2023-09-08 13:41:15,036 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-08 13:41:15,094 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-08 13:41:15,585 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-08 13:41:15,756 WARN o.s.b.a.f.FreeMarkerAutoConfiguration [main] Cannot find template location(s): [classpath:/templates/] (please add some templates, check your FreeMarker configuration, or set spring.freemarker.check-template-location=false)
+2023-09-08 13:41:15,847 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-auto-2"]
+2023-09-08 13:41:15,876 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 62902 (http) with context path ''
+2023-09-08 13:41:15,911 INFO o.s.b.StartupInfoLogger [main] Started PessoaControllerIT in 2.978 seconds (process running for 16.303)
+2023-09-08 13:41:19,252 INFO o.a.j.l.DirectJDKLog [http-nio-auto-2-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-09-08 13:41:19,253 INFO o.s.w.s.FrameworkServlet [http-nio-auto-2-exec-1] Initializing Servlet 'dispatcherServlet'
+2023-09-08 13:41:19,254 INFO o.s.w.s.FrameworkServlet [http-nio-auto-2-exec-1] Completed initialization in 1 ms
+2023-09-08 13:41:22,118 INFO o.s.o.j.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'

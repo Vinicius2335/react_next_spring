@@ -35,6 +35,11 @@ public class CrudPessoaService {
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este ID"));
     }
 
+    public List<Permissao> buscarPermissoes(Long id){
+        Pessoa pessoa = buscarPorId(id);
+        return pessoa.getPermissoes();
+    }
+
     public Pessoa buscarPeloEmailECodigo(String email, String codigo){
         return pessoaRepository.findByEmailAndCodigoRecuperacaoSenha(email, codigo)
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO"));

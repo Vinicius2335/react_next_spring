@@ -42,6 +42,7 @@ class CrudPessoaServiceTest {
     private CrudPermissaoService permissaoServiceMock;
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
+    private final Permissao permissao = PermissaoCreator.createPermissao();
 
 
     @Test
@@ -140,6 +141,40 @@ class CrudPessoaServiceTest {
 
     private void findByIdExceptionConfig(){
         given(pessoaRepositoryMock.findById(anyLong())).willReturn(Optional.empty());
+    }
+
+    @Test
+    @DisplayName("buscarPermissoes() return list of Permissao related to pessoa found")
+    void givenId_whenBuscarPermissoes_thenListPessoasShouldBeFound(){
+        // given
+        buscarPermissoesConfig();
+        // when
+        List<Permissao> expected = underTest.buscarPermissoes(1L);
+        // then
+        verify(pessoaRepositoryMock, times(1)).findById(anyLong());
+        assertThat(expected)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1)
+                .contains(permissao);
+    }
+
+    private void buscarPermissoesConfig(){
+        findByIdConfig();
+        pessoa.getPermissoes().add(permissao);
+    }
+
+    @Test
+    @DisplayName("buscarPermissoes() throws PessoaNaoEncontradaException when pessoa not found by id")
+    void givenUnregisteredId_whenBuscarPermissoes_thenThrowsPessoaNaoEncontradaException(){
+        // given
+        findByIdExceptionConfig();
+        // when
+        assertThatThrownBy(() -> underTest.buscarPermissoes(1L))
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
+        // then
+        verify(pessoaRepositoryMock, times(1)).findById(anyLong());
     }
 
     @Test

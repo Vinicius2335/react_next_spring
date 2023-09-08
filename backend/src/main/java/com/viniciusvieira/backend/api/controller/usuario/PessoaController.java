@@ -2,6 +2,7 @@ package com.viniciusvieira.backend.api.controller.usuario;
 
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
 import jakarta.validation.Valid;
@@ -22,6 +23,12 @@ public class PessoaController {
     @GetMapping
     public ResponseEntity<List<Pessoa>> buscarTodos(){
         return ResponseEntity.ok(crudPessoaService.buscarTodos());
+    }
+
+    // TEST
+    @GetMapping("/{id}/permissoes")
+    public ResponseEntity<List<Permissao>> buscarPermissoes(@PathVariable Long id){
+        return ResponseEntity.ok(crudPessoaService.buscarPermissoes(id));
     }
 
     @PostMapping

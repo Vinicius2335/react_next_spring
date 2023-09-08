@@ -4,8 +4,10 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Pesso
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.usuario.PessoaNaoEncontradaException;
+import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
+import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +36,7 @@ class PessoaControllerTest {
     private CrudPessoaService crudPessoaServiceMock;
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
+    private final Permissao permissao = PermissaoCreator.createPermissao();
     private PessoaResponse pessoaResponse;
 
     @BeforeEach
@@ -54,6 +57,37 @@ class PessoaControllerTest {
                 .isNotNull()
                 .hasSize(1)
                 .contains(pessoa);
+    }
+
+    @Test
+    @DisplayName("buscarPermissoes() return list permissoes related to pessoa")
+    void giveId_whenBuscarPermissoes_thenReturnListPermissoes(){
+        // given
+        given(crudPessoaServiceMock.buscarPermissoes(anyLong())).willReturn(List.of(permissao));
+        // when
+        ResponseEntity<List<Permissao>> expected = underTest.buscarPermissoes(1L);
+        // then
+        verify(crudPessoaServiceMock, times(1)).buscarPermissoes(anyLong());
+        assertThat(expected.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(expected.getBody())
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1)
+                .contains(permissao);
+    }
+
+    @Test
+    @DisplayName("buscarPermissoes() throws PessoaNaoEncontradaException when pessoa not found by id")
+    void giveUnregisteredId_whenBuscarPermissoes_thenThrowsPessoaNaoEncontradaException(){
+        // given
+        String errorMenssage = "Não existe nenhuma pessoa cadastrada com este ID";
+        doThrow(new PessoaNaoEncontradaException(errorMenssage)).when(crudPessoaServiceMock).buscarPermissoes(anyLong());
+        // when
+        assertThatThrownBy(() -> underTest.buscarPermissoes(1L))
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                .hasMessageContaining(errorMenssage);
+        // then
+        verify(crudPessoaServiceMock, times(1)).buscarPermissoes(anyLong());
     }
 
     @Test
