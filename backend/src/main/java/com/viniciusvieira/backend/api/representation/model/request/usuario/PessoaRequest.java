@@ -33,6 +33,7 @@ public class PessoaRequest {
     private String senha;
 
     @Valid
+    @NotNull(message = "ENDEREÇO não pode ser nulo")
     private EnderecoRequest endereco;
 
     @NotBlank(message = "NOME da Permissao nao pode ser nulo ou em branco")

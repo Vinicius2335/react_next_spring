@@ -170,6 +170,7 @@ export default function ModalSalvar({
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPermissao(new Set([e.target.value]))
     setNomeSelectedPermissao(e.target.value)
+    formik.values.permissao = e.target.value
   }
 
   React.useEffect(() => {
@@ -185,7 +186,7 @@ export default function ModalSalvar({
       pessoaService.getPermissao(pessoa.id).then(permissao => {
         setSelectedPermissao(new Set([permissao[0].nome]))
         setNomeSelectedPermissao(permissao[0].nome)
-        formik.values.permissao = permissao[0].nome
+        formik.values.permissao = nomeSelectedPermissao
       })
     }
   }, [pessoa])
@@ -275,7 +276,7 @@ export default function ModalSalvar({
                         startContent={<Certificate size={23} />}
                         selectedKeys={selectedPermissao}
                         onChange={handleSelectionChange}
-                        variant="faded"
+                        variant="bordered"
                         onBlur={formik.handleBlur}
                         color={Boolean(formik.errors.permissao) ? "danger" : "success"}
                         errorMessage={formik.errors.permissao}

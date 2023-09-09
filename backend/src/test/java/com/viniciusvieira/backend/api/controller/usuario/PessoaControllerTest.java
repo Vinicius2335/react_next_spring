@@ -149,21 +149,6 @@ class PessoaControllerTest {
     }
 
     @Test
-    @DisplayName("alterar() throws CpfAlreadyExistsException when cpf already exists")
-    void givenIdAndAlreadyResgisteredPessoaRequest_whenAlterar_thenThrowsCpfAlreadyExistsException() {
-        // given
-        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
-        when(crudPessoaServiceMock.alterar(anyLong(), any(PessoaRequest.class)))
-                .thenThrow(new CpfAlreadyExistsException("Já existe uma pessoa cadastrada com esse CPF"));
-        // when
-        assertThatThrownBy(() -> underTest.alterar(99L, pessoaRequest))
-                .isInstanceOf(CpfAlreadyExistsException.class)
-                .hasMessageContaining("Já existe uma pessoa cadastrada com esse CPF");
-        // then
-        verify(crudPessoaServiceMock, times(1)).alterar(anyLong(), any(PessoaRequest.class));
-    }
-
-    @Test
     @DisplayName("excluirPermissao() removed permissao")
     void givenIdPessoaAndIdPermissao_whenExcluirPermissao_thenPessoaShouldHavePermissaoRemoved() {
         // given

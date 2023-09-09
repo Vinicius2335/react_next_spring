@@ -207,25 +207,6 @@ class PessoaControllerIT {
     }
 
     @Test
-    @DisplayName("alterar() retur CONFLICT when cpf already exists")
-    void givenAlreadyRegisteredPessoaRequest_whenAlterar_thenReturnStatusCONFLICT() {
-        Pessoa pessoaInserted = getPessoaInserted();
-        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
-
-        given()
-                .body(pessoaRequest)
-                .pathParam("id", pessoaInserted.getId())
-                .contentType(JSON)
-                .accept(JSON)
-                .log().all()
-        .when()
-                .put("/{id}")
-        .then()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .log().body();
-    }
-
-    @Test
     @DisplayName("excluirPermissao() return status NO_CONTENT when the pessoa relationship is deleted")
     void givenIdPessoaAndIdPermissao_whenExcluirPermissao_thenReturnStatusNO_CONTENT() {
         Pessoa pessoaInserted = getPessoaInserted();

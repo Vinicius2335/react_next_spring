@@ -6,7 +6,7 @@ export function Sidebar() {
 
   return (
     <aside className="lg:fixed lg:top-20 z-0 lg:h-[calc(100vh-121px)] overflow-hidden bg-sakai-bg rounded">
-      <div className="flex flex-col w-[170px] overflow-y-auto lg:max-h-[calc(100vh_-_64px)] pb-28">
+      <div className="flex flex-col w-[200px] overflow-y-auto lg:max-h-[calc(100vh_-_64px)] pb-28">
         {menuItems.map((item: MenuItemType) =>
           item.items == undefined ? (
             <div className="first:mt-2 mx-2" key={item.label}>

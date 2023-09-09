@@ -170,11 +170,17 @@ export default function TablePessoas() {
           </div>
         )
 
+      case "nome":
+        return <p className="w-32">{item.nome}</p>
+      
+      case "cpf":
+        return <p className="w-28">{item.cpf}</p>
+
       case "cep":
-        return <p>{item.endereco.cep}</p>
+        return <p className="w-20">{item.endereco.cep}</p>
 
       case "logradouro":
-        return <p>{item.endereco.logradouro}</p>
+        return <p className="text-tiny">{item.endereco.logradouro}</p>
 
       case "cidade":
         return <p>{item.endereco.cidade}</p>
@@ -306,7 +312,7 @@ export default function TablePessoas() {
         bottomContentPlacement="inside"
         classNames={{
           wrapper: "max-h-[500px]",
-          table: "min-h-[150px]"
+          table: "min-h-[150px] w-full"
         }}
         selectedKeys={selectedKeys}
         selectionMode="single"

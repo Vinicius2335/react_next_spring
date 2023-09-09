@@ -25,7 +25,6 @@ public class PessoaController {
         return ResponseEntity.ok(crudPessoaService.buscarTodos());
     }
 
-    // TEST
     @GetMapping("/{id}/permissoes")
     public ResponseEntity<List<Permissao>> buscarPermissoes(@PathVariable Long id){
         return ResponseEntity.ok(crudPessoaService.buscarPermissoes(id));

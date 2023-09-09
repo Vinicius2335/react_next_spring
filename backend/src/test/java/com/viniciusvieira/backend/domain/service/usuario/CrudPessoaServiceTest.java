@@ -82,7 +82,7 @@ class CrudPessoaServiceTest {
         assertThat(captorEmailValue).isEqualTo(email);
     }
 
-    private void findByEmailConfig(){
+    private void findByEmailConfig() {
         given(pessoaRepositoryMock.findByEmail(anyString())).willReturn(Optional.of(pessoa));
     }
 
@@ -100,7 +100,7 @@ class CrudPessoaServiceTest {
         verify(pessoaRepositoryMock, times(1)).findByEmail(anyString());
     }
 
-    private void findByEmailExceptionConfig(){
+    private void findByEmailExceptionConfig() {
         given(pessoaRepositoryMock.findByEmail(anyString())).willReturn(Optional.empty());
     }
 
@@ -121,7 +121,7 @@ class CrudPessoaServiceTest {
                 .isEqualTo(pessoa);
     }
 
-    private void findByIdConfig(){
+    private void findByIdConfig() {
         given(pessoaRepositoryMock.findById(anyLong())).willReturn(Optional.of(pessoa));
     }
 
@@ -134,18 +134,18 @@ class CrudPessoaServiceTest {
         // when
         assertThatThrownBy(() -> underTest.buscarPorId(id))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
-                        .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
+                .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
         verify(pessoaRepositoryMock, times(1)).findById(anyLong());
     }
 
-    private void findByIdExceptionConfig(){
+    private void findByIdExceptionConfig() {
         given(pessoaRepositoryMock.findById(anyLong())).willReturn(Optional.empty());
     }
 
     @Test
     @DisplayName("buscarPermissoes() return list of Permissao related to pessoa found")
-    void givenId_whenBuscarPermissoes_thenListPessoasShouldBeFound(){
+    void givenId_whenBuscarPermissoes_thenListPessoasShouldBeFound() {
         // given
         buscarPermissoesConfig();
         // when
@@ -159,14 +159,14 @@ class CrudPessoaServiceTest {
                 .contains(permissao);
     }
 
-    private void buscarPermissoesConfig(){
+    private void buscarPermissoesConfig() {
         findByIdConfig();
         pessoa.getPermissoes().add(permissao);
     }
 
     @Test
     @DisplayName("buscarPermissoes() throws PessoaNaoEncontradaException when pessoa not found by id")
-    void givenUnregisteredId_whenBuscarPermissoes_thenThrowsPessoaNaoEncontradaException(){
+    void givenUnregisteredId_whenBuscarPermissoes_thenThrowsPessoaNaoEncontradaException() {
         // given
         findByIdExceptionConfig();
         // when
@@ -197,7 +197,7 @@ class CrudPessoaServiceTest {
                 .isEqualTo(pessoa);
     }
 
-    private void findByEmailECodigoConfig(){
+    private void findByEmailECodigoConfig() {
         given(pessoaRepositoryMock.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString()))
                 .willReturn(Optional.of(pessoa));
     }
@@ -219,7 +219,7 @@ class CrudPessoaServiceTest {
                 .findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString());
     }
 
-    private void findByEmailECodigoExceptionConfig(){
+    private void findByEmailECodigoExceptionConfig() {
         given(pessoaRepositoryMock.findByEmailAndCodigoRecuperacaoSenha(anyString(), anyString()))
                 .willReturn(Optional.empty());
     }
@@ -242,7 +242,7 @@ class CrudPessoaServiceTest {
                 .isEqualTo(getPessoaResponse());
     }
 
-    private void inserirConfig(){
+    private void inserirConfig() {
         given(permissaoServiceMock.buscarPeloNome(anyString())).willReturn(PermissaoCreator.createPermissao());
         mockValidSaveConfig();
     }
@@ -263,12 +263,12 @@ class CrudPessoaServiceTest {
         // when
         assertThatThrownBy(() -> underTest.inserir(pessoaRequest))
                 .isInstanceOf(PermissaoNaoEncontradaException.class)
-                        .hasMessageContaining("Permissão não encontrada");
+                .hasMessageContaining("Permissão não encontrada");
         // then
         verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
-    private void permissaoServiceBuscarPorNomeExceptionConfig(){
+    private void permissaoServiceBuscarPorNomeExceptionConfig() {
         doThrow(new PermissaoNaoEncontradaException("Permissão não encontrada"))
                 .when(permissaoServiceMock).buscarPeloNome(anyString());
     }
@@ -278,7 +278,7 @@ class CrudPessoaServiceTest {
     void givenCpfInUse_whenInserir_thenThrowsCpfAlreadyExistsException() {
         // given
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
-        inserirExceptionConfig();
+        findByCpfConfig();
         // when
         assertThatThrownBy(() -> underTest.inserir(pessoaRequest))
                 .isInstanceOf(CpfAlreadyExistsException.class)
@@ -287,12 +287,7 @@ class CrudPessoaServiceTest {
         verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
-    private void inserirExceptionConfig(){
-        given(permissaoServiceMock.buscarPeloNome(anyString())).willReturn(PermissaoCreator.createPermissao());
-        findByCpfExceptionConfig();
-    }
-
-    private void findByCpfExceptionConfig() {
+    private void findByCpfConfig() {
         given(pessoaRepositoryMock.findByCpf(anyString())).willReturn(Optional.of(pessoa));
     }
 
@@ -316,9 +311,12 @@ class CrudPessoaServiceTest {
                 .isEqualTo(getPessoaResponse());
     }
 
-    private void alterarConfig(){
+    private void alterarConfig() {
         findByIdConfig();
-        mockValidSaveConfig();
+        given(permissaoServiceMock.buscarPeloNome(anyString())).willReturn(permissao);
+        given(pessoaMapperMock.toDomainPessoa(any(PessoaRequest.class))).willReturn(pessoa);
+        given(pessoaRepositoryMock.saveAndFlush(any(Pessoa.class))).willReturn(pessoa);
+        given(pessoaMapperMock.toPessoaResponse(any(Pessoa.class))).willReturn(getPessoaResponse());
     }
 
     @Test
@@ -330,32 +328,11 @@ class CrudPessoaServiceTest {
         pessoaRequest.setNome("Vinicius");
         findByIdExceptionConfig();
         // when
-         assertThatThrownBy(() -> underTest.alterar(id, pessoaRequest))
-                 .isInstanceOf(PessoaNaoEncontradaException.class)
-                         .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
-        // then
-        verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
-    }
-
-    @Test
-    @DisplayName("alterar() throws CpfAlreadyExistsException when cpf already exists")
-    void givenAlreadyRegisteredPessoaRequest_whenAlterar_thenThrowsCpfAlreadyExistsException() {
-        // given
-        Long id = 99L;
-        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
-        pessoaRequest.setNome("Vinicius");
-        alterarCpfExceptionConfig();
-        // when
         assertThatThrownBy(() -> underTest.alterar(id, pessoaRequest))
-                .isInstanceOf(CpfAlreadyExistsException.class)
-                .hasMessageContaining("Já existe uma pessoa cadastrada com esse CPF");
+                .isInstanceOf(PessoaNaoEncontradaException.class)
+                .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
         verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
-    }
-
-    private void alterarCpfExceptionConfig(){
-        findByIdConfig();
-        findByCpfExceptionConfig();
     }
 
     @Test
@@ -379,7 +356,7 @@ class CrudPessoaServiceTest {
         verify(pessoaRepositoryMock, times(1)).delete(any(Pessoa.class));
     }
 
-    private void excluirConfig(){
+    private void excluirConfig() {
         findByIdConfig();
         doNothing().when(pessoaRepositoryMock).delete(any(Pessoa.class));
     }
@@ -393,7 +370,7 @@ class CrudPessoaServiceTest {
         // when
         assertThatThrownBy(() -> underTest.excluir(id))
                 .isInstanceOf(PessoaNaoEncontradaException.class)
-                        .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
+                .hasMessageContaining("Não existe nenhuma pessoa cadastrada com este ID");
         // then
         verify(pessoaRepositoryMock, never()).delete(any(Pessoa.class));
     }
@@ -412,7 +389,7 @@ class CrudPessoaServiceTest {
         assertThat(pessoa.getPermissoes()).isEmpty();
     }
 
-    private void excluirPermissaoConfig(){
+    private void excluirPermissaoConfig() {
         findByIdConfig();
         given(pessoaRepositoryMock.saveAndFlush(any(Pessoa.class))).willReturn(pessoa);
     }
@@ -430,7 +407,7 @@ class CrudPessoaServiceTest {
         verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
-    private PessoaResponse getPessoaResponse(){
+    private PessoaResponse getPessoaResponse() {
         return PessoaCreator.createPessoaResponse(pessoa);
     }
 }

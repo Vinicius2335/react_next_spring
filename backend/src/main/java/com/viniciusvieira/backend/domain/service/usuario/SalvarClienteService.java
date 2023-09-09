@@ -44,8 +44,6 @@ public class SalvarClienteService {
     }
 
     private void sendEmail(Pessoa clienteSalvo) {
-        // enviando email
-        // COMMENT -- Comentado para testes
         Map<String, Object> propriedades = new HashMap<>();
         propriedades.put("nome", clienteSalvo.getNome());
         propriedades.put("mensagem", "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
