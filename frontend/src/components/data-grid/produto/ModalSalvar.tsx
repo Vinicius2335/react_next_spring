@@ -151,6 +151,26 @@ export default function ModalSalvar({
     onClose()
   }
 
+  const handleSelectMarcaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    marcas.forEach(marca => {
+      if (marca.nome == e.target.value) {
+        setSelectedMarca(new Set([e.target.value]))
+        setIdMarca(marca.id)
+        formik.values.marca = e.target.value
+      }
+    })
+  }
+
+  const handleSelectCategoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    categorias.forEach(categoria => {
+      if (categoria.nome == e.target.value) {
+        setSelectedCategoria(new Set([e.target.value]))
+        setIdCategoria(categoria.id)
+        formik.values.categoria = e.target.value
+      }
+    })
+  }
+
   React.useEffect(() => {
     marcaService.getAll().then(response => {
       setMarcas(response)
@@ -159,24 +179,6 @@ export default function ModalSalvar({
       setCategorias(response)
     })
   }, [])
-
-  const handleSelectMarcaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setIdMarca(Number(e.target.value))
-    marcas.forEach(marca => {
-      if (marca.id == Number(e.target.value)) {
-        formik.values.marca = marca.nome
-      }
-    })
-  }
-
-  const handleSelectCategoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setIdCategoria(Number(e.target.value))
-    categorias.forEach(categoria => {
-      if (categoria.id == Number(e.target.value)) {
-        formik.values.categoria = categoria.nome
-      }
-    })
-  }
 
   React.useEffect(() => {
     formik.initialValues.quantidade = produto.quantidade
@@ -187,13 +189,15 @@ export default function ModalSalvar({
 
     if (produto.id != 0) {
       marcaService.buscarPorId(produto.marca.id).then(marca => {
-        setSelectedMarca(new Set([marca.id]))
+        setSelectedMarca(new Set([marca.nome]))
         setIdMarca(marca.id)
+        console.log(selectedMarca)
         formik.values.marca = marca.nome
       })
 
       categoriaService.buscarPorId(produto.categoria.id).then(categoria => {
-        setSelectedCategoria(new Set([categoria.id]))
+        setSelectedCategoria(new Set([categoria.nome]))
+        console.log(selectedCategoria)
         setIdCategoria(categoria.id)
         formik.values.categoria = categoria.nome
       })
@@ -313,8 +317,6 @@ export default function ModalSalvar({
                         isRequired
                       />
 
-                      {/* TODO - Select Marca e Categoria */}
-
                       <div className="flex justify-between gap-3">
                         <Select
                           label="Marca"
@@ -323,7 +325,6 @@ export default function ModalSalvar({
                           placeholder="Selecione uma Marca"
                           variant="bordered"
                           selectedKeys={selectedMarca}
-                          onSelectionChange={setSelectedMarca}
                           onChange={handleSelectMarcaChange}
                           onBlur={formik.handleBlur}
                           color={Boolean(formik.errors.marca) ? "danger" : "success"}
@@ -332,7 +333,7 @@ export default function ModalSalvar({
                           isRequired
                         >
                           {marcas.map(marca => (
-                            <SelectItem key={marca.id} value={marca.nome}>
+                            <SelectItem key={marca.nome} value={marca.nome}>
                               {marca.nome}
                             </SelectItem>
                           ))}
@@ -345,7 +346,6 @@ export default function ModalSalvar({
                           placeholder="Selecione uma Categoria"
                           variant="bordered"
                           selectedKeys={selectedCategoria}
-                          onSelectionChange={setSelectedCategoria}
                           onChange={handleSelectCategoriaChange}
                           onBlur={formik.handleBlur}
                           color={Boolean(formik.errors.categoria) ? "danger" : "success"}
@@ -354,7 +354,7 @@ export default function ModalSalvar({
                           isRequired
                         >
                           {categorias.map(categoria => (
-                            <SelectItem key={categoria.id} value={categoria.nome}>
+                            <SelectItem key={categoria.nome} value={categoria.nome}>
                               {categoria.nome}
                             </SelectItem>
                           ))}
