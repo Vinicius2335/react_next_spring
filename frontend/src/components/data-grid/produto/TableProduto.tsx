@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { DataTypePessoa, createEmptyPessoa, getColumnsPessoa } from "@/models/pessoa"
 import { capitalize } from "@/services/utils"
 import {
   Button,
@@ -22,12 +21,13 @@ import {
 import { MagnifyingGlass, PencilSimpleLine, Plus, Trash } from "@phosphor-icons/react"
 import React, { useCallback, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { PessoaService } from "../../../services/PessoaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
 import ModalSalvar from "./ModalSalvar"
+import { DataTypeProduto, createEmptyProduto, getColumnsProduto } from "@/models/produto"
+import { ProdutoService } from "@/services/ProdutoService"
 
-export default function TablePessoas() {
-  let columns = getColumnsPessoa()
+export default function TableProduto() {
+  let columns = getColumnsProduto()
 
   const [isLoading, setIsLoading] = React.useState(true)
   const [isEmptyContent, setIsEmptyContent] = React.useState(false)
@@ -43,16 +43,16 @@ export default function TablePessoas() {
     direction: "ascending"
   })
 
-  const [data, setData] = useState<DataTypePessoa[]>([])
-  const [pessoa, setPessoa] = useState<DataTypePessoa>(createEmptyPessoa())
-  const text = "pessoa"
-  const pessoaService = new PessoaService()
+  const [data, setData] = useState<DataTypeProduto[]>([])
+  const [produto, setProduto] = useState<DataTypeProduto>(createEmptyProduto())
+  const text = "produto"
+  const produtoService = new ProdutoService()
 
   const salvarModal = useDisclosure()
   const deleteModal = useDisclosure()
 
   function carregaDados() {
-    pessoaService
+    produtoService
       .getAll()
       .then(data => {
         if (data.length == 0) {
@@ -72,24 +72,24 @@ export default function TablePessoas() {
     carregaDados()
   }, [])
 
-  function onEdit(item: DataTypePessoa) {
-    setPessoa(item)
+  function onEdit(item: DataTypeProduto) {
+    setProduto(item)
     salvarModal.onOpen()
   }
 
-  function onDelete(item: DataTypePessoa) {
-    setPessoa(item)
+  function onDelete(item: DataTypeProduto) {
+    setProduto(item)
     deleteModal.onOpen()
   }
 
   function onConfirmarDelete() {
-    let entityToDelete = pessoa
-    pessoaService
+    let entityToDelete = produto
+    produtoService
       .delete(entityToDelete.id)
       .then(() => {
         toast.success(`${capitalize(text)} deletada com sucesso!`)
         carregaDados()
-        setPessoa(createEmptyPessoa())
+        setProduto(createEmptyProduto())
         deleteModal.onClose()
       })
       .catch(() => {
@@ -99,7 +99,7 @@ export default function TablePessoas() {
   }
 
   function onAdd() {
-    setPessoa(createEmptyPessoa())
+    setProduto(createEmptyProduto())
     salvarModal.onOpen()
   }
 
@@ -133,9 +133,9 @@ export default function TablePessoas() {
 
   // ------ TUDO RELACIONADO COM A ORDENAÇAO DAS LINHAS ------
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: DataTypePessoa, b: DataTypePessoa) => {
-      const first = a[sortDescriptor.column as keyof DataTypePessoa] as number
-      const second = b[sortDescriptor.column as keyof DataTypePessoa] as number
+    return [...items].sort((a: DataTypeProduto, b: DataTypeProduto) => {
+      const first = a[sortDescriptor.column as keyof DataTypeProduto] as number
+      const second = b[sortDescriptor.column as keyof DataTypeProduto] as number
       const cmp = first < second ? -1 : first > second ? 1 : 0
 
       return sortDescriptor.direction === "descending" ? -cmp : cmp
@@ -143,7 +143,7 @@ export default function TablePessoas() {
   }, [sortDescriptor, items])
 
   // ------ TUDO RELACIONADO COM A RENDERIZAÇAO DAS COLUNAS ------
-  const renderCell = React.useCallback((item: DataTypePessoa, columnKey: React.Key) => {
+  const renderCell = React.useCallback((item: DataTypeProduto, columnKey: React.Key) => {
     const cellValue = item[columnKey]
 
     switch (columnKey) {
@@ -169,23 +169,18 @@ export default function TablePessoas() {
           </div>
         )
 
-      case "nome":
-        return <p className="w-32">{item.nome}</p>
+      case "descricao":
+        return <p>{item.descricaoCurta}</p>
+
+      case "detalhe":
+        return <p className="text-tiny">{item.descricaoDetalhada}</p>
+
+      case "custo":
+        return <p>{`R$ ${item.valorCusto}`}</p>
       
-      case "cpf":
-        return <p className="w-28">{item.cpf}</p>
+      case "venda":
+        return <p>{`R$ ${item.valorVenda}`}</p>
 
-      case "cep":
-        return <p className="w-20">{item.endereco.cep}</p>
-
-      case "logradouro":
-        return <p className="text-tiny">{item.endereco.logradouro}</p>
-
-      case "cidade":
-        return <p>{item.endereco.cidade}</p>
-
-      case "estado":
-        return <p>{item.endereco.estado}</p>
       default:
         return cellValue
     }
@@ -335,7 +330,7 @@ export default function TablePessoas() {
 
         <TableBody
           isLoading={isLoading}
-          emptyContent={isEmptyContent ? `Nenhuma ${text} foi encontrada` : ""}
+          emptyContent={isEmptyContent ? `Nenhuma ${text} foi encontrado` : ""}
           items={sortedItems}
           loadingContent={
             <Spinner color="primary" className="mt-36" labelColor="primary" label="Loading..." />
@@ -355,7 +350,7 @@ export default function TablePessoas() {
         onOpenChange={salvarModal.onOpenChange}
         onClose={salvarModal.onClose}
         onSalvarPressed={carregaDados}
-        pessoa={pessoa}
+        produto={produto}
       />
 
       <ModalDeleteGeneric

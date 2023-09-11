@@ -1,0 +1,394 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { DataTypeCategoria } from "@/models/categoria"
+import { DataTypeMarca } from "@/models/marca"
+import { CategoriaType, DataTypeProduto, MarcaType, createEmptyProduto } from "@/models/produto"
+import { CategoriaService } from "@/services/CategoriaService"
+import { MarcaService } from "@/services/MarcaService"
+import { ProdutoService } from "@/services/ProdutoService"
+import { capitalize } from "@/services/utils"
+import {
+  Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  Textarea,
+  Select,
+  SelectItem,
+  Selection
+} from "@nextui-org/react"
+import { useFormik } from "formik"
+import React from "react"
+import { toast } from "react-toastify"
+import * as yup from "yup"
+
+interface ModalSalvarProps {
+  isOpen: boolean
+  onOpenChange: () => void
+  onClose: () => void
+  produto: DataTypeProduto
+  onSalvarPressed: () => void
+}
+
+const validationSchema = yup.object({
+  quantidade: yup.number().required("Quantidade is required"),
+  descricao: yup.string().required("Descrição is required"),
+  detalhe: yup
+    .string()
+    .max(255, "Número máximo de caracteres é 255")
+    .required("Detalhes is required"),
+  custo: yup
+    .number()
+    .moreThan(0, "Valor de Custo não pode ser menor que 0")
+    .required("Valor de Custo is required"),
+  venda: yup
+    .number()
+    .moreThan(0, "Valor de Venda não pode ser menor que 0")
+    .required("Valor de Venda is required"),
+  marca: yup.string().required("Marca is required"),
+  categoria: yup.string().required("Categoria is required")
+})
+
+export default function ModalSalvar({
+  isOpen,
+  onOpenChange,
+  onClose,
+  produto,
+  onSalvarPressed
+}: ModalSalvarProps) {
+  const produtoService = new ProdutoService()
+  const marcaService = new MarcaService()
+  const categoriaService = new CategoriaService()
+  const text = "produto"
+  const [marcas, setMarcas] = React.useState<DataTypeMarca[]>([])
+  const [categorias, setCategorias] = React.useState<DataTypeCategoria[]>([])
+  const [selectedMarca, setSelectedMarca] = React.useState<Selection>(new Set([]))
+  const [selectedCategoria, setSelectedCategoria] = React.useState<Selection>(new Set([]))
+  const [idMarca, setIdMarca] = React.useState(0)
+  const [idCategoria, setIdCategoria] = React.useState(0)
+
+  let formik = useFormik({
+    initialValues: {
+      quantidade: produto.quantidade,
+      descricao: produto.descricaoCurta,
+      detalhe: produto.descricaoDetalhada,
+      custo: produto.valorCusto,
+      venda: produto.valorVenda,
+      marca: "",
+      categoria: ""
+    },
+
+    validationSchema: validationSchema,
+
+    onSubmit: values => {
+      let entityToEdit = produto
+
+      entityToEdit.quantidade = values.quantidade
+      entityToEdit.descricaoCurta = values.descricao
+      entityToEdit.descricaoDetalhada = values.detalhe
+      entityToEdit.valorCusto = values.custo
+      entityToEdit.valorVenda = values.venda
+      entityToEdit.marca.id = idMarca
+      entityToEdit.categoria.id = idCategoria
+
+      if (typeof entityToEdit.id !== "undefined" && entityToEdit.id != 0) {
+        produtoService
+          .alterar(entityToEdit, entityToEdit.id)
+          .then(() => {
+            toast.success(`${capitalize(text)} editada com sucesso!`)
+            onSalvarPressed()
+            onCloseModal()
+          })
+          .catch((error) => {
+            toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
+            console.error(error)
+            onCloseModal()
+          })
+      } else {
+        let addMarca: MarcaType = {
+          id: idMarca
+        }
+
+        let addCategoria: CategoriaType = {
+          id: idCategoria
+        }
+
+        let entityToAdd: Partial<DataTypeProduto> = {
+          quantidade: values.quantidade,
+          descricaoCurta: values.descricao,
+          descricaoDetalhada: values.detalhe,
+          valorCusto: values.custo,
+          valorVenda: values.venda,
+          marca: addMarca,
+          categoria: addCategoria
+        }
+
+        produtoService
+          .inserir(entityToAdd)
+          .then(() => {
+            toast.success(`${capitalize(text)} criada com sucesso!`)
+            onSalvarPressed()
+            onCloseModal()
+          })
+          .catch(data => {
+            toast.error(`Erro ao tentar salvar ${text}, tente novamente mais tarde!`)
+            onCloseModal()
+          })
+      }
+    }
+  })
+
+  function onCloseModal() {
+    produto = createEmptyProduto()
+    formik.resetForm()
+    formik.values.marca = ""
+    formik.values.categoria = ""
+    setIdMarca(0)
+    setIdCategoria(0)
+    setSelectedCategoria(new Set([]))
+    setSelectedMarca(new Set([]))
+    onClose()
+  }
+
+  React.useEffect(() => {
+    marcaService.getAll().then(response => {
+      setMarcas(response)
+    })
+    categoriaService.getAll().then(response => {
+      setCategorias(response)
+    })
+  }, [])
+
+  const handleSelectMarcaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setIdMarca(Number(e.target.value))
+    marcas.forEach(marca => {
+      if (marca.id == Number(e.target.value)) {
+        formik.values.marca = marca.nome
+      }
+    })
+  }
+
+  const handleSelectCategoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setIdCategoria(Number(e.target.value))
+    categorias.forEach(categoria => {
+      if (categoria.id == Number(e.target.value)) {
+        formik.values.categoria = categoria.nome
+      }
+    })
+  }
+
+  React.useEffect(() => {
+    formik.initialValues.quantidade = produto.quantidade
+    formik.initialValues.descricao = produto.descricaoCurta
+    formik.initialValues.detalhe = produto.descricaoDetalhada
+    formik.initialValues.custo = produto.valorCusto
+    formik.initialValues.venda = produto.valorVenda
+
+    if (produto.id != 0) {
+      marcaService.buscarPorId(produto.marca.id).then(marca => {
+        setSelectedMarca(new Set([marca.id]))
+        setIdMarca(marca.id)
+        formik.values.marca = marca.nome
+      })
+
+      categoriaService.buscarPorId(produto.categoria.id).then(categoria => {
+        setSelectedCategoria(new Set([categoria.id]))
+        setIdCategoria(categoria.id)
+        formik.values.categoria = categoria.nome
+      })
+    }
+  }, [produto])
+
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="top-center"
+        scrollBehavior="inside"
+        size="4xl"
+        backdrop="blur"
+        onClose={onCloseModal}
+        isDismissable={false}
+      >
+        <ModalContent>
+          {onClose => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Salvar Produto</ModalHeader>
+              <ModalBody>
+                <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
+                  <div className="flex w-full gap-4">
+                    <div className="w-[50%] flex flex-col gap-3">
+                      <Input
+                        autoFocus
+                        label="Quantidade"
+                        id="quantidade"
+                        name="quantidade"
+                        type="number"
+                        placeholder="Digite a quantidade de produtos..."
+                        variant="bordered"
+                        value={formik.values.quantidade.toString()}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        color={Boolean(formik.errors.quantidade) ? "danger" : "success"}
+                        errorMessage={formik.errors.quantidade}
+                        validationState={Boolean(formik.errors.quantidade) ? "invalid" : "valid"}
+                        isRequired
+                      />
+
+                      <Input
+                        label="Descrição"
+                        id="descricao"
+                        name="descricao"
+                        type="descricao"
+                        placeholder="Digite o nome do produto..."
+                        variant="bordered"
+                        value={formik.values.descricao}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        color={Boolean(formik.errors.descricao) ? "danger" : "success"}
+                        errorMessage={formik.errors.descricao}
+                        validationState={Boolean(formik.errors.descricao) ? "invalid" : "valid"}
+                        isRequired
+                      />
+
+                      <Textarea
+                        label="Detalhe"
+                        id="detalhe"
+                        name="detalhe"
+                        variant="bordered"
+                        maxLength={255}
+                        placeholder="Digite detalhes sobre o produto..."
+                        value={formik.values.detalhe}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        color={Boolean(formik.errors.detalhe) ? "danger" : "success"}
+                        errorMessage={formik.errors.detalhe}
+                        validationState={Boolean(formik.errors.detalhe) ? "invalid" : "valid"}
+                        isRequired
+                      />
+                    </div>
+
+                    <div className="w-[50%] flex flex-col gap-3">
+                      <Input
+                        label="Valor de Custo"
+                        id="custo"
+                        name="custo"
+                        type="number"
+                        placeholder="0.00"
+                        variant="bordered"
+                        startContent={
+                          <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">R$</span>
+                          </div>
+                        }
+                        value={formik.values.custo.toString()}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        color={Boolean(formik.errors.custo) ? "danger" : "success"}
+                        errorMessage={formik.errors.custo}
+                        validationState={Boolean(formik.errors.custo) ? "invalid" : "valid"}
+                        isRequired
+                      />
+
+                      <Input
+                        label="Valor de Venda"
+                        id="venda"
+                        name="venda"
+                        type="number"
+                        placeholder="0.00"
+                        variant="bordered"
+                        startContent={
+                          <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">R$</span>
+                          </div>
+                        }
+                        value={formik.values.venda.toString()}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        color={Boolean(formik.errors.venda) ? "danger" : "success"}
+                        errorMessage={formik.errors.venda}
+                        validationState={Boolean(formik.errors.venda) ? "invalid" : "valid"}
+                        isRequired
+                      />
+
+                      {/* TODO - Select Marca e Categoria */}
+
+                      <div className="flex justify-between gap-3">
+                        <Select
+                          label="Marca"
+                          name="marca"
+                          id="marca"
+                          placeholder="Selecione uma Marca"
+                          variant="bordered"
+                          selectedKeys={selectedMarca}
+                          onSelectionChange={setSelectedMarca}
+                          onChange={handleSelectMarcaChange}
+                          onBlur={formik.handleBlur}
+                          color={Boolean(formik.errors.marca) ? "danger" : "success"}
+                          errorMessage={formik.errors.marca}
+                          validationState={Boolean(formik.errors.marca) ? "invalid" : "valid"}
+                          isRequired
+                        >
+                          {marcas.map(marca => (
+                            <SelectItem key={marca.id} value={marca.nome}>
+                              {marca.nome}
+                            </SelectItem>
+                          ))}
+                        </Select>
+
+                        <Select
+                          label="Categoria"
+                          name="categoria"
+                          id="categoria"
+                          placeholder="Selecione uma Categoria"
+                          variant="bordered"
+                          selectedKeys={selectedCategoria}
+                          onSelectionChange={setSelectedCategoria}
+                          onChange={handleSelectCategoriaChange}
+                          onBlur={formik.handleBlur}
+                          color={Boolean(formik.errors.categoria) ? "danger" : "success"}
+                          errorMessage={formik.errors.categoria}
+                          validationState={Boolean(formik.errors.categoria) ? "invalid" : "valid"}
+                          isRequired
+                        >
+                          {categorias.map(categoria => (
+                            <SelectItem key={categoria.id} value={categoria.nome}>
+                              {categoria.nome}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex py-2 px-1 justify-end gap-4">
+                    <Button
+                      color="secondary"
+                      variant="flat"
+                      onPress={onClose}
+                      className="hover:bg-secondary-400 hover:text-white"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      color="success"
+                      type="submit"
+                      variant="shadow"
+                      className="hover:bg-success-200 hover:text-white"
+                      onClick={onSalvarPressed}
+                      isDisabled={!formik.isValid}
+                    >
+                      Salvar
+                    </Button>
+                  </div>
+                </form>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
