@@ -3,7 +3,7 @@ import { DataTypePermissao } from "@/models/permissao"
 import { DataTypePessoa, EnderecoType, createEmptyPessoa } from "@/models/pessoa"
 import { PermissaoService } from "@/services/PermissaoService"
 import { PessoaService } from "@/services/PessoaService"
-import { capitalize } from "@/services/utils"
+import { capitalize, regexNomeUtil } from "@/services/utils"
 import {
   Button,
   Input,
@@ -17,10 +17,11 @@ import {
 } from "@nextui-org/react"
 import { Certificate } from "@phosphor-icons/react"
 import { useFormik } from "formik"
-import React, { Key } from "react"
+import React from "react"
 import { toast } from "react-toastify"
 import * as yup from "yup"
 import { ViaCep } from "../../../models/ViaCep"
+import InputMask from "react-input-mask"
 
 interface ModalSalvarProps {
   isOpen: boolean
@@ -30,14 +31,22 @@ interface ModalSalvarProps {
   onSalvarPressed: () => void
 }
 
-const regexp = new RegExp(/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/)
+const regexCpf = new RegExp(/^\d{3}\.\d{3}\.\d{3}\-\d{2}$/)
+const regexCep = new RegExp(/^\d{5}-\d{3}$/)
+const regexNome = regexNomeUtil
 
 const validationSchema = yup.object({
-  nome: yup.string().required("Nome is required"),
-  cpf: yup.string().matches(regexp, "CPF is invalid").required("CPF is requided"),
+  nome: yup
+    .string()
+    .matches(regexNome, "Nome is invalid. Ex: Maria Da Silva")
+    .required("Nome is required"),
+  cpf: yup
+    .string()
+    .matches(regexCpf, "CPF is invalid. Ex: 999.999.999-99")
+    .required("CPF is requided"),
   email: yup.string().email("Email is invalid").required("Email is requided"),
   permissao: yup.string().required("Permissão is required"),
-  cep: yup.string().required("CEP is requided"),
+  cep: yup.string().matches(regexCep, "CEP is invalid. Ex: 99999-999").required("CEP is requided"),
   logradouro: yup.string().required("Logradouro is requided"),
   cidade: yup.string().required("Cidade is requided"),
   estado: yup.string().required("Estado is requided")
@@ -57,6 +66,7 @@ export default function ModalSalvar({
   const [nomeSelectedPermissao, setNomeSelectedPermissao] = React.useState("")
   let service = new PermissaoService()
   const [permissoes, setPermissoes] = React.useState<DataTypePermissao[]>([])
+  const [disabled, setDisabled] = React.useState(false)
 
   let formik = useFormik({
     initialValues: {
@@ -136,6 +146,7 @@ export default function ModalSalvar({
     pessoa = createEmptyPessoa()
     formik.resetForm()
     setSelectedPermissao(new Set([]))
+    setDisabled(false)
     formik.values.permissao = ""
     onClose()
   }
@@ -174,7 +185,7 @@ export default function ModalSalvar({
   }
 
   React.useEffect(() => {
-    formik.initialValues.nome = pessoa.nome
+    formik.initialValues.nome = pessoa.nome.trim()
     formik.initialValues.cpf = pessoa.cpf
     formik.initialValues.email = pessoa.email
     formik.initialValues.cep = pessoa.endereco.cep
@@ -186,6 +197,7 @@ export default function ModalSalvar({
       pessoaService.getPermissao(pessoa.id).then(permissao => {
         setSelectedPermissao(new Set([permissao[0].nome]))
         setNomeSelectedPermissao(permissao[0].nome)
+        setDisabled(true)
         formik.values.permissao = nomeSelectedPermissao
       })
     }
@@ -233,26 +245,28 @@ export default function ModalSalvar({
                         isRequired
                       />
 
-                      <Input
-                        autoFocus
-                        label="Cpf"
-                        id="cpf"
+                      <InputMask
+                        mask={"999.999.999-99"}
                         name="cpf"
-                        type="text"
-                        maxLength={14}
-                        placeholder="Digite o seu CPF..."
-                        variant="bordered"
+                        id="cpf"
                         value={formik.values.cpf}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        color={Boolean(formik.errors.cpf) ? "danger" : "success"}
-                        errorMessage={formik.errors.cpf}
-                        validationState={Boolean(formik.errors.cpf) ? "invalid" : "valid"}
-                        isRequired
-                      />
+                      >
+                        <Input
+                          label="Cpf"
+                          type="text"
+                          placeholder="Digite o seu CPF..."
+                          variant="bordered"
+                          color={Boolean(formik.errors.cpf) ? "danger" : "success"}
+                          errorMessage={formik.errors.cpf}
+                          validationState={Boolean(formik.errors.cpf) ? "invalid" : "valid"}
+                          isDisabled={disabled}
+                          isRequired
+                        />
+                      </InputMask>
 
                       <Input
-                        autoFocus
                         label="Email"
                         id="email"
                         name="email"
@@ -294,26 +308,27 @@ export default function ModalSalvar({
                     <div className="w-[50%] flex flex-col gap-3">
                       <h2>Endereço</h2>
 
-                      <Input
-                        autoFocus
-                        label="Cep"
+                      <InputMask
+                        mask={"99999-999"}
                         id="cep"
                         name="cep"
-                        type="text"
-                        maxLength={9}
-                        placeholder="Digite o seu cep..."
-                        variant="bordered"
                         value={formik.values.cep}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        color={Boolean(formik.errors.cep) ? "danger" : "success"}
-                        errorMessage={formik.errors.cep}
-                        validationState={Boolean(formik.errors.cep) ? "invalid" : "valid"}
-                        isRequired
-                      />
+                      >
+                        <Input
+                          label="Cep"
+                          type="text"
+                          placeholder="Digite o seu cep..."
+                          variant="bordered"
+                          color={Boolean(formik.errors.cep) ? "danger" : "success"}
+                          errorMessage={formik.errors.cep}
+                          validationState={Boolean(formik.errors.cep) ? "invalid" : "valid"}
+                          isRequired
+                        />
+                      </InputMask>
 
                       <Input
-                        autoFocus
                         label="Logradouro"
                         id="logradouro"
                         name="logradouro"
@@ -331,7 +346,6 @@ export default function ModalSalvar({
 
                       <div className="flex py-2 px-1 justify-center gap-4">
                         <Input
-                          autoFocus
                           label="Cidade"
                           id="cidade"
                           name="cidade"
@@ -348,7 +362,6 @@ export default function ModalSalvar({
                         />
 
                         <Input
-                          autoFocus
                           label="Estado"
                           id="estado"
                           name="estado"
