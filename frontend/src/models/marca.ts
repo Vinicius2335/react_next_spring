@@ -16,3 +16,13 @@ export function createEmptyMarca(){
 
   return emptyMarca
 }
+
+export function getColumnsMarca(){
+  return [
+    { name: "ID", uid: "id", sortable: true },
+    { name: "NOME", uid: "nome", sortable: true },
+    { name: "DATA CRIAÇÃO", uid: "dataCriacao" },
+    { name: "DATA ATUALIZAÇÃO", uid: "dataAtualizacao" },
+    { name: "ACTIONS", uid: "actions" }
+  ]
+}

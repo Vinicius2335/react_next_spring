@@ -7,17 +7,6 @@ export type DataTypeCategoria = {
   dataAtualizacao: string
 }
 
-export function createCategoria(nome: string){
-  let categoria: DataTypeCategoria = {
-    id : 0,
-    nome : nome,
-    dataCriacao : "",
-    dataAtualizacao : ""
-  }
-
-  return categoria
-}
-
 export function createEmptyCategoria(){
   let categoria: DataTypeCategoria = {
     id : 0,
@@ -29,7 +18,7 @@ export function createEmptyCategoria(){
   return categoria
 }
 
-export function getColumns(){
+export function getColumnsCategoria(){
   return [
     { name: "ID", uid: "id", sortable: true },
     { name: "NOME", uid: "nome", sortable: true },

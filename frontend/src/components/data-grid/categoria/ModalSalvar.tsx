@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { DataTypeCategoria, createCategoria, createEmptyCategoria } from "@/models/categoria"
+import { DataTypeCategoria, createEmptyCategoria } from "@/models/categoria"
 import { CategoriaService } from "@/services/CategoriaService"
 import { capitalize } from "@/services/utils"
 import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react"
@@ -12,6 +13,7 @@ import * as yup from "yup"
 interface ModalSalvarProps {
   isOpen: boolean
   onOpenChange: () => void
+  onClose: () => void
   categoria: DataTypeCategoria
   onSalvarPressed: () => void
 }
@@ -23,6 +25,7 @@ const validationSchema = yup.object({
 export default function ModalSalvar({
   isOpen,
   onOpenChange,
+  onClose,
   categoria,
   onSalvarPressed
 }: ModalSalvarProps) {
@@ -45,12 +48,12 @@ export default function ModalSalvar({
           .alterar(entityToEdit, entityToEdit.id)
           .then(() => {
             toast.success(`${capitalize(text)} editada com sucesso!`)
-            reset(values)
             onSalvarPressed()
+            onCloseModal()
           })
           .catch(() => {
             toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
-            reset(values)
+            onCloseModal()
           })
       } else {
         let entityToAdd: Partial<DataTypeCategoria> = {
@@ -61,35 +64,25 @@ export default function ModalSalvar({
           .inserir(entityToAdd)
           .then(() => {
             toast.success(`${capitalize(text)} criada com sucesso!`)
-            reset(values)
             onSalvarPressed()
+            onCloseModal()
           })
           .catch(() => {
             toast.error(`Erro ao tentar salvar ${text}, tente novamente mais tarde!`)
-            reset(values)
+            onCloseModal()
           })
       }
     }
   })
 
-  function reset(values: any){
-    values.nome = ""
-  }
-
   React.useEffect(() => {
     formik.initialValues.nome = categoria.nome
-    // if(formik.initialValues.nome){
-    //   formik.errors.nome = undefined
-    // } else {
-    //   formik.errors.nome = ""
-    // }
   }, [categoria])
 
-  function onClose(){
+  function onCloseModal() {
     categoria = createEmptyCategoria()
     formik.resetForm()
-    console.log("onClose")
-    console.log(categoria)
+    onClose()
   }
 
   return (
@@ -101,7 +94,7 @@ export default function ModalSalvar({
         scrollBehavior="inside"
         size="md"
         backdrop="blur"
-        onClose={onClose}
+        onClose={onCloseModal}
       >
         <ModalContent>
           {onClose => (
@@ -141,7 +134,6 @@ export default function ModalSalvar({
                       variant="shadow"
                       className="hover:bg-success-200 hover:text-white"
                       onClick={onSalvarPressed}
-                      onPress={onClose}
                       isDisabled={!formik.isValid}
                     >
                       Salvar

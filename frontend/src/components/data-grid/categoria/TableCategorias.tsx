@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
+import { DataTypeCategoria, createEmptyCategoria, getColumnsCategoria } from "@/models/categoria"
+import { CategoriaService } from "@/services/CategoriaService"
+import { capitalize } from "@/services/utils"
 import {
   Button,
   Input,
@@ -18,17 +21,14 @@ import {
   useDisclosure
 } from "@nextui-org/react"
 import { MagnifyingGlass, PencilSimpleLine, Plus, Trash } from "@phosphor-icons/react"
-import React, { useCallback, useEffect, useState } from "react"
-import ModalSalvar from "./ModalSalvar"
 import dayjs from "dayjs"
+import React, { useCallback, useEffect } from "react"
 import { toast } from "react-toastify"
-import { capitalize } from "@/services/utils"
-import { CategoriaService } from "@/services/CategoriaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
-import { DataTypeCategoria, createEmptyCategoria, getColumns } from "@/models/categoria"
+import ModalSalvar from "./ModalSalvar"
 
 export default function TableCategorias() {
-  let columns = getColumns()
+  let columns = getColumnsCategoria()
 
   const [isLoading, setIsLoading] = React.useState(true)
   const [isEmptyContent, setIsEmptyContent] = React.useState(false)
@@ -350,6 +350,7 @@ export default function TableCategorias() {
       <ModalSalvar
         isOpen={salvarModal.isOpen}
         onOpenChange={salvarModal.onOpenChange}
+        onClose={salvarModal.onClose}
         categoria={categoria}
         onSalvarPressed={carregaDados}
       />

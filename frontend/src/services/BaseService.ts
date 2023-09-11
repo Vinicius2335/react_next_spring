@@ -22,4 +22,8 @@ export class BaseService<T> {
   delete(id: number) {
     return AXIOS.delete(this.url + "/" + + id).then(resp => resp.data)
   }
+
+  getUrl(){
+    return this.url
+  }
 }

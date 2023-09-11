@@ -1,4 +1,4 @@
-import { Coffee, Envelope, House, PencilSimple, Question } from "@phosphor-icons/react"
+import { Book, Certificate, House, PencilSimple, Question, User } from "@phosphor-icons/react"
 
 export type MenuItemType = {
   label: string
@@ -47,7 +47,7 @@ export const SIDEBAR_ITEMS: MenuItemType[] = [
       {
         href: "/admin/cadastros/permissoes",
         label: "Permissão",
-        icon: <Envelope className="sidebar-icon" />
+        icon: <Certificate  className="sidebar-icon" />
       },
       {
         href: "/admin/cadastros/marcas",
@@ -57,7 +57,12 @@ export const SIDEBAR_ITEMS: MenuItemType[] = [
       {
         href: "/admin/cadastros/categorias",
         label: "Categoria",
-        icon: <Coffee className="sidebar-icon" />
+        icon: <Book className="sidebar-icon" />
+      },
+      {
+        href: "/admin/cadastros/pessoas",
+        label: "Pessoa",
+        icon: <User className="sidebar-icon" />
       }
     ]
   },

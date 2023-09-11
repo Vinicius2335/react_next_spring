@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { DataTypePermissao, createEmptyPermissao } from "@/models/permissao"
+import { DataTypePermissao, createEmptyPermissao, getColumnsPermissao } from "@/models/permissao"
 import { PermissaoService } from "@/services/PermissaoService"
 import { capitalize } from "@/services/utils"
 import {
@@ -27,16 +27,8 @@ import { toast } from "react-toastify"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
 import ModalSalvar from "./ModalSalvar"
 
-
-
 export default function TablePermissoes() {
-  let columns = [
-    { name: "ID", uid: "id", sortable: true },
-    { name: "NOME", uid: "nome", sortable: true },
-    { name: "DATA CRIAÇÃO", uid: "dataCriacao" },
-    { name: "DATA ATUALIZAÇÃO", uid: "dataAtualizacao" },
-    { name: "ACTIONS", uid: "actions" }
-  ]
+  let columns = getColumnsPermissao()
 
   const [isLoading, setIsLoading] = React.useState(true)
   const [isEmptyContent, setIsEmptyContent] = React.useState(false)
@@ -53,8 +45,7 @@ export default function TablePermissoes() {
   })
 
   const [data, setData] = useState<DataTypePermissao[]>([])
-  const emptyEntity = createEmptyPermissao()
-  const [permissao, setPermissao] = useState<DataTypePermissao>(emptyEntity)
+  const [permissao, setPermissao] = useState<DataTypePermissao>(createEmptyPermissao())
   const text = "permissão"
   const permissaoService = new PermissaoService()
 
@@ -99,7 +90,7 @@ export default function TablePermissoes() {
       .then(() => {
         toast.success(`${capitalize(text)} deletada com sucesso!`)
         carregaDados()
-        setPermissao(emptyEntity)
+        setPermissao(createEmptyPermissao())
         deleteModal.onClose()
       })
       .catch(() => {
@@ -108,8 +99,8 @@ export default function TablePermissoes() {
       })
   }
 
-  function onAdd(){
-    setPermissao(emptyEntity)
+  function onAdd() {
+    setPermissao(createEmptyPermissao())
     salvarModal.onOpen()
   }
 
@@ -246,7 +237,7 @@ export default function TablePermissoes() {
             onValueChange={onSearchChange}
           />
           <div className="flex gap-3">
-            <Button onClick={onAdd} color="primary" endContent={<Plus />}>
+            <Button onClick={onAdd} color="primary" variant="shadow" endContent={<Plus />}>
               Add New
             </Button>
           </div>
@@ -307,6 +298,7 @@ export default function TablePermissoes() {
     ) : null
   }, [selectedKeys, items.length, page, pages, hasSearchFilter])
 
+  // ------ TABELA ------
   return (
     <>
       <Table
@@ -354,24 +346,14 @@ export default function TablePermissoes() {
         </TableBody>
       </Table>
 
-      {/* ------ MODAIS & ALERTS------ */}
+      {/* ------ MODAIS ------ */}
       <ModalSalvar
         isOpen={salvarModal.isOpen}
         onOpenChange={salvarModal.onOpenChange}
-        //nomePermissao={nomePermissao}
-        //onSetNome={setNomePermissao}
+        onClose={salvarModal.onClose}
         onSalvarPressed={carregaDados}
         permissao={permissao}
       />
-
-      {/* <ModalSalvar
-        isOpen={addModal.isOpen}
-        onOpenChange={addModal.onOpenChange}
-        //nomePermissao={nomePermissao}
-        //onSetNome={setNomePermissao}
-        onSalvarPressed={carregaDados}
-        permissao={{} as DataTypePermissao}
-      /> */}
 
       <ModalDeleteGeneric
         isOpen={deleteModal.isOpen}

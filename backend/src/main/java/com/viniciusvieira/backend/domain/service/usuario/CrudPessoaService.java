@@ -35,6 +35,11 @@ public class CrudPessoaService {
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este ID"));
     }
 
+    public List<Permissao> buscarPermissoes(Long id){
+        Pessoa pessoa = buscarPorId(id);
+        return pessoa.getPermissoes();
+    }
+
     public Pessoa buscarPeloEmailECodigo(String email, String codigo){
         return pessoaRepository.findByEmailAndCodigoRecuperacaoSenha(email, codigo)
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL e CODIGO"));
@@ -42,13 +47,13 @@ public class CrudPessoaService {
 
     @Transactional
     public PessoaResponse inserir(PessoaRequest pessoaRequest) {
-        Permissao permissao = permissaoService.buscarPeloNome(pessoaRequest.getNomePermissao());
         verifyIfPessoaExistsByCpf(pessoaRequest.getCpf());
+        Permissao permissao = permissaoService.buscarPeloNome(pessoaRequest.getNomePermissao());
 
         Pessoa pessoaParaSalvar = pessoaMapper.toDomainPessoa(pessoaRequest);
         pessoaParaSalvar.adicionarPermissao(permissao);
-        Pessoa pessoaSalva = pessoaRepository.saveAndFlush(pessoaParaSalvar);
 
+        Pessoa pessoaSalva = pessoaRepository.saveAndFlush(pessoaParaSalvar);
         return pessoaMapper.toPessoaResponse(pessoaSalva);
     }
 
@@ -63,11 +68,13 @@ public class CrudPessoaService {
     @Transactional
     public PessoaResponse alterar(Long id, PessoaRequest pessoaRequest) {
         Pessoa pessoaEncontrada = buscarPorId(id);
-        verifyIfPessoaExistsByCpf(pessoaRequest.getCpf());
 
         Pessoa pessoaParaAlterar = pessoaMapper.toDomainPessoa(pessoaRequest);
         pessoaParaAlterar.setId(pessoaEncontrada.getId());
         pessoaParaAlterar.setDataCriacao(pessoaEncontrada.getDataCriacao());
+
+        Permissao permissao = permissaoService.buscarPeloNome(pessoaRequest.getNomePermissao());
+        pessoaParaAlterar.adicionarPermissao(permissao);
 
         Pessoa pessoaAlterada = pessoaRepository.saveAndFlush(pessoaParaAlterar);
         return pessoaMapper.toPessoaResponse(pessoaAlterada);

@@ -23,7 +23,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       />
 
       <Navbar />
-      <main className="relative container mt-8 mx-auto max-w-7xl z-10 min-h-[calc(100vh_-_64px_-_108px)] flex-grow">
+      {/*container   max-w-7xl */}
+      <main className="relative mt-8 px-4 w-full z-10 min-h-[calc(100vh_-_64px_-_108px)] flex-grow">
         <div className="grid grid-cols-12">
           <div className="hidden relative z-10 lg:block lg:col-span-2 mt-8">
             <Sidebar />

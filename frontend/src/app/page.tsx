@@ -59,7 +59,7 @@ export default function Home() {
             <Button  onClick={onCancel} color="default" variant="flat" className="hover:bg-default-300">
               Close
             </Button>
-            <Button onClick={onSignIn} color="primary" className="hover:bg-primary-200">
+            <Button onClick={onSignIn} color="primary" variant="shadow" className="hover:bg-primary-200">
               Sign in
             </Button>
           </CardFooter>
