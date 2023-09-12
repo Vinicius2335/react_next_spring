@@ -22,6 +22,7 @@ import { useFormik } from "formik"
 import React from "react"
 import { toast } from "react-toastify"
 import * as yup from "yup"
+import CurrencyFormat, { Values } from "react-currency-format"
 
 interface ModalSalvarProps {
   isOpen: boolean
@@ -40,10 +41,12 @@ const validationSchema = yup.object({
     .required("Detalhes is required"),
   custo: yup
     .number()
+    .transform(value => (Number.isNaN(value) ? 0 : value))
     .moreThan(0, "Valor de Custo não pode ser menor que 0")
     .required("Valor de Custo is required"),
   venda: yup
     .number()
+    .transform(value => (Number.isNaN(value) ? 0 : value))
     .moreThan(0, "Valor de Venda não pode ser menor que 0")
     .required("Valor de Venda is required"),
   marca: yup.string().required("Marca is required"),
@@ -100,7 +103,7 @@ export default function ModalSalvar({
             onSalvarPressed()
             onCloseModal()
           })
-          .catch((error) => {
+          .catch(error => {
             toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
             console.error(error)
             onCloseModal()
@@ -169,6 +172,24 @@ export default function ModalSalvar({
         formik.values.categoria = e.target.value
       }
     })
+  }
+
+  const handleVendaChange = (values: Values) => {
+    const { floatValue, value } = values
+    if (value === "") {
+      formik.values.venda = 0
+    } else {
+      formik.values.venda = floatValue
+    }
+  }
+
+  const handleCustoChange = (values: Values) => {
+    const { floatValue, value } = values
+    if (value === "") {
+      formik.values.custo = 0
+    } else {
+    formik.values.custo = floatValue
+    }
   }
 
   React.useEffect(() => {
@@ -275,20 +296,23 @@ export default function ModalSalvar({
                     </div>
 
                     <div className="w-[50%] flex flex-col gap-3">
-                      <Input
+                      <CurrencyFormat
+                        thousandSeparator={","}
+                        decimalSeparator={"."}
+                        decimalScale={2}
+                        customInput={Input}
                         label="Valor de Custo"
                         id="custo"
                         name="custo"
-                        type="number"
-                        placeholder="0.00"
+                        placeholder="Ex: 2.99"
                         variant="bordered"
                         startContent={
                           <div className="pointer-events-none flex items-center">
                             <span className="text-default-400 text-small">R$</span>
                           </div>
                         }
-                        value={formik.values.custo.toString()}
-                        onChange={formik.handleChange}
+                        value={formik.values.custo}
+                        onValueChange={handleCustoChange}
                         onBlur={formik.handleBlur}
                         color={Boolean(formik.errors.custo) ? "danger" : "success"}
                         errorMessage={formik.errors.custo}
@@ -296,20 +320,23 @@ export default function ModalSalvar({
                         isRequired
                       />
 
-                      <Input
+                      <CurrencyFormat
+                        thousandSeparator={","}
+                        decimalSeparator={"."}
+                        decimalScale={2}
+                        customInput={Input}
                         label="Valor de Venda"
                         id="venda"
                         name="venda"
-                        type="number"
-                        placeholder="0.00"
+                        placeholder="Ex: 20.99"
                         variant="bordered"
                         startContent={
                           <div className="pointer-events-none flex items-center">
                             <span className="text-default-400 text-small">R$</span>
                           </div>
                         }
-                        value={formik.values.venda.toString()}
-                        onChange={formik.handleChange}
+                        value={formik.values.venda}
+                        onValueChange={handleVendaChange}
                         onBlur={formik.handleBlur}
                         color={Boolean(formik.errors.venda) ? "danger" : "success"}
                         errorMessage={formik.errors.venda}
