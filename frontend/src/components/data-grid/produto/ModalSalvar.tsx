@@ -16,7 +16,8 @@ import {
   Textarea,
   Select,
   SelectItem,
-  Selection
+  Selection,
+  ModalFooter
 } from "@nextui-org/react"
 import { useFormik } from "formik"
 import React from "react"
@@ -34,24 +35,24 @@ interface ModalSalvarProps {
 }
 
 const validationSchema = yup.object({
-  quantidade: yup.number().required("Quantidade is required"),
-  descricao: yup.string().required("Descrição is required"),
+  quantidade: yup.number().required("Quantidade é obrigatório."),
+  descricao: yup.string().required("Descrição é obrigatório."),
   detalhe: yup
     .string()
-    .max(255, "Número máximo de caracteres é 255")
-    .required("Detalhes is required"),
+    .max(255, "Número máximo de caracteres é 255.")
+    .required("Detalhes é obrigatório."),
   custo: yup
     .number()
     .transform(value => (Number.isNaN(value) ? 0 : value))
-    .moreThan(0, "Valor de Custo não pode ser menor que 0")
-    .required("Valor de Custo is required"),
+    .moreThan(0, "Valor de Custo não pode ser menor que 0.")
+    .required("Valor de Custo é obrigatório."),
   venda: yup
     .number()
     .transform(value => (Number.isNaN(value) ? 0 : value))
-    .moreThan(0, "Valor de Venda não pode ser menor que 0")
-    .required("Valor de Venda is required"),
-  marca: yup.string().required("Marca is required"),
-  categoria: yup.string().required("Categoria is required")
+    .moreThan(0, "Valor de Venda não pode ser menor que 0.")
+    .required("Valor de Venda é obrigatório."),
+  marca: yup.string().required("Marca é obrigatório."),
+  categoria: yup.string().required("Categoria é obrigatório.")
 })
 
 export default function ModalSalvar({
@@ -190,7 +191,7 @@ export default function ModalSalvar({
     if (value === "") {
       formik.values.custo = 0
     } else {
-    formik.values.custo = floatValue
+      formik.values.custo = floatValue
     }
   }
 
@@ -242,7 +243,7 @@ export default function ModalSalvar({
             <>
               <ModalHeader className="flex flex-col gap-1">Salvar Produto</ModalHeader>
               <ModalBody>
-                <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
+                <form id="formProduto" onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
                   <div className="flex w-full gap-4">
                     <div className="w-[50%] flex flex-col gap-3">
                       <Input
@@ -390,28 +391,30 @@ export default function ModalSalvar({
                     </div>
                   </div>
 
-                  <div className="flex py-2 px-1 justify-end gap-4">
-                    <Button
-                      color="secondary"
-                      variant="flat"
-                      onPress={onClose}
-                      className="hover:bg-secondary-400 hover:text-white"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      color="success"
-                      type="submit"
-                      variant="shadow"
-                      className="hover:bg-success-200 hover:text-white"
-                      onClick={onSalvarPressed}
-                      isDisabled={!formik.isValid}
-                    >
-                      Salvar
-                    </Button>
-                  </div>
                 </form>
               </ModalBody>
+              
+              <ModalFooter>
+                <Button
+                  color="secondary"
+                  variant="flat"
+                  onPress={onClose}
+                  className="hover:bg-secondary-400 hover:text-white"
+                >
+                  Cancelar
+                </Button>
+                
+                <Button
+                  color="success"
+                  type="submit"
+                  form="formProduto"
+                  variant="shadow"
+                  className="hover:bg-success-200 hover:text-white"
+                  isDisabled={!formik.isValid}
+                >
+                  Salvar
+                </Button>
+              </ModalFooter>
             </>
           )}
         </ModalContent>
