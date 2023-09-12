@@ -36,8 +36,14 @@ const regexCep = new RegExp(/^\d{5}-\d{3}$/)
 const regexNome = regexNomeUtil
 
 const validationSchema = yup.object({
-  nome: yup.string().matches(regexNome, "Nome is invalid. Ex: Maria Da Silva").required("Nome is required"),
-  cpf: yup.string().matches(regexCpf, "CPF is invalid. Ex: 999.999.999-99").required("CPF is requided"),
+  nome: yup
+    .string()
+    .matches(regexNome, "Nome is invalid. Ex: Maria Da Silva")
+    .required("Nome is required"),
+  cpf: yup
+    .string()
+    .matches(regexCpf, "CPF is invalid. Ex: 999.999.999-99")
+    .required("CPF is requided"),
   email: yup.string().email("Email is invalid").required("Email is requided"),
   permissao: yup.string().required("Permissão is required"),
   cep: yup.string().matches(regexCep, "CEP is invalid. Ex: 99999-999").required("CEP is requided"),
@@ -60,6 +66,7 @@ export default function ModalSalvar({
   const [nomeSelectedPermissao, setNomeSelectedPermissao] = React.useState("")
   let service = new PermissaoService()
   const [permissoes, setPermissoes] = React.useState<DataTypePermissao[]>([])
+  const [disabled, setDisabled] = React.useState(false)
 
   let formik = useFormik({
     initialValues: {
@@ -139,6 +146,7 @@ export default function ModalSalvar({
     pessoa = createEmptyPessoa()
     formik.resetForm()
     setSelectedPermissao(new Set([]))
+    setDisabled(false)
     formik.values.permissao = ""
     onClose()
   }
@@ -177,7 +185,7 @@ export default function ModalSalvar({
   }
 
   React.useEffect(() => {
-    formik.initialValues.nome = pessoa.nome
+    formik.initialValues.nome = pessoa.nome.trim()
     formik.initialValues.cpf = pessoa.cpf
     formik.initialValues.email = pessoa.email
     formik.initialValues.cep = pessoa.endereco.cep
@@ -189,6 +197,7 @@ export default function ModalSalvar({
       pessoaService.getPermissao(pessoa.id).then(permissao => {
         setSelectedPermissao(new Set([permissao[0].nome]))
         setNomeSelectedPermissao(permissao[0].nome)
+        setDisabled(true)
         formik.values.permissao = nomeSelectedPermissao
       })
     }
@@ -245,26 +254,19 @@ export default function ModalSalvar({
                         onBlur={formik.handleBlur}
                       >
                         <Input
-                          autoFocus
                           label="Cpf"
-                          //id="cpf"
-                          //name="cpf"
                           type="text"
-                          //maxLength={14}
                           placeholder="Digite o seu CPF..."
                           variant="bordered"
-                          //value={formik.values.cpf}
-                          //onChange={formik.handleChange}
-                          //onBlur={formik.handleBlur}
                           color={Boolean(formik.errors.cpf) ? "danger" : "success"}
                           errorMessage={formik.errors.cpf}
                           validationState={Boolean(formik.errors.cpf) ? "invalid" : "valid"}
+                          isDisabled={disabled}
                           isRequired
                         />
                       </InputMask>
 
                       <Input
-                        autoFocus
                         label="Email"
                         id="email"
                         name="email"
@@ -315,7 +317,6 @@ export default function ModalSalvar({
                         onBlur={formik.handleBlur}
                       >
                         <Input
-                          autoFocus
                           label="Cep"
                           type="text"
                           placeholder="Digite o seu cep..."
@@ -328,7 +329,6 @@ export default function ModalSalvar({
                       </InputMask>
 
                       <Input
-                        autoFocus
                         label="Logradouro"
                         id="logradouro"
                         name="logradouro"
@@ -346,7 +346,6 @@ export default function ModalSalvar({
 
                       <div className="flex py-2 px-1 justify-center gap-4">
                         <Input
-                          autoFocus
                           label="Cidade"
                           id="cidade"
                           name="cidade"
@@ -363,7 +362,6 @@ export default function ModalSalvar({
                         />
 
                         <Input
-                          autoFocus
                           label="Estado"
                           id="estado"
                           name="estado"

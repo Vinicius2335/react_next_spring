@@ -11,6 +11,10 @@ export class BaseService<T> {
     return AXIOS.get<T[]>(this.url).then(resp => resp.data)
   }
 
+  buscarPorId(id: number) : Promise<T> {
+    return AXIOS.get<T>(this.url + "/" + id).then(resp => resp.data)
+  }
+
   alterar(entity: Partial<T>, id: number) {
     return AXIOS.put<T>(this.url + "/" + id, entity).then(resp => resp.data)
   }
