@@ -29,6 +29,7 @@ interface ModalSalvarProps {
   onOpenChange: () => void
   onClose: () => void
   produto: DataTypeProduto
+  onSetProduto: (produto: DataTypeProduto) => void
   onSalvarPressed: () => void
 }
 
@@ -58,6 +59,7 @@ export default function ModalSalvar({
   onOpenChange,
   onClose,
   produto,
+  onSetProduto,
   onSalvarPressed
 }: ModalSalvarProps) {
   const produtoService = new ProdutoService()
@@ -143,7 +145,7 @@ export default function ModalSalvar({
   })
 
   function onCloseModal() {
-    produto = createEmptyProduto()
+    onSetProduto(createEmptyProduto())
     formik.resetForm()
     formik.values.marca = ""
     formik.values.categoria = ""
@@ -212,13 +214,11 @@ export default function ModalSalvar({
       marcaService.buscarPorId(produto.marca.id).then(marca => {
         setSelectedMarca(new Set([marca.nome]))
         setIdMarca(marca.id)
-        console.log(selectedMarca)
         formik.values.marca = marca.nome
       })
 
       categoriaService.buscarPorId(produto.categoria.id).then(categoria => {
         setSelectedCategoria(new Set([categoria.nome]))
-        console.log(selectedCategoria)
         setIdCategoria(categoria.id)
         formik.values.categoria = categoria.nome
       })

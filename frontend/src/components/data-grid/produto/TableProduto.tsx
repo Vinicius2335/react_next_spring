@@ -351,6 +351,7 @@ export default function TableProduto() {
         onClose={salvarModal.onClose}
         onSalvarPressed={carregaDados}
         produto={produto}
+        onSetProduto={setProduto}
       />
 
       <ModalDeleteGeneric

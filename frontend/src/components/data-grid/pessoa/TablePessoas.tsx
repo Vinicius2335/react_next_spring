@@ -356,6 +356,7 @@ export default function TablePessoas() {
         onClose={salvarModal.onClose}
         onSalvarPressed={carregaDados}
         pessoa={pessoa}
+        onSetPessoa={setPessoa}
       />
 
       <ModalDeleteGeneric

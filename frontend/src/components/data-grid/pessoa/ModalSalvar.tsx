@@ -28,6 +28,7 @@ interface ModalSalvarProps {
   onOpenChange: () => void
   onClose: () => void
   pessoa: DataTypePessoa
+  onSetPessoa: (pessoa: DataTypePessoa) => void
   onSalvarPressed: () => void
 }
 
@@ -57,13 +58,14 @@ export default function ModalSalvar({
   onOpenChange,
   onClose,
   pessoa,
+  onSetPessoa,
   onSalvarPressed
 }: ModalSalvarProps) {
   const pessoaService = new PessoaService()
   const text = "pessoa"
 
   const [selectedPermissao, setSelectedPermissao] = React.useState<Selection>(new Set([]))
-  const [nomeSelectedPermissao, setNomeSelectedPermissao] = React.useState("")
+  const [nomePermissao, setNomePermissao] = React.useState("")
   let service = new PermissaoService()
   const [permissoes, setPermissoes] = React.useState<DataTypePermissao[]>([])
   const [disabled, setDisabled] = React.useState(false)
@@ -94,7 +96,7 @@ export default function ModalSalvar({
 
       entityToEdit.nome = values.nome
       entityToEdit.cpf = values.cpf
-      entityToEdit.nomePermissao = nomeSelectedPermissao
+      entityToEdit.nomePermissao = nomePermissao
       entityToEdit.email = values.email
       entityToEdit.endereco = endereco
 
@@ -122,7 +124,7 @@ export default function ModalSalvar({
           nome: values.nome,
           senha: "Dale",
           cpf: values.cpf,
-          nomePermissao: nomeSelectedPermissao,
+          nomePermissao: nomePermissao,
           email: values.email,
           endereco: endereco
         }
@@ -143,7 +145,7 @@ export default function ModalSalvar({
   })
 
   function onCloseModal() {
-    pessoa = createEmptyPessoa()
+    onSetPessoa(createEmptyPessoa())
     formik.resetForm()
     setSelectedPermissao(new Set([]))
     setDisabled(false)
@@ -180,7 +182,7 @@ export default function ModalSalvar({
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPermissao(new Set([e.target.value]))
-    setNomeSelectedPermissao(e.target.value)
+    setNomePermissao(e.target.value)
     formik.values.permissao = e.target.value
   }
 
@@ -196,9 +198,9 @@ export default function ModalSalvar({
     if (pessoa.id != 0) {
       pessoaService.getPermissao(pessoa.id).then(permissao => {
         setSelectedPermissao(new Set([permissao[0].nome]))
-        setNomeSelectedPermissao(permissao[0].nome)
+        setNomePermissao(permissao[0].nome)
+        formik.values.permissao = permissao[0].nome
         setDisabled(true)
-        formik.values.permissao = nomeSelectedPermissao
       })
     }
   }, [pessoa])
