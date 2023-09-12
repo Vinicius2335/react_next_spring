@@ -34,6 +34,7 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@types/react-currency-format": "^1.0.0",
     "@types/react-input-mask": "^3.0.2"
   }
 }

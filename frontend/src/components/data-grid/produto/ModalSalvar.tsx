@@ -22,6 +22,7 @@ import { useFormik } from "formik"
 import React from "react"
 import { toast } from "react-toastify"
 import * as yup from "yup"
+import CurrencyFormat from "react-currency-format"
 
 interface ModalSalvarProps {
   isOpen: boolean
@@ -100,7 +101,7 @@ export default function ModalSalvar({
             onSalvarPressed()
             onCloseModal()
           })
-          .catch((error) => {
+          .catch(error => {
             toast.error(`Erro ao tentar editar ${text}, tente novamente mais tarde!`)
             console.error(error)
             onCloseModal()
@@ -169,6 +170,12 @@ export default function ModalSalvar({
         formik.values.categoria = e.target.value
       }
     })
+  }
+  
+  const handleVendaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let precoString: string = e.target.value.replaceAll("." , "").replace("," , ".")
+    let precoFloat: number = parseFloat(precoString)
+    formik.values.venda = precoFloat
   }
 
   React.useEffect(() => {
@@ -296,20 +303,23 @@ export default function ModalSalvar({
                         isRequired
                       />
 
-                      <Input
+                      <CurrencyFormat
+                        thousandSeparator={'.'} 
+                        decimalSeparator={','}
+                        decimalScale={2}
+                        customInput={Input}
                         label="Valor de Venda"
                         id="venda"
                         name="venda"
-                        type="number"
-                        placeholder="0.00"
+                        placeholder="2,99"
                         variant="bordered"
                         startContent={
                           <div className="pointer-events-none flex items-center">
                             <span className="text-default-400 text-small">R$</span>
                           </div>
                         }
-                        value={formik.values.venda.toString()}
-                        onChange={formik.handleChange}
+                        value={formik.values.venda}
+                        onChange={handleVendaChange}
                         onBlur={formik.handleBlur}
                         color={Boolean(formik.errors.venda) ? "danger" : "success"}
                         errorMessage={formik.errors.venda}
