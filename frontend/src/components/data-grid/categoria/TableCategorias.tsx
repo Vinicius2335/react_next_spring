@@ -308,7 +308,7 @@ export default function TableCategorias() {
         bottomContentPlacement="inside"
         classNames={{
           wrapper: "max-h-[500px]",
-          table: "min-h-[150px]"
+          table: "min-h-[150px]",
         }}
         selectedKeys={selectedKeys}
         selectionMode="single"

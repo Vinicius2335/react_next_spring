@@ -4,8 +4,10 @@ import com.viniciusvieira.backend.api.representation.model.request.venda.Produto
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
 import com.viniciusvieira.backend.api.representation.model.response.venda.ProdutoResponse;
 import com.viniciusvieira.backend.domain.model.venda.Produto;
+import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
+import com.viniciusvieira.backend.domain.service.CrudProdutoImagemService;
 import com.viniciusvieira.backend.domain.service.venda.CrudProdutoService;
-import com.viniciusvieira.backend.domain.service.ImagemUploadService;
+import com.viniciusvieira.backend.domain.service.ImageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,18 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ProdutoController {
     private final CrudProdutoService crudProdutoService;
-    private final ImagemUploadService imagemUploadService;
+    private final ImageService imageService;
+    private final CrudProdutoImagemService crudProdutoImagemService;
 
     @GetMapping
     public ResponseEntity<List<Produto>> buscarTodos() {
         return ResponseEntity.ok(crudProdutoService.buscarTodos());
+    }
+
+    @GetMapping("/{idProduto}/imagens")
+    public ResponseEntity<List<ProdutoImagem>> buscarImagensPorProduto(@PathVariable Long idProduto){
+        return ResponseEntity
+                .ok(crudProdutoImagemService.buscarPorProduto(idProduto));
     }
 
     @GetMapping("/{id}")
@@ -48,7 +57,7 @@ public class ProdutoController {
     ) throws IOException {
 
         Produto produtoEncontrado = crudProdutoService.buscarPorId(idProduto);
-        ProdutoImagemResponse imagemSalva = imagemUploadService.uploadEInseriNovaImagem(produtoEncontrado, file);
+        ProdutoImagemResponse imagemSalva = imageService.uploadEInseriNovaImagem(produtoEncontrado, file);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -69,7 +78,7 @@ public class ProdutoController {
     ) throws IOException {
 
         crudProdutoService.buscarPorId(idProduto);
-        return ResponseEntity.ok(imagemUploadService.uploadEAlteraImagem(idImage, file));
+        return ResponseEntity.ok(imageService.uploadEAlteraImagem(idImage, file));
     }
 
     @DeleteMapping("/{id}")

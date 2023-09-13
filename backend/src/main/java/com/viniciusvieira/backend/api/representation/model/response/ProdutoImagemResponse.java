@@ -12,6 +12,7 @@ import java.time.OffsetDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProdutoImagemResponse {
     private String nome;
+    private String fileCode;
     private OffsetDateTime dataCriacao;
     private OffsetDateTime dataAtualizacao;
 }

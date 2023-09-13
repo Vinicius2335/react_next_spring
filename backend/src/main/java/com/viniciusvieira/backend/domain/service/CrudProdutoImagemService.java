@@ -9,9 +9,13 @@ import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
 import com.viniciusvieira.backend.domain.repository.venda.ProdutoImagemRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,10 +27,25 @@ import java.util.List;
 public class CrudProdutoImagemService {
     private final ProdutoImagemRepository produtoImagemRepository;
     private final ProdutoImagemMapper produtoImagemMapper;
-    private static final String PATH_DIRECTORY = "src/main/resources/static/image";
+    public static final String PATH_DIRECTORY = "src/main/resources/static/image";
 
     public List<ProdutoImagem> buscarTodos() {
         return produtoImagemRepository.findAll();
+    }
+
+    public List<ProdutoImagem> buscarPorProduto(Long idProduto){
+        List<ProdutoImagem> listaImagens = produtoImagemRepository.findByProdutoId(idProduto);
+
+        for (ProdutoImagem  imagem : listaImagens){
+            try (InputStream in = new FileInputStream(PATH_DIRECTORY + "/" +imagem.getNome())){
+                //IOUtils - Do Commons IO
+                imagem.setArquivo(IOUtils.toByteArray(in));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return listaImagens;
     }
 
     public ProdutoImagem buscarPorId(Long id){
@@ -35,10 +54,11 @@ public class CrudProdutoImagemService {
     }
 
     @Transactional
-    public ProdutoImagemResponse inserir(Produto produto, String nomeImagem){
+    public ProdutoImagemResponse inserir(Produto produto, String nomeImagem, String fileCode){
         ProdutoImagem produtoImagem = ProdutoImagem.builder()
                 .nome(nomeImagem)
                 .produto(produto)
+                .imageCode(fileCode)
                 .build();
         ProdutoImagem imagemSalva = produtoImagemRepository.saveAndFlush(produtoImagem);
 
@@ -46,13 +66,14 @@ public class CrudProdutoImagemService {
     }
 
     @Transactional
-    public ProdutoImagemResponse alterar(Long id, String nomeImagem){
+    public ProdutoImagemResponse alterar(Long id, String nomeImagem, String fileCode){
         ProdutoImagem produtoImagemParaAlterar = buscarPorId(id);
         Path diretorioDeImagens = Paths.get(PATH_DIRECTORY);
         boolean isImageDeleted = deletandoImagemArmazenada(produtoImagemParaAlterar, diretorioDeImagens);
 
         if (isImageDeleted){
             produtoImagemParaAlterar.setNome(nomeImagem);
+            produtoImagemParaAlterar.setImageCode(fileCode);
             ProdutoImagem imagemAlterada = produtoImagemRepository.saveAndFlush(produtoImagemParaAlterar);
             return produtoImagemMapper.toProdutoImagemResponse(imagemAlterada);
         } else {

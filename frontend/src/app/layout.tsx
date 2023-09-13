@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt_BR">
+    <html lang="pt-BR">
       <body className={`${inter.className} dark min-h-screen`}>
         <NextUIProvider>
           <div className="relative flex flex-col" id="app-container">

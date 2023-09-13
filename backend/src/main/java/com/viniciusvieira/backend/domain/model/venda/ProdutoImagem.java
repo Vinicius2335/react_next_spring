@@ -17,6 +17,10 @@ public class ProdutoImagem extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String nome;
 
+    private String imageCode;
+    @Transient
+    private byte[] arquivo;
+
     @ManyToOne
     @JoinColumn(nullable = false, name = "produto_id")
     private Produto produto;

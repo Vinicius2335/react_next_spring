@@ -20,6 +20,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+
         <!-- Para conseguir testar com LocalDateTime.now() -->
         <dependency>
             <groupId>org.mockito</groupId>
