@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.integration.usuario;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +44,11 @@ class ClienteControllerIT {
     private final Pessoa cliente = PessoaCreator.createPessoa();
     private final ClienteRequest clienteRequest = ClienteCreator.createClienteRequest();
 
+    @RegisterExtension
+    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
+            .withConfiguration(GreenMailConfiguration
+                    .aConfig().withUser("user@gmail.com", "password"));
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -52,7 +61,6 @@ class ClienteControllerIT {
     @Test
     @DisplayName("inserir() inset cliente")
     void givenClienteRequest_whenInserir_thenClienteInsertedAndStatusCREATED() {
-        clienteRequest.setEmail(System.getenv("GMAIL"));
         given()
                 .body(clienteRequest)
                 .contentType(JSON)

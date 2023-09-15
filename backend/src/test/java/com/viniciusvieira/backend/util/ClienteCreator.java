@@ -25,10 +25,6 @@ public abstract class ClienteCreator {
                 .build();
     }
 
-    public static String cpfToUpdate(){
-        return "195.479.450-92";
-    }
-
     private static Faker createFaker(){
         return new Faker(new Locale("pt_BR"));
     }

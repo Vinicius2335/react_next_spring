@@ -22,15 +22,15 @@ class RandomTests {
     private static final String PATH_DIRECTORY = "src/main/resources/static/image";
 
     @Test
-    void testeLocalizarArquivoPeloNome(){
+    void testeLocalizarArquivoPeloNome() {
         assertDoesNotThrow(() -> {
             Path diretorioDeImagens = Paths.get(PATH_DIRECTORY);
-            try(DirectoryStream<Path> stream = Files.newDirectoryStream(diretorioDeImagens)){
-                for (Path path : stream){
-                    if (path.getFileName().toString().equals("AlzTXwFH-escudo.jpg")){
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(diretorioDeImagens)) {
+                for (Path path : stream) {
+                    if (path.getFileName().toString().equals("AlzTXwFH-escudo.jpg")) {
                         System.out.println("Arquivo encontrado pelo nome com sucesso!!");
                     }
-                // System.out.println(path.getFileName());
+                    // System.out.println(path.getFileName());
                 }
             } catch (IOException e) {
                 throw new NegocioException("Erro ao tentar encontrar o arquivo da imagem", e);
@@ -39,7 +39,7 @@ class RandomTests {
     }
 
     @Test
-    void TesteData(){
+    void TesteData() {
         assertDoesNotThrow(() -> {
             Date data = new Date();
             System.out.println("Data antes de adicionar 15 min: " + data);
@@ -49,7 +49,7 @@ class RandomTests {
     }
 
     @Test
-    void TesteData2(){
+    void TesteData2() {
         assertDoesNotThrow(() -> {
             Date data = new Date();
             Date data2 = new Date();
@@ -62,11 +62,11 @@ class RandomTests {
         });
     }
 
-    private LocalDateTime convertToLocalDateTime(Date date){
+    private LocalDateTime convertToLocalDateTime(Date date) {
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 
-    private LocalDate convertToLocalDate(Date date){
+    private LocalDate convertToLocalDate(Date date) {
         return LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 

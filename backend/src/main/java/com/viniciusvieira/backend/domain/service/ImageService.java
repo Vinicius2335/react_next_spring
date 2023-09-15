@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.domain.service;
 
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
+import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.model.venda.Produto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,9 +27,9 @@ public class ImageService {
     private Path foundFile;
 
     public Resource dowloadImage(String imageCode) throws IOException {
-        Path uploadDirector = Path.of(PATH_DIRECTORY);
+        Path uploadDirectory = Path.of(PATH_DIRECTORY);
 
-        try (Stream<Path> files = Files.list(uploadDirector)) {
+        try (Stream<Path> files = Files.list(uploadDirectory)) {
             files.forEach(file -> {
                 if (file.getFileName().toString().startsWith(imageCode)) {
                     foundFile = file;
@@ -41,9 +42,9 @@ public class ImageService {
 
         if (foundFile != null) {
             return new UrlResource(foundFile.toUri());
+        } else {
+            throw new NegocioException(String.format("ImageCode: '%s'  não está registrado no banco de dados.", imageCode));
         }
-
-        return null;
     }
 
     // COMMENT - Atenção se o arquivo estiver vazio
@@ -58,21 +59,6 @@ public class ImageService {
 
         } catch (IOException e) {
             throw new IOException("Error ao tentar realizar o upload/salvar nova imagem. . .");
-        }
-    }
-
-    // TODO - Remover o alterar
-    public ProdutoImagemResponse uploadEAlteraImagem(Long idImagem, MultipartFile file) throws IOException {
-        try {
-            if (!file.isEmpty()){
-                String fileCode = generateRandomCode();
-                String nomeImagem = uploadImagem(file, fileCode);
-                return  crudProdutoImagemService.alterar(idImagem, nomeImagem, fileCode);
-            }
-            return null;
-
-        } catch (IOException e) {
-            throw new IOException("Error ao tentar realizar o upload/alterar imagem. . .");
         }
     }
 

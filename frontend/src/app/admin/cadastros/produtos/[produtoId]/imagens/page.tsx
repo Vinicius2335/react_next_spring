@@ -36,7 +36,7 @@ export default function ProdutoImagens({ params }: ProdutoImagensProps) {
 
   const handleDisplayFileDetails = () => {
     if (inputRef.current?.files != null) {
-      produtoService
+      produtoImageService
         .uploadImage(produto.id, inputRef.current.files[0])
         .then(() => {
           toast.success(`Upload realizado com sucesso.`)
@@ -50,7 +50,7 @@ export default function ProdutoImagens({ params }: ProdutoImagensProps) {
   }
 
   function buscarImagensPorProduto(idProduto: number) {
-    produtoService.buscarImagemPorProduto(idProduto).then(resp => {
+    produtoImageService.buscarImagemPorProduto(idProduto).then(resp => {
       setImagens(resp)
       console.log(resp)
     })

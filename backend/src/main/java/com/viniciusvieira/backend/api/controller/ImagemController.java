@@ -1,6 +1,5 @@
 package com.viniciusvieira.backend.api.controller;
 
-import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
 import com.viniciusvieira.backend.domain.service.CrudProdutoImagemService;
 import com.viniciusvieira.backend.domain.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -12,21 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/imagens")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class ImageController {
+public class ImagemController {
     private final CrudProdutoImagemService crudProdutoImagemService;
     private final ImageService imageService;
-
-    @GetMapping
-    public ResponseEntity<List<ProdutoImagem>> buscarTodos(){
-        return ResponseEntity
-                .ok(crudProdutoImagemService.buscarTodos());
-    }
 
     @GetMapping("/{fileCode}")
     public ResponseEntity<?> dowloadImage(@PathVariable("fileCode") String fileCode){
@@ -54,8 +46,6 @@ public class ImageController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         crudProdutoImagemService.excluir(id);
-        return ResponseEntity
-                .noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
 }

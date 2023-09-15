@@ -13,7 +13,6 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -29,21 +28,17 @@ public class CrudProdutoImagemService {
     private final ProdutoImagemMapper produtoImagemMapper;
     public static final String PATH_DIRECTORY = "src/main/resources/static/image";
 
-    public List<ProdutoImagem> buscarTodos() {
-        return produtoImagemRepository.findAll();
-    }
-
     public List<ProdutoImagem> buscarPorProduto(Long idProduto){
         List<ProdutoImagem> listaImagens = produtoImagemRepository.findByProdutoId(idProduto);
 
-        for (ProdutoImagem  imagem : listaImagens){
-            try (InputStream in = new FileInputStream(PATH_DIRECTORY + "/" +imagem.getNome())){
+        listaImagens.forEach(produtoImagem -> {
+            try (InputStream in = new FileInputStream(PATH_DIRECTORY + "/" +produtoImagem.getNome())){
                 //IOUtils - Do Commons IO
-                imagem.setArquivo(IOUtils.toByteArray(in));
+                produtoImagem.setArquivo(IOUtils.toByteArray(in));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new NegocioException("Erro ao tentar buscar imagem pelo id do produto: " +idProduto ,e);
             }
-        }
+        });
 
         return listaImagens;
     }
@@ -63,22 +58,6 @@ public class CrudProdutoImagemService {
         ProdutoImagem imagemSalva = produtoImagemRepository.saveAndFlush(produtoImagem);
 
         return produtoImagemMapper.toProdutoImagemResponse(imagemSalva);
-    }
-
-    @Transactional
-    public ProdutoImagemResponse alterar(Long id, String nomeImagem, String fileCode){
-        ProdutoImagem produtoImagemParaAlterar = buscarPorId(id);
-        Path diretorioDeImagens = Paths.get(PATH_DIRECTORY);
-        boolean isImageDeleted = deletandoImagemArmazenada(produtoImagemParaAlterar, diretorioDeImagens);
-
-        if (isImageDeleted){
-            produtoImagemParaAlterar.setNome(nomeImagem);
-            produtoImagemParaAlterar.setImageCode(fileCode);
-            ProdutoImagem imagemAlterada = produtoImagemRepository.saveAndFlush(produtoImagemParaAlterar);
-            return produtoImagemMapper.toProdutoImagemResponse(imagemAlterada);
-        } else {
-           throw new NegocioException("Erro ao tentar alterar a imagem do produto");
-        }
     }
 
     @Transactional

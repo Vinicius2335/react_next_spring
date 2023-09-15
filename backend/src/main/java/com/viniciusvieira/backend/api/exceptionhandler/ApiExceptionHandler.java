@@ -1,6 +1,8 @@
 package com.viniciusvieira.backend.api.exceptionhandler;
 
-import com.viniciusvieira.backend.domain.exception.*;
+import com.viniciusvieira.backend.domain.exception.CreateTemplateException;
+import com.viniciusvieira.backend.domain.exception.NegocioException;
+import com.viniciusvieira.backend.domain.exception.ProdutoImagemNaoEncontradoException;
 import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.usuario.PermissaoAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.usuario.PermissaoNaoEncontradaException;

@@ -2,18 +2,14 @@ package com.viniciusvieira.backend.api.controller.venda;
 
 
 import com.viniciusvieira.backend.api.representation.model.request.venda.CarrinhoDeCompraRequest;
-import com.viniciusvieira.backend.api.representation.model.request.venda.CarrinhoDeCompraRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.api.representation.model.response.venda.CarrinhoDeCompraResponse;
 import com.viniciusvieira.backend.domain.exception.venda.CarrinhoDeCompraNaoEncontradoException;
-import com.viniciusvieira.backend.domain.exception.venda.CarrinhoDeCompraNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
-import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
 import com.viniciusvieira.backend.domain.model.venda.CarrinhoDeCompra;
 import com.viniciusvieira.backend.domain.service.venda.CrudCarrinhoDeCompraService;
 import com.viniciusvieira.backend.util.CarrinhoDeCompraCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
-import com.viniciusvieira.backend.util.CarrinhoDeCompraCreator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +23,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 

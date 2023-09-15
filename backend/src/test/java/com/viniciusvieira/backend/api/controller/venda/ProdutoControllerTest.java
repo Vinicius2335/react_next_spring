@@ -6,7 +6,6 @@ import com.viniciusvieira.backend.domain.exception.venda.ProdutoNaoEncontradoExc
 import com.viniciusvieira.backend.domain.model.venda.Produto;
 import com.viniciusvieira.backend.domain.service.venda.CrudProdutoService;
 import com.viniciusvieira.backend.util.ProdutoCreator;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -102,13 +101,6 @@ class ProdutoControllerTest {
     }
 
     @Test
-    @Disabled
-    @DisplayName("uploadFile()")
-    void uploadFile() {
-        // TEST - ImagemUploadService PRIMEIRO
-    }
-
-    @Test
     @DisplayName("alterar() update produto")
     void givenProdutoRequest_whenAlterar_thenProdutoShouldBeUpdated() {
         // given
@@ -140,13 +132,6 @@ class ProdutoControllerTest {
         // then
         verify(crudProdutoServiceMock, times(1))
                 .alterar(anyLong(), any(ProdutoRequest.class));
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("alterarImagem()")
-    void alterarImagem() {
-        // TEST - ImagemUploadService PRIMEIRO
     }
 
     @Test
