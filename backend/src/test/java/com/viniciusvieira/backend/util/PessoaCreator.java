@@ -32,7 +32,6 @@ public abstract class PessoaCreator {
     public static PessoaRequest createPessoaRequest(){
         return PessoaRequest.builder()
                 .nome(FAKER.name().fullName())
-                .senha(FAKER.internet().password())
                 .cpf("302.218.730-07")
                 .nomePermissao("CLIENTE")
                 .email(FAKER.internet().emailAddress())
@@ -43,7 +42,6 @@ public abstract class PessoaCreator {
     public static PessoaRequest createInvalidPessoaRequest(){
         return PessoaRequest.builder()
                 .nome(null)
-                .senha(null)
                 .cpf(null)
                 .nomePermissao(null)
                 .email(null)

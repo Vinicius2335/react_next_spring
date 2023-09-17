@@ -2,7 +2,11 @@ package com.viniciusvieira.backend;
 
 import com.github.javafaker.Faker;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -87,5 +91,12 @@ class RandomTests {
             System.out.println(paragraph);
             System.out.println(sentence);
         });
+    }
+
+    @Test
+    @Disabled
+    void passwordEncode(){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        System.out.println(encoder.encode("senha"));
     }
 }

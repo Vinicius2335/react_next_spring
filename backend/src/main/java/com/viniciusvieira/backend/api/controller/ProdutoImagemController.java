@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/produtos/{idProduto}/imagens")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class ProdutoImagemController {
     private final ImageService imageService;
     private final CrudProdutoService crudProdutoService;
