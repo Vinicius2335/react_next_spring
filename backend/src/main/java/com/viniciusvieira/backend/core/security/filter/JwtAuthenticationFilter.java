@@ -1,6 +1,13 @@
 package com.viniciusvieira.backend.core.security.filter;
 
-import com.viniciusvieira.backend.core.security.service.JwtService;
+//import com.viniciusvieira.backend.core.security.service.JwtService;
+import com.viniciusvieira.backend.core.security.service.JwtService2;
+import com.viniciusvieira.backend.domain.exception.TokenException;
+import com.viniciusvieira.backend.domain.repository.token.TokenModelRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,8 +28,10 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
+    //private final JwtService jwtService;
+    private final JwtService2 jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenModelRepository tokenModelRepository;
 
     @Override
     protected void doFilterInternal(
@@ -32,35 +42,57 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+        final String attribute = "validacaoToken";
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // extraindo o token
-        jwt = authHeader.substring(7);
-        //extraindo o userEmail do token
-        userEmail = jwtService.extractUsername(jwt, request);
+        try {
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            // extraindo o token
+            jwt = authHeader.substring(7);
+            //extraindo o userEmail do token
+            userEmail = jwtService.extractUsername(jwt);
 
-            if (jwtService.isTokenValid(request, jwt, userDetails)){
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
+                boolean isTokenValid = tokenModelRepository.findByToken(jwt)
+                        .map(t -> !t.isExpired() && !t.isRevoked())
+                        .orElse(false);
 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+
+        } catch (SignatureException e) {
+            request.setAttribute(attribute, "Assinatura do token Inválida...");
+            throw new TokenException("Assinatura Inválida..." + e.getMessage());
+        } catch (MalformedJwtException e) {
+            request.setAttribute(attribute, "JWT token inválido...");
+            throw new TokenException("JWT token inválido..." + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            // TODO - aqui fica o refresh token
+            request.setAttribute(attribute, "Token expirado...");
+            throw new TokenException("Token expirado..." + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            request.setAttribute(attribute, "Token não suportado...");
+            throw new TokenException("Token não suportado..." + e.getMessage());
+        }
     }
 }

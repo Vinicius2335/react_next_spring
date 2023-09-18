@@ -8,11 +8,16 @@ import com.viniciusvieira.backend.domain.exception.usuario.PermissaoAlreadyExist
 import com.viniciusvieira.backend.domain.exception.usuario.PermissaoNaoEncontradaException;
 import com.viniciusvieira.backend.domain.exception.usuario.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.exception.venda.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
