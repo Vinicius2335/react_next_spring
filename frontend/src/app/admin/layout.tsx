@@ -20,6 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         draggable
         pauseOnHover
         theme="colored"
+        limit={1}
       />
 
       <Navbar />

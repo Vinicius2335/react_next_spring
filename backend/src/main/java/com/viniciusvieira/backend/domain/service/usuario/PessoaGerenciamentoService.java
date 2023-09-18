@@ -6,16 +6,20 @@ import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 public class PessoaGerenciamentoService {
     private final CrudPessoaService crudPessoaService;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     public void solicitarCodigo(String email){
         Pessoa pessoa = crudPessoaService.buscarPeloEmail(email);
@@ -24,9 +28,16 @@ public class PessoaGerenciamentoService {
         pessoa.setDataEnvioCodigo(LocalDateTime.now());
         crudPessoaService.alterarParaGerenciamento(pessoa);
 
-        emailService.sendEmailSimples(pessoa.getEmail(),
-                "Código de recuperação de senha",
-                "Olá, o seu código para recuperação de senha é o seguinte '" + pessoa.getCodigoRecuperacaoSenha() + "'");
+        Map<String, Object> propriedades = new HashMap<>();
+        propriedades.put("nome", pessoa.getNome());
+        propriedades.put("codigo", pessoa.getCodigoRecuperacaoSenha());
+
+        emailService.sendEmailTemplateRecuperacaoCodigo(
+                pessoa.getEmail(),
+                "Código de Segurança - Loja Sakai",
+                propriedades
+        );
+
     }
 
     public void alterarSenha(PessoaGerenciamentoRequest pessoaGerenciamentoRequest){
@@ -37,8 +48,7 @@ public class PessoaGerenciamentoService {
 
         // validade do código de recuperação é de 15min
         if (diferenca >= 0 && diferenca <= 15){
-            // TODO - depois de adicionar o spring security é necessário criptografar a senha
-            pessoaEncontrada.setSenha(pessoaGerenciamentoRequest.getSenha());
+            pessoaEncontrada.setSenha(passwordEncoder.encode(pessoaGerenciamentoRequest.getSenha()));
             pessoaEncontrada.setCodigoRecuperacaoSenha(null);
             pessoaEncontrada.setDataEnvioCodigo(null);
             crudPessoaService.alterarParaGerenciamento(pessoaEncontrada);

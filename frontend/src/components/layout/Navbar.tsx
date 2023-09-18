@@ -21,7 +21,7 @@ export function Navbar() {
           href={"/"}
           className="flex justify-start items-center gap-2 tap-highlight-transparent transition-opacity active:opacity-50"
         >
-          <Image alt="Logo" src={ImageLogo} width={50} height={50} color="white" />
+          <Image alt="Logo" src={ImageLogo} width={50} className="h-auto" color="white" />
           <p className="font-bold text-inherit">Logo</p>
         </NextLink>
       </NavbarBrand>

@@ -49,7 +49,7 @@ export default function Home() {
                 Remember me
               </Checkbox>
               
-              <Link color="primary" href="#" size="sm">
+              <Link color="primary" href="#" size="sm" as={"style"}>
                 Forgot password?
               </Link>
             </div>

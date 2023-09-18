@@ -5,6 +5,7 @@ import { capitalize } from "@/services/utils"
 import {
   Button,
   Input,
+  Link,
   Pagination,
   Selection,
   SortDescriptor,
@@ -18,7 +19,7 @@ import {
   Tooltip,
   useDisclosure
 } from "@nextui-org/react"
-import { MagnifyingGlass, PencilSimpleLine, Plus, Trash } from "@phosphor-icons/react"
+import { Images, MagnifyingGlass, PencilSimpleLine, Plus, Trash } from "@phosphor-icons/react"
 import React, { useCallback, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
@@ -166,6 +167,13 @@ export default function TableProduto() {
                 <Trash size={25} />
               </span>
             </Tooltip>
+            <Tooltip content="Imagens do Produto">
+              <Link href={`/admin/cadastros/produtos/${item.id}/imagens`}>
+                <span className="text-lg text-default-400 hover:text-default-500 cursor-pointer active:opacity-50">
+                  <Images size={25} />
+                </span>
+              </Link>
+            </Tooltip>
           </div>
         )
 
@@ -177,7 +185,7 @@ export default function TableProduto() {
 
       case "custo":
         return <p>{`R$ ${item.valorCusto}`}</p>
-      
+
       case "venda":
         return <p>{`R$ ${item.valorVenda}`}</p>
 
@@ -351,6 +359,7 @@ export default function TableProduto() {
         onClose={salvarModal.onClose}
         onSalvarPressed={carregaDados}
         produto={produto}
+        onSetProduto={setProduto}
       />
 
       <ModalDeleteGeneric

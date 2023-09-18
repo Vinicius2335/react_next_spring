@@ -11,7 +11,6 @@ import com.viniciusvieira.backend.util.ProdutoCreator;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -133,13 +132,6 @@ class ProdutoControllerIT {
     }
 
     @Test
-    @Disabled
-    @DisplayName("uploadFile()")
-    void uploadFile() {
-        // TEST - ImagemUploadService PRIMEIRO
-    }
-
-    @Test
     @DisplayName("alterar() update produto")
     void givenProdutoRequest_whenAlterar_thenStatusOK() {
         insertProdutos();
@@ -191,13 +183,6 @@ class ProdutoControllerIT {
         .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .log().all();
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("alterarImagem()")
-    void alterarImagem() {
-        // TEST - ImagemUploadService PRIMEIRO
     }
 
     @Test

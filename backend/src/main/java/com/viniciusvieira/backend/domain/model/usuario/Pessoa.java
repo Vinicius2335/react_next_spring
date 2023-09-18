@@ -6,11 +6,16 @@ import com.viniciusvieira.backend.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +23,7 @@ import java.util.Objects;
 @Data
 @Entity
 @Table(name = "pessoa")
-public class Pessoa extends BaseEntity {
+public class Pessoa extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String nome;
@@ -26,6 +31,7 @@ public class Pessoa extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String cpf;
 
+    // TODO - Unique dps
     @Column(nullable = false)
     private String email;
 
@@ -37,7 +43,6 @@ public class Pessoa extends BaseEntity {
 
     @Embedded
     private Endereco endereco;
-
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
@@ -61,5 +66,52 @@ public class Pessoa extends BaseEntity {
                 .orElseThrow(() -> new PermissaoNaoEncontradaException("Permissao nao cadastrada ou nao registrada para essa pessoa"));
         this.getPermissoes().remove(permissaoParaRemover);
         permissaoParaRemover.getPessoas().remove(this);
+    }
+
+    public String getRolesString(){
+        return getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(", "));
+
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        this.permissoes.forEach(permissao ->
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + permissao.getNome().toUpperCase()))
+        );
+
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

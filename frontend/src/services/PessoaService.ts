@@ -9,6 +9,6 @@ export class PessoaService extends BaseService<DataTypePessoa> {
   }
 
   getPermissao(id: number){
-    return AXIOS.get<DataTypePermissao[]>(this.getUrl() + `/${id}/permissoes`).then(resp => resp.data)
+    return AXIOS.get<DataTypePermissao[]>(this.url + `/${id}/permissoes`).then(resp => resp.data)
   }
 }

@@ -46,11 +46,11 @@ public class SalvarClienteService {
     private void sendEmail(Pessoa clienteSalvo) {
         Map<String, Object> propriedades = new HashMap<>();
         propriedades.put("nome", clienteSalvo.getNome());
-        propriedades.put("mensagem", "O registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso por e-mail");
+        // COMMENT - Lembrando que após o registro o usuário deve solicitar um código para criar/alterar senha
 
-        emailService.sendEmailTemplate(
+        emailService.sendEmailTemplateBoasVindas(
                 clienteSalvo.getEmail(),
-                "Cadastro na Loja Sakai",
+                "Registro Concluído com Sucesso",
                 propriedades
         );
     }

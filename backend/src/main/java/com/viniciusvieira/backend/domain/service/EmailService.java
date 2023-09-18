@@ -41,7 +41,22 @@ public class EmailService {
     }
 
     // COMMENT - Baeldung
-    public void sendEmailTemplate(String destinatario, String titulo, Map<String, Object> propriedades) {
+    public void sendEmailTemplateBoasVindas(String destinatario, String titulo, Map<String, Object> propriedades) {
+        try {
+            Template freemarkerTemplate = freemarkerConfigurer.getConfiguration()
+                    .getTemplate("email-boas-vindas.ftl");
+            String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freemarkerTemplate, propriedades);
+
+            sendHtmlMessage(destinatario, titulo, htmlBody);
+
+        } catch (TemplateException | TemplateNotFoundException | ParseException | MalformedTemplateNameException e) {
+            throw new CreateTemplateException("Erro ao tentar criar o template para o envio de email.", e);
+        } catch (IOException e) {
+            throw new CreateTemplateException("Erro ao tentar encontrar o template para o envio de email.", e);
+        }
+    }
+
+    public void sendEmailTemplateRecuperacaoCodigo(String destinatario, String titulo, Map<String, Object> propriedades) {
         try {
             Template freemarkerTemplate = freemarkerConfigurer.getConfiguration()
                     .getTemplate("email-recuperacao-codigo.ftl");

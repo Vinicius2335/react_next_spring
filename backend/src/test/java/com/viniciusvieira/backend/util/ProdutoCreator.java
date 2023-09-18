@@ -8,7 +8,6 @@ import com.viniciusvieira.backend.api.representation.model.response.venda.Produt
 import com.viniciusvieira.backend.domain.model.venda.Produto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Locale;
 

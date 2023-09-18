@@ -3,8 +3,8 @@ package com.viniciusvieira.backend.domain.service.usuario;
 import com.viniciusvieira.backend.api.mapper.usuario.ClienteMapper;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.ClienteRequest;
 import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
-import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.exception.CreateTemplateException;
+import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsException;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.domain.service.EmailService;
@@ -50,7 +50,7 @@ class SalvarClienteServiceTest {
         when(pessoaRepositoryMock.findByCpf(anyString())).thenReturn(Optional.empty());
         when(crudPermissaoServiceMock.buscarPeloNome(any())).thenReturn(PermissaoCreator.createPermissao());
         when(pessoaRepositoryMock.saveAndFlush(any(Pessoa.class))).thenReturn(cliente);
-        doNothing().when(emailServiceMock).sendEmailTemplate(anyString(), anyString(), anyMap());
+        doNothing().when(emailServiceMock).sendEmailTemplateBoasVindas(anyString(), anyString(), anyMap());
         when(clienteMapperMock.toPessoaResponse(any(Pessoa.class))).thenReturn(pessoaResponse);
     }
 
@@ -62,7 +62,7 @@ class SalvarClienteServiceTest {
         // when
         PessoaResponse expected = underTest.inserirCliente(clienteRequest);
         // then
-        verify(emailServiceMock, times(1)).sendEmailTemplate(anyString(), anyString(), anyMap());
+        verify(emailServiceMock, times(1)).sendEmailTemplateBoasVindas(anyString(), anyString(), anyMap());
         verify(pessoaRepositoryMock, times(1)).saveAndFlush(any(Pessoa.class));
 
         assertThat(expected).isEqualTo(pessoaResponse);
@@ -79,7 +79,7 @@ class SalvarClienteServiceTest {
                 .isInstanceOf(CpfAlreadyExistsException.class)
                         .hasMessageContaining("á existe uma pessoa cadastrada com esse CPF");
         // then
-        verify(emailServiceMock, never()).sendEmailTemplate(anyString(), anyString(), anyMap());
+        verify(emailServiceMock, never()).sendEmailTemplateBoasVindas(anyString(), anyString(), anyMap());
         verify(pessoaRepositoryMock, never()).saveAndFlush(any(Pessoa.class));
     }
 
@@ -89,14 +89,14 @@ class SalvarClienteServiceTest {
         // given
         ClienteRequest clienteRequest = ClienteCreator.createClienteRequest();
         doThrow(new CreateTemplateException("Erro ao tentar criar o template para o envio de email."))
-                .when(emailServiceMock).sendEmailTemplate(anyString(), anyString(), anyMap());
+                .when(emailServiceMock).sendEmailTemplateBoasVindas(anyString(), anyString(), anyMap());
         // when
         assertThatThrownBy(() -> underTest.inserirCliente(clienteRequest))
                 .isInstanceOf(CreateTemplateException.class)
                 .hasMessageContaining("Erro ao tentar criar o template para o envio de email.");
         // then
         verify(emailServiceMock, times(1))
-                .sendEmailTemplate(anyString(), anyString(), anyMap());
+                .sendEmailTemplateBoasVindas(anyString(), anyString(), anyMap());
         verify(pessoaRepositoryMock, times(1)).saveAndFlush(any(Pessoa.class));
     }
 }

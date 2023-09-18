@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/carrinhos")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class CarrinhoDeCompraController {
     private final CrudCarrinhoDeCompraService crudCarrinhoDeCompraService;
 

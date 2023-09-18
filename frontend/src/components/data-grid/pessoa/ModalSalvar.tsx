@@ -10,6 +10,7 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   Select,
   SelectItem,
@@ -28,6 +29,7 @@ interface ModalSalvarProps {
   onOpenChange: () => void
   onClose: () => void
   pessoa: DataTypePessoa
+  onSetPessoa: (pessoa: DataTypePessoa) => void
   onSalvarPressed: () => void
 }
 
@@ -38,18 +40,24 @@ const regexNome = regexNomeUtil
 const validationSchema = yup.object({
   nome: yup
     .string()
-    .matches(regexNome, "Nome is invalid. Ex: Maria Da Silva")
-    .required("Nome is required"),
+    .matches(regexNome, "Nome está invalido. Ex: Maria Da Silva")
+    .required("Nome é obrigatório."),
   cpf: yup
     .string()
     .matches(regexCpf, "CPF is invalid. Ex: 999.999.999-99")
-    .required("CPF is requided"),
-  email: yup.string().email("Email is invalid").required("Email is requided"),
-  permissao: yup.string().required("Permissão is required"),
-  cep: yup.string().matches(regexCep, "CEP is invalid. Ex: 99999-999").required("CEP is requided"),
-  logradouro: yup.string().required("Logradouro is requided"),
-  cidade: yup.string().required("Cidade is requided"),
-  estado: yup.string().required("Estado is requided")
+    .required("CPF é obrigatório."),
+  email: yup
+    .string()
+    .email("Email está inválido. Ex: exemplo@gmail.com")
+    .required("Email é obrigatório."),
+  permissao: yup.string().required("Permissão é obrigatório."),
+  cep: yup
+    .string()
+    .matches(regexCep, "CEP está inválido. Ex: 99999-999")
+    .required("CEP é obrigatório."),
+  logradouro: yup.string().required("Logradouro é obrigatório."),
+  cidade: yup.string().required("Cidade é obrigatório."),
+  estado: yup.string().required("Estado é obrigatório.")
 })
 
 export default function ModalSalvar({
@@ -57,13 +65,14 @@ export default function ModalSalvar({
   onOpenChange,
   onClose,
   pessoa,
+  onSetPessoa,
   onSalvarPressed
 }: ModalSalvarProps) {
   const pessoaService = new PessoaService()
   const text = "pessoa"
 
   const [selectedPermissao, setSelectedPermissao] = React.useState<Selection>(new Set([]))
-  const [nomeSelectedPermissao, setNomeSelectedPermissao] = React.useState("")
+  const [nomePermissao, setNomePermissao] = React.useState("")
   let service = new PermissaoService()
   const [permissoes, setPermissoes] = React.useState<DataTypePermissao[]>([])
   const [disabled, setDisabled] = React.useState(false)
@@ -94,7 +103,7 @@ export default function ModalSalvar({
 
       entityToEdit.nome = values.nome
       entityToEdit.cpf = values.cpf
-      entityToEdit.nomePermissao = nomeSelectedPermissao
+      entityToEdit.nomePermissao = nomePermissao
       entityToEdit.email = values.email
       entityToEdit.endereco = endereco
 
@@ -122,7 +131,7 @@ export default function ModalSalvar({
           nome: values.nome,
           senha: "Dale",
           cpf: values.cpf,
-          nomePermissao: nomeSelectedPermissao,
+          nomePermissao: nomePermissao,
           email: values.email,
           endereco: endereco
         }
@@ -143,7 +152,7 @@ export default function ModalSalvar({
   })
 
   function onCloseModal() {
-    pessoa = createEmptyPessoa()
+    onSetPessoa(createEmptyPessoa())
     formik.resetForm()
     setSelectedPermissao(new Set([]))
     setDisabled(false)
@@ -180,7 +189,7 @@ export default function ModalSalvar({
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPermissao(new Set([e.target.value]))
-    setNomeSelectedPermissao(e.target.value)
+    setNomePermissao(e.target.value)
     formik.values.permissao = e.target.value
   }
 
@@ -196,9 +205,9 @@ export default function ModalSalvar({
     if (pessoa.id != 0) {
       pessoaService.getPermissao(pessoa.id).then(permissao => {
         setSelectedPermissao(new Set([permissao[0].nome]))
-        setNomeSelectedPermissao(permissao[0].nome)
+        setNomePermissao(permissao[0].nome)
+        formik.values.permissao = permissao[0].nome
         setDisabled(true)
-        formik.values.permissao = nomeSelectedPermissao
       })
     }
   }, [pessoa])
@@ -224,7 +233,11 @@ export default function ModalSalvar({
             <>
               <ModalHeader className="flex flex-col gap-1">Salvar Pessoa</ModalHeader>
               <ModalBody>
-                <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
+                <form
+                  id="formPessoa"
+                  onSubmit={formik.handleSubmit}
+                  className="flex flex-col gap-3"
+                >
                   <div className="flex w-full gap-4">
                     <div className="w-[50%] flex flex-col gap-3">
                       <h2>Pessoal</h2>
@@ -379,29 +392,29 @@ export default function ModalSalvar({
                       </div>
                     </div>
                   </div>
-
-                  <div className="flex py-2 px-1 justify-end gap-4">
-                    <Button
-                      color="secondary"
-                      variant="flat"
-                      onPress={onClose}
-                      className="hover:bg-secondary-400 hover:text-white"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      color="success"
-                      type="submit"
-                      variant="shadow"
-                      className="hover:bg-success-200 hover:text-white"
-                      onClick={onSalvarPressed}
-                      isDisabled={!formik.isValid}
-                    >
-                      Salvar
-                    </Button>
-                  </div>
                 </form>
               </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  color="secondary"
+                  variant="flat"
+                  onPress={onClose}
+                  className="hover:bg-secondary-400 hover:text-white"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  color="success"
+                  type="submit"
+                  form="formPessoa"
+                  variant="shadow"
+                  className="hover:bg-success-200 hover:text-white"
+                  isDisabled={!formik.isValid}
+                >
+                  Salvar
+                </Button>
+              </ModalFooter>
             </>
           )}
         </ModalContent>

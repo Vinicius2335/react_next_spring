@@ -4,7 +4,15 @@
 import { DataTypeCategoria, createEmptyCategoria } from "@/models/categoria"
 import { CategoriaService } from "@/services/CategoriaService"
 import { capitalize } from "@/services/utils"
-import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react"
+import {
+  Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader
+} from "@nextui-org/react"
 import { useFormik } from "formik"
 import React from "react"
 import { toast } from "react-toastify"
@@ -19,7 +27,7 @@ interface ModalSalvarProps {
 }
 
 const validationSchema = yup.object({
-  nome: yup.string().required("Nome is required")
+  nome: yup.string().required("Nome é obrigatório.")
 })
 
 export default function ModalSalvar({
@@ -101,7 +109,7 @@ export default function ModalSalvar({
             <>
               <ModalHeader className="flex flex-col gap-1">Salvar Categoria</ModalHeader>
               <ModalBody>
-                <form onSubmit={formik.handleSubmit}>
+                <form id="formCategoria" onSubmit={formik.handleSubmit}>
                   <Input
                     autoFocus
                     label="Nome"
@@ -118,29 +126,29 @@ export default function ModalSalvar({
                     validationState={Boolean(formik.errors.nome) ? "invalid" : "valid"}
                     isRequired
                   />
-
-                  <div className="flex py-2 px-1 justify-end mt-10 gap-4">
-                    <Button
-                      color="secondary"
-                      variant="flat"
-                      onPress={onClose}
-                      className="hover:bg-secondary-400 hover:text-white"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      color="success"
-                      type="submit"
-                      variant="shadow"
-                      className="hover:bg-success-200 hover:text-white"
-                      onClick={onSalvarPressed}
-                      isDisabled={!formik.isValid}
-                    >
-                      Salvar
-                    </Button>
-                  </div>
                 </form>
               </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  color="secondary"
+                  variant="flat"
+                  onPress={onClose}
+                  className="hover:bg-secondary-400 hover:text-white"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  color="success"
+                  type="submit"
+                  form="formCategoria"
+                  variant="shadow"
+                  className="hover:bg-success-200 hover:text-white"
+                  isDisabled={!formik.isValid}
+                >
+                  Salvar
+                </Button>
+              </ModalFooter>
             </>
           )}
         </ModalContent>

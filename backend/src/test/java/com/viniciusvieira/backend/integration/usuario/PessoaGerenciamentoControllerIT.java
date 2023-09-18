@@ -1,5 +1,8 @@
 package com.viniciusvieira.backend.integration.usuario;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.ServerSetupTest;
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaGerenciamentoRequest;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
@@ -8,13 +11,12 @@ import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,14 +26,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
-import static org.junit.jupiter.api.Assertions.*;
 
 
-// COMMENT - Todos os testes precisa do env. variables para GMAIL e PASSWORD
 @ExtendWith(SpringExtension.class)
 @AutoConfigureTestDatabase
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -46,6 +45,11 @@ class PessoaGerenciamentoControllerIT {
     private PermissaoRepository permissaoRepository;
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
+
+    @RegisterExtension
+    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
+            .withConfiguration(GreenMailConfiguration
+                    .aConfig().withUser("user@gmail.com", "password"));
 
     @BeforeEach
     void setUp() {
@@ -148,7 +152,6 @@ class PessoaGerenciamentoControllerIT {
     private Pessoa getPessoaInserted(){
         Permissao permissaoInserted = getPermissaoInserted();
         pessoa.adicionarPermissao(permissaoInserted);
-        pessoa.setEmail(System.getenv("GMAIL"));
         return pessoaRepository.saveAndFlush(pessoa);
     }
 

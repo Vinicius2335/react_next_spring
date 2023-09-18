@@ -16,39 +16,43 @@ import {
   Textarea,
   Select,
   SelectItem,
-  Selection
+  Selection,
+  ModalFooter
 } from "@nextui-org/react"
 import { useFormik } from "formik"
 import React from "react"
 import { toast } from "react-toastify"
 import * as yup from "yup"
-import CurrencyFormat from "react-currency-format"
+import CurrencyFormat, { Values } from "react-currency-format"
 
 interface ModalSalvarProps {
   isOpen: boolean
   onOpenChange: () => void
   onClose: () => void
   produto: DataTypeProduto
+  onSetProduto: (produto: DataTypeProduto) => void
   onSalvarPressed: () => void
 }
 
 const validationSchema = yup.object({
-  quantidade: yup.number().required("Quantidade is required"),
-  descricao: yup.string().required("Descrição is required"),
+  quantidade: yup.number().required("Quantidade é obrigatório."),
+  descricao: yup.string().required("Descrição é obrigatório."),
   detalhe: yup
     .string()
-    .max(255, "Número máximo de caracteres é 255")
-    .required("Detalhes is required"),
+    .max(255, "Número máximo de caracteres é 255.")
+    .required("Detalhes é obrigatório."),
   custo: yup
     .number()
-    .moreThan(0, "Valor de Custo não pode ser menor que 0")
-    .required("Valor de Custo is required"),
+    .transform(value => (Number.isNaN(value) ? 0 : value))
+    .moreThan(0, "Valor de Custo não pode ser menor que 0.")
+    .required("Valor de Custo é obrigatório."),
   venda: yup
     .number()
-    .moreThan(0, "Valor de Venda não pode ser menor que 0")
-    .required("Valor de Venda is required"),
-  marca: yup.string().required("Marca is required"),
-  categoria: yup.string().required("Categoria is required")
+    .transform(value => (Number.isNaN(value) ? 0 : value))
+    .moreThan(0, "Valor de Venda não pode ser menor que 0.")
+    .required("Valor de Venda é obrigatório."),
+  marca: yup.string().required("Marca é obrigatório."),
+  categoria: yup.string().required("Categoria é obrigatório.")
 })
 
 export default function ModalSalvar({
@@ -56,6 +60,7 @@ export default function ModalSalvar({
   onOpenChange,
   onClose,
   produto,
+  onSetProduto,
   onSalvarPressed
 }: ModalSalvarProps) {
   const produtoService = new ProdutoService()
@@ -141,7 +146,7 @@ export default function ModalSalvar({
   })
 
   function onCloseModal() {
-    produto = createEmptyProduto()
+    onSetProduto(createEmptyProduto())
     formik.resetForm()
     formik.values.marca = ""
     formik.values.categoria = ""
@@ -171,11 +176,23 @@ export default function ModalSalvar({
       }
     })
   }
-  
-  const handleVendaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let precoString: string = e.target.value.replaceAll("." , "").replace("," , ".")
-    let precoFloat: number = parseFloat(precoString)
-    formik.values.venda = precoFloat
+
+  const handleVendaChange = (values: Values) => {
+    const { floatValue, value } = values
+    if (value === "") {
+      formik.values.venda = 0
+    } else {
+      formik.values.venda = floatValue
+    }
+  }
+
+  const handleCustoChange = (values: Values) => {
+    const { floatValue, value } = values
+    if (value === "") {
+      formik.values.custo = 0
+    } else {
+      formik.values.custo = floatValue
+    }
   }
 
   React.useEffect(() => {
@@ -198,13 +215,11 @@ export default function ModalSalvar({
       marcaService.buscarPorId(produto.marca.id).then(marca => {
         setSelectedMarca(new Set([marca.nome]))
         setIdMarca(marca.id)
-        console.log(selectedMarca)
         formik.values.marca = marca.nome
       })
 
       categoriaService.buscarPorId(produto.categoria.id).then(categoria => {
         setSelectedCategoria(new Set([categoria.nome]))
-        console.log(selectedCategoria)
         setIdCategoria(categoria.id)
         formik.values.categoria = categoria.nome
       })
@@ -228,7 +243,7 @@ export default function ModalSalvar({
             <>
               <ModalHeader className="flex flex-col gap-1">Salvar Produto</ModalHeader>
               <ModalBody>
-                <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
+                <form id="formProduto" onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
                   <div className="flex w-full gap-4">
                     <div className="w-[50%] flex flex-col gap-3">
                       <Input
@@ -282,20 +297,23 @@ export default function ModalSalvar({
                     </div>
 
                     <div className="w-[50%] flex flex-col gap-3">
-                      <Input
+                      <CurrencyFormat
+                        thousandSeparator={","}
+                        decimalSeparator={"."}
+                        decimalScale={2}
+                        customInput={Input}
                         label="Valor de Custo"
                         id="custo"
                         name="custo"
-                        type="number"
-                        placeholder="0.00"
+                        placeholder="Ex: 2.99"
                         variant="bordered"
                         startContent={
                           <div className="pointer-events-none flex items-center">
                             <span className="text-default-400 text-small">R$</span>
                           </div>
                         }
-                        value={formik.values.custo.toString()}
-                        onChange={formik.handleChange}
+                        value={formik.values.custo}
+                        onValueChange={handleCustoChange}
                         onBlur={formik.handleBlur}
                         color={Boolean(formik.errors.custo) ? "danger" : "success"}
                         errorMessage={formik.errors.custo}
@@ -304,14 +322,14 @@ export default function ModalSalvar({
                       />
 
                       <CurrencyFormat
-                        thousandSeparator={'.'} 
-                        decimalSeparator={','}
+                        thousandSeparator={","}
+                        decimalSeparator={"."}
                         decimalScale={2}
                         customInput={Input}
                         label="Valor de Venda"
                         id="venda"
                         name="venda"
-                        placeholder="2,99"
+                        placeholder="Ex: 20.99"
                         variant="bordered"
                         startContent={
                           <div className="pointer-events-none flex items-center">
@@ -319,7 +337,7 @@ export default function ModalSalvar({
                           </div>
                         }
                         value={formik.values.venda}
-                        onChange={handleVendaChange}
+                        onValueChange={handleVendaChange}
                         onBlur={formik.handleBlur}
                         color={Boolean(formik.errors.venda) ? "danger" : "success"}
                         errorMessage={formik.errors.venda}
@@ -373,28 +391,30 @@ export default function ModalSalvar({
                     </div>
                   </div>
 
-                  <div className="flex py-2 px-1 justify-end gap-4">
-                    <Button
-                      color="secondary"
-                      variant="flat"
-                      onPress={onClose}
-                      className="hover:bg-secondary-400 hover:text-white"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      color="success"
-                      type="submit"
-                      variant="shadow"
-                      className="hover:bg-success-200 hover:text-white"
-                      onClick={onSalvarPressed}
-                      isDisabled={!formik.isValid}
-                    >
-                      Salvar
-                    </Button>
-                  </div>
                 </form>
               </ModalBody>
+              
+              <ModalFooter>
+                <Button
+                  color="secondary"
+                  variant="flat"
+                  onPress={onClose}
+                  className="hover:bg-secondary-400 hover:text-white"
+                >
+                  Cancelar
+                </Button>
+                
+                <Button
+                  color="success"
+                  type="submit"
+                  form="formProduto"
+                  variant="shadow"
+                  className="hover:bg-success-200 hover:text-white"
+                  isDisabled={!formik.isValid}
+                >
+                  Salvar
+                </Button>
+              </ModalFooter>
             </>
           )}
         </ModalContent>
