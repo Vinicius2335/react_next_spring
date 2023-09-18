@@ -1,11 +1,10 @@
 package com.viniciusvieira.backend.core.security.service;
 
-import com.viniciusvieira.backend.domain.exception.TokenException;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,37 +25,21 @@ public class JwtService {
     private String secretKey;
 
     // Extraindo username do token
-    public String extractUsername(String token, HttpServletRequest request) {
-        return extractClaim(request, token, Claims::getSubject);
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(HttpServletRequest request, String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaimsAndValidating(request, token);
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaimsAndValidating(HttpServletRequest request, String token) {
-        String attribute = "validacaoToken";
-        try {
+    private Claims extractAllClaims(String token) {
             return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
-        } catch (SignatureException e) {
-            request.setAttribute(attribute, "Assinatura do token Inválida...");
-            throw new TokenException("Assinatura Inválida..." + e.getMessage());
-        } catch (MalformedJwtException e){
-            request.setAttribute(attribute, "JWT token inválido...");
-            throw new TokenException("JWT token inválido..." + e.getMessage());
-        } catch (ExpiredJwtException e) {
-            request.setAttribute(attribute, "Token expirado...");
-            throw new TokenException("Token expirado..." + e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            request.setAttribute(attribute, "Token não suportado...");
-            throw new TokenException("Token não suportado..." + e.getMessage());
-        }
     }
 
     private Key getSigningKey() {
@@ -81,13 +64,16 @@ public class JwtService {
     }
 
     // Validando Token
-    public boolean isTokenValid(HttpServletRequest request, String token, UserDetails userDetails) {
-        final String extractUsername = extractUsername(token, request);
-        Date extractExpiration = extractClaim(request, token, Claims::getExpiration);
+    public boolean isTokenValid(String token, UserDetails userDetails){
+        final String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
 
-        boolean isUsernameTokenValid = extractUsername.equals(userDetails.getUsername());
-        boolean isTokenExpired = extractExpiration.before(new Date());
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
 
-        return isUsernameTokenValid && !isTokenExpired;
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
     }
 }

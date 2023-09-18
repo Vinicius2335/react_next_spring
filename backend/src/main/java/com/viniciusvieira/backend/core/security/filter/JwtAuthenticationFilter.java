@@ -1,6 +1,11 @@
 package com.viniciusvieira.backend.core.security.filter;
 
 import com.viniciusvieira.backend.core.security.service.JwtService;
+import com.viniciusvieira.backend.domain.exception.TokenException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,35 +37,52 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+        final String attribute = "validacaoToken";
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // extraindo o token
-        jwt = authHeader.substring(7);
-        //extraindo o userEmail do token
-        userEmail = jwtService.extractUsername(jwt, request);
+        try {
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            // extraindo o token
+            jwt = authHeader.substring(7);
+            //extraindo o userEmail do token
+            userEmail = jwtService.extractUsername(jwt);
 
-            if (jwtService.isTokenValid(request, jwt, userDetails)){
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+
+        } catch (SignatureException e) {
+            request.setAttribute(attribute, "Assinatura do token Inválida...");
+            throw new TokenException("Assinatura Inválida..." + e.getMessage());
+        } catch (MalformedJwtException e) {
+            request.setAttribute(attribute, "JWT token inválido...");
+            throw new TokenException("JWT token inválido..." + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            request.setAttribute(attribute, "Token expirado...");
+            throw new TokenException("Token expirado..." + e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            request.setAttribute(attribute, "Token não suportado...");
+            throw new TokenException("Token não suportado..." + e.getMessage());
+        }
     }
 }
