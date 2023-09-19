@@ -54,11 +54,15 @@
     <div class="container">
         <h1>Código de Segurança - Loja Sakai</h1>
         <p>Olá, ${nome}</p>
+
         <p>Recebemos uma solicitação para gerar um código de segurança para a sua conta na nossa loja virtual.</p>
         <p>Seu código de segurança é:</p>
         <div class="code-box">${codigo}</div>
+        <p>Este código expirará em 15 minutos.</p>
+
         <p>Este código é importante para garantir a segurança da sua conta. Por favor, não compartilhe com ninguém.</p>
         <p>Se você não solicitou este código, por favor, entre em contato conosco imediatamente.</p>
+
         <div class="footer">
             <p>Atenciosamente,</p>
             <p>Equipe da Loja Sakai</p>
