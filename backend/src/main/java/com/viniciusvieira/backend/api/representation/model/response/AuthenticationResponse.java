@@ -1,5 +1,6 @@
 package com.viniciusvieira.backend.api.representation.model.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,5 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponse {
-    private String token;
+    @JsonProperty("access-token")
+    private String accessToken;
+
+    @JsonProperty("refresh-token")
+    private String refreshToken;
 }

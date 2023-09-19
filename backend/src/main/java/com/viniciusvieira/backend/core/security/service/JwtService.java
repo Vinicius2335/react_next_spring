@@ -24,6 +24,12 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
 
+    @Value("${jwt.expiration}")
+    private Long jwtExpiration;
+
+    @Value("${jwt.refresh-token.expiration}")
+    private Long refreshExpiration;
+
     // Extraindo username do token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -52,13 +58,23 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    // Permite personalizar o token atraves do map
+    // Cria um token com claims extras personalizadas
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return buildToken(extraClaims, userDetails, jwtExpiration);
+    }
+
+    // Cria o Refresh Token
+    public String generateRefreshToken(UserDetails userDetails) {
+        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+    }
+
+    // Constroi o token
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration){
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

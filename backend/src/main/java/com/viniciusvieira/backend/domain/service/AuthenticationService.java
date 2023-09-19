@@ -1,5 +1,6 @@
 package com.viniciusvieira.backend.domain.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.viniciusvieira.backend.api.representation.model.request.AuthenticationRequest;
 import com.viniciusvieira.backend.api.representation.model.response.AuthenticationResponse;
 import com.viniciusvieira.backend.core.security.service.JwtService;
@@ -8,13 +9,17 @@ import com.viniciusvieira.backend.domain.model.token.TokenType;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.TokenRepository;
 import com.viniciusvieira.backend.domain.service.usuario.CrudPessoaService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +46,14 @@ public class AuthenticationService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", pessoa.getRolesString());
         String jwtToken = jwtService.generateToken(claims, pessoa);
+        String refreshToken = jwtService.generateRefreshToken(pessoa);
 
         revokedAllPessoaTokens(pessoa);
         savingPessoaToken(jwtToken, pessoa);
 
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -77,5 +84,36 @@ public class AuthenticationService {
         });
 
         tokenRepository.saveAll(validsUserTokens);
+    }
+
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String refreshToken;
+        final String userEmail;
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+            return;
+        }
+
+        refreshToken = authHeader.substring(7);
+        userEmail = jwtService.extractUsername(refreshToken);
+
+        if (userEmail != null) {
+            Pessoa pessoa = crudPessoaService.buscarPeloEmail(userEmail);
+
+            if (jwtService.isTokenValid(refreshToken, pessoa)){
+                String accessToken = jwtService.generateSimpleToken(pessoa);
+
+                revokedAllPessoaTokens(pessoa);
+                savingPessoaToken(accessToken, pessoa);
+
+                AuthenticationResponse authResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
+
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+            }
+        }
     }
 }

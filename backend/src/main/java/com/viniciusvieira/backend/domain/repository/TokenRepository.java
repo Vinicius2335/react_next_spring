@@ -21,7 +21,7 @@ public interface TokenRepository extends JpaRepository<TokenModel, Long> {
     @Modifying
     @Query("""
             DELETE FROM TokenModel t
-            WHERE NOT (t.id = :tokenId)
+            WHERE NOT (t.id = :tokenId) AND (t.pessoa.id = :pessoaId)
             """)
-    void deleteOthersTokens(Long tokenId);
+    void deleteOthersTokens(Long tokenId, Long pessoaId);
 }

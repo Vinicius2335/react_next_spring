@@ -35,7 +35,7 @@ public class LogoutService implements LogoutHandler {
             storedToken.setRevoked(true);
             tokenRepository.save(storedToken);
 
-            tokenRepository.deleteOthersTokens(storedToken.getId());
+            tokenRepository.deleteOthersTokens(storedToken.getId(), storedToken.getPessoa().getId());
         }
 
     }
