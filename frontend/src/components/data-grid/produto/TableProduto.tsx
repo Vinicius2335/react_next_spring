@@ -25,7 +25,7 @@ import { toast } from "react-toastify"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
 import ModalSalvar from "./ModalSalvar"
 import { DataTypeProduto, createEmptyProduto, getColumnsProduto } from "@/models/produto"
-import { ProdutoService } from "@/services/ProdutoService"
+import { ProdutoService } from "@/services/cadastros/ProdutoService"
 
 export default function TableProduto() {
   let columns = getColumnsProduto()

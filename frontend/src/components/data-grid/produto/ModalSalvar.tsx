@@ -2,9 +2,9 @@
 import { DataTypeCategoria } from "@/models/categoria"
 import { DataTypeMarca } from "@/models/marca"
 import { CategoriaType, DataTypeProduto, MarcaType, createEmptyProduto } from "@/models/produto"
-import { CategoriaService } from "@/services/CategoriaService"
-import { MarcaService } from "@/services/MarcaService"
-import { ProdutoService } from "@/services/ProdutoService"
+import { CategoriaService } from "@/services/cadastros/CategoriaService"
+import { MarcaService } from "@/services/cadastros/MarcaService"
+import { ProdutoService } from "@/services/cadastros/ProdutoService"
 import { capitalize } from "@/services/utils"
 import {
   Button,

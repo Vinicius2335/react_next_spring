@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { DataTypePermissao } from "@/models/permissao"
 import { DataTypePessoa, EnderecoType, createEmptyPessoa } from "@/models/pessoa"
-import { PermissaoService } from "@/services/PermissaoService"
-import { PessoaService } from "@/services/PessoaService"
+import { PermissaoService } from "@/services/cadastros/PermissaoService"
+import { PessoaService } from "@/services/cadastros/PessoaService"
 import { capitalize, regexNomeUtil } from "@/services/utils"
 import {
   Button,

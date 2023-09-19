@@ -14,8 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +34,18 @@ public class SecurityConfig {
         http
                 .csrf(
                         AbstractHttpConfigurer::disable
+                );
+
+        http
+                .cors(
+                       cors -> cors
+                               .configurationSource(request -> {
+                                   CorsConfiguration corsConfiguration = new CorsConfiguration();
+                                   corsConfiguration.setAllowedOrigins(List.of("*"));
+                                   corsConfiguration.setAllowedHeaders(List.of("*"));
+                                   corsConfiguration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
+                                   return corsConfiguration;
+                               })
                 );
 
         http
@@ -70,17 +85,5 @@ public class SecurityConfig {
                 );
 
         return http.build();
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer(){
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NotNull CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE");
-            }
-        };
     }
 }

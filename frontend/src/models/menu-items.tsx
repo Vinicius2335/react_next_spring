@@ -9,7 +9,7 @@ export type MenuItemType = {
 
 export const NAVBAR_ITEMS: MenuItemType[] = [
     {
-      label: "Dashboard",
+      label: "Produtos",
       href: "/",
     },
     {
@@ -31,11 +31,6 @@ export const SIDEBAR_ITEMS: MenuItemType[] = [
         href: "/dashboard",
         label: "Dashboard",
         icon: <House className="sidebar-icon" />
-      },
-      {
-        href: "/about",
-        label: "About",
-        icon: <Question className="sidebar-icon" />
       }
     ]
   },

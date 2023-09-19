@@ -2,7 +2,7 @@
 "use client"
 
 import { DataTypeCategoria, createEmptyCategoria, getColumnsCategoria } from "@/models/categoria"
-import { CategoriaService } from "@/services/CategoriaService"
+import { CategoriaService } from "@/services/cadastros/CategoriaService"
 import { capitalize } from "@/services/utils"
 import {
   Button,
