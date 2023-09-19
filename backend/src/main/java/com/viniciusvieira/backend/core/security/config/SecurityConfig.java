@@ -1,7 +1,6 @@
 package com.viniciusvieira.backend.core.security.config;
 
 import com.viniciusvieira.backend.core.security.filter.JwtAuthenticationFilter;
-import com.viniciusvieira.backend.core.security.service.LogoutService;
 import com.viniciusvieira.backend.domain.repository.token.TokenModelRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;

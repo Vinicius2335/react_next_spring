@@ -87,7 +87,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             request.setAttribute(attribute, "JWT token inválido...");
             throw new TokenException("JWT token inválido..." + e.getMessage());
         } catch (ExpiredJwtException e) {
-            // TODO - aqui fica o refresh token
             request.setAttribute(attribute, "Token expirado...");
             throw new TokenException("Token expirado..." + e.getMessage());
         } catch (UnsupportedJwtException e) {

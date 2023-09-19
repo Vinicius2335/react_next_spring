@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.domain.repository.token;
 
 import com.viniciusvieira.backend.domain.model.token.TokenModel;
+import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
