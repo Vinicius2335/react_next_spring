@@ -2,7 +2,7 @@
 "use client"
 
 import { DataTypePermissao, createEmptyPermissao, getColumnsPermissao } from "@/models/permissao"
-import { PermissaoService } from "@/services/PermissaoService"
+import { PermissaoService } from "@/services/cadastros/PermissaoService"
 import { capitalize } from "@/services/utils"
 import {
   Button,

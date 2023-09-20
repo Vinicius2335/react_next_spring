@@ -2,7 +2,7 @@
 "use client"
 
 import { DataTypeMarca, createEmptyMarca, getColumnsMarca } from "@/models/marca"
-import { MarcaService } from "@/services/MarcaService"
+import { MarcaService } from "@/services/cadastros/MarcaService"
 import { capitalize } from "@/services/utils"
 import {
   Button,

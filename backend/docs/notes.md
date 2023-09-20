@@ -39,4 +39,7 @@
 
 # Testes
 
-- CascadeService
+- Token Repository
+- AuthenticationController
+- Refazer todos os Testes unitários e IT dos Controller agora que o Spring Security foi adicionado
+- AuthenticationService

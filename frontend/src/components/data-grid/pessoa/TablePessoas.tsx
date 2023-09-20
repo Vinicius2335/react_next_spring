@@ -22,7 +22,7 @@ import {
 import { MagnifyingGlass, PencilSimpleLine, Plus, Trash } from "@phosphor-icons/react"
 import React, { useCallback, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { PessoaService } from "../../../services/PessoaService"
+import { PessoaService } from "@/services/cadastros/PessoaService"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
 import ModalSalvar from "./ModalSalvar"
 

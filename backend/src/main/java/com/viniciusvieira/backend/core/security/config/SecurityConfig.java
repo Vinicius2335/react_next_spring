@@ -12,11 +12,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -25,15 +30,24 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
     private final AuthEntryPointJwt authEntryPointJwt;
-    private final LogoutHandler logoutHandler;
-   // private final LogoutService logoutService;
-    private final TokenModelRepository tokenModelRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(
                         AbstractHttpConfigurer::disable
+                );
+
+        http
+                .cors(
+                       cors -> cors
+                               .configurationSource(request -> {
+                                   CorsConfiguration corsConfiguration = new CorsConfiguration();
+                                   corsConfiguration.setAllowedOrigins(List.of("*"));
+                                   corsConfiguration.setAllowedHeaders(List.of("*"));
+                                   corsConfiguration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
+                                   return corsConfiguration;
+                               })
                 );
 
         http
@@ -62,30 +76,6 @@ public class SecurityConfig {
                                 .authenticationEntryPoint(authEntryPointJwt)
                 );
 
-        http
-                .logout(
-                        logout -> logout
-                                .logoutUrl("/api/auth/logout")
-                                .addLogoutHandler(logoutHandler)
-                                .logoutSuccessHandler(
-                                        (request, response, authentication) -> {
-                                            SecurityContextHolder.clearContext();
-                                        }
-                                )
-                );
-
         return http.build();
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer(){
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NotNull CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE");
-            }
-        };
     }
 }

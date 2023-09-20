@@ -25,7 +25,7 @@ import { toast } from "react-toastify"
 import ModalDeleteGeneric from "../ModalDeleteGeneric"
 import ModalSalvar from "./ModalSalvar"
 import { DataTypeProduto, createEmptyProduto, getColumnsProduto } from "@/models/produto"
-import { ProdutoService } from "@/services/ProdutoService"
+import { ProdutoService } from "@/services/cadastros/ProdutoService"
 
 export default function TableProduto() {
   let columns = getColumnsProduto()
@@ -168,7 +168,7 @@ export default function TableProduto() {
               </span>
             </Tooltip>
             <Tooltip content="Imagens do Produto">
-              <Link href={`/admin/cadastros/produtos/${item.id}/imagens`}>
+              <Link href={`/cadastros/produtos/${item.id}/imagens`}>
                 <span className="text-lg text-default-400 hover:text-default-500 cursor-pointer active:opacity-50">
                   <Images size={25} />
                 </span>

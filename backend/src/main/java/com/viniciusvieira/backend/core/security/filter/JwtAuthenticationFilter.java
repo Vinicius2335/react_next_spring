@@ -1,9 +1,8 @@
 package com.viniciusvieira.backend.core.security.filter;
 
-//import com.viniciusvieira.backend.core.security.service.JwtService;
-import com.viniciusvieira.backend.core.security.service.JwtService2;
+import com.viniciusvieira.backend.core.security.service.JwtService;
 import com.viniciusvieira.backend.domain.exception.TokenException;
-import com.viniciusvieira.backend.domain.repository.token.TokenModelRepository;
+import com.viniciusvieira.backend.domain.repository.TokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -31,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //private final JwtService jwtService;
     private final JwtService2 jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenModelRepository tokenModelRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(
@@ -59,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-                boolean isTokenValid = tokenModelRepository.findByToken(jwt)
+                boolean isTokenValid = tokenRepository.findByToken(jwt)
                         .map(t -> !t.isExpired() && !t.isRevoked())
                         .orElse(false);
 

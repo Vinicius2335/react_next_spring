@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { DataTypeMarca, createEmptyMarca } from "@/models/marca"
 import { DataTypePermissao } from "@/models/permissao"
-import { MarcaService } from "@/services/MarcaService"
+import { MarcaService } from "@/services/cadastros/MarcaService"
 import { capitalize } from "@/services/utils"
 import {
   Button,

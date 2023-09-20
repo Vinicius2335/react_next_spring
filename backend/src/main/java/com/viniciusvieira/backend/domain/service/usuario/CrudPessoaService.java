@@ -25,7 +25,7 @@ public class CrudPessoaService {
         return pessoaRepository.findAll();
     }
 
-    public Pessoa buscarPeloEmail(String email){
+    public Pessoa buscarPeloEmail(String email) throws PessoaNaoEncontradaException{
         return pessoaRepository.findByEmail(email)
                 .orElseThrow(() -> new PessoaNaoEncontradaException("Não existe nenhuma pessoa cadastrada com este EMAIL"));
     }

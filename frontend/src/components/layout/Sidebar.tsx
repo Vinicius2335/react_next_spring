@@ -27,7 +27,7 @@ export function Sidebar() {
                   <li className="m-2 text-sm" key={subTitle.label}>
                     <Link
                       href={subTitle.href}
-                      className="pl-4 flex items-center gap-2 bg-sakai-bg rounded hover:bg-sakai-bg-hover cursor-pointer"
+                      className="pl-4 flex items-center gap-2 leading-relaxed bg-sakai-bg rounded hover:bg-sakai-bg-hover cursor-pointer"
                       color="foreground"
                     >
                       {subTitle.icon}
