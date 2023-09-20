@@ -130,7 +130,7 @@ export default function ProdutoImagens({ params }: ProdutoImagensProps) {
         )}
       </div>
 
-      <Link href="/admin/cadastros/produtos">
+      <Link href="/cadastros/produtos">
         <ArrowLeft size={32} className="mr-2" />
         Voltar
       </Link>

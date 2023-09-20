@@ -26,13 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <NextUIProvider>
           <MyGlobalContext.Provider value={{isAutenticado, setAutenticado }}>
-            <div className="relative flex flex-col" id="app-container">
-              <Navbar />
-              <main className="w-full mt-8 flex flex-col items-center justify-center">
-                {children}
-                <Footer />
-              </main>
-            </div>
+            {children}
           </MyGlobalContext.Provider>
         </NextUIProvider>
       </body>

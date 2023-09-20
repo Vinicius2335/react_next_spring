@@ -10,7 +10,7 @@ export type MenuItemType = {
 export const NAVBAR_ITEMS: MenuItemType[] = [
     {
       label: "Produtos",
-      href: "/",
+      href: "/produtos",
     },
     {
       label: "About",
@@ -40,27 +40,27 @@ export const SIDEBAR_ITEMS: MenuItemType[] = [
     label: "Cadastros",
     items: [
       {
-        href: "/admin/cadastros/permissoes",
+        href: "/cadastros/permissoes",
         label: "Permissão",
         icon: <Certificate  className="sidebar-icon" />
       },
       {
-        href: "/admin/cadastros/marcas",
+        href: "/cadastros/marcas",
         label: "Marca",
         icon: <PencilSimple className="sidebar-icon" />
       },
       {
-        href: "/admin/cadastros/categorias",
+        href: "/cadastros/categorias",
         label: "Categoria",
         icon: <Book className="sidebar-icon" />
       },
       {
-        href: "/admin/cadastros/pessoas",
+        href: "/cadastros/pessoas",
         label: "Pessoa",
         icon: <User className="sidebar-icon" />
       },
       {
-        href: "/admin/cadastros/produtos",
+        href: "/cadastros/produtos",
         label: "Produto",
         icon: <Bag  className="sidebar-icon" />
       }
