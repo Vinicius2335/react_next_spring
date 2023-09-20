@@ -20,12 +20,13 @@ import { NAVBAR_ITEMS, MenuItemType } from "@/models/menu-items"
 import { AuthenticationService } from "@/services/AuthenticationService"
 import React from "react"
 import { toast } from "react-toastify"
+import { useGlobalContext } from "../GlobalContext"
 
 export function Navbar() {
   const menuItems: MenuItemType[] = NAVBAR_ITEMS
 
   const authenticataionService = new AuthenticationService()
-  const [isAutenticado, setAutenticado] = React.useState(false)
+  const { isAutenticado, setAutenticado } = useGlobalContext()
 
   function handleDeslogar(){
     authenticataionService.logout()?.then(() => {

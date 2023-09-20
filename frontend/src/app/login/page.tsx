@@ -5,31 +5,24 @@ import { Envelope, LockKey } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { AuthenticationService } from '../../services/AuthenticationService';
+import { useGlobalContext } from "@/components/GlobalContext";
 
-interface LoginProps {
-  onSuccessLogin: (autenticado: boolean) => void
-}
-
-export default function Login({ onSuccessLogin }: LoginProps){
+export default function Login(){
   const emailInputRef = React.useRef<HTMLInputElement>(null)
   const senhaInputRef = React.useRef<HTMLInputElement>(null)
 
   const router = useRouter();
 
   const authenticationService = new AuthenticationService()
+  const { setAutenticado } = useGlobalContext()
 
   function onSignIn(){
     let email = emailInputRef.current!.value
     let senha = senhaInputRef.current!.value
 
-    // NOTE - REMOVER + PROPS
-    // authenticationService.login(email, senha).then(() => {
-    //   onSuccessLogin(true)
-    // })
-
     authenticationService.login(email, senha).then(() => {
-      router.push('/')
-      router.refresh()
+      setAutenticado(true)
+      router.push("/")
     })
     
   }
