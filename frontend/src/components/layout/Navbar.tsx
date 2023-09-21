@@ -1,4 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { MenuItemType, NAVBAR_ITEMS } from "@/models/menu-items"
+import { AuthenticationService } from "@/services/AuthenticationService"
 import {
   Avatar,
   Button,
@@ -10,38 +12,43 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Navbar as NavbarUI,
-  image
+  Navbar as NavbarUI
 } from "@nextui-org/react"
+import { signOut, useSession } from "next-auth/react"
 import Image from "next/image"
-import ImageLogo from "../../assets/logo-white.svg"
 import NextLink from "next/link"
-import { NAVBAR_ITEMS, MenuItemType } from "@/models/menu-items"
-import { AuthenticationService } from "@/services/AuthenticationService"
+import { useRouter } from "next/navigation"
 import React from "react"
 import { toast } from "react-toastify"
-import { useGlobalContext } from "../GlobalContext"
+import ImageLogo from "../../assets/logo-white.svg"
 
 export function Navbar() {
   const menuItems: MenuItemType[] = NAVBAR_ITEMS
+  const [isAutenticado, setIsAutenticado] = React.useState(false)
+  const { data: session, status } = useSession()
 
-  const authenticataionService = new AuthenticationService()
-  const { isAutenticado, setAutenticado } = useGlobalContext()
+  const authenticationService = new AuthenticationService()
+  const router = useRouter()
 
-  function handleDeslogar(){
-    authenticataionService.logout()?.then(() => {
-      toast.success("Logout realizado com sucesso!")
-      localStorage.removeItem("ACCESS_TOKEN")
-      setAutenticado(false)
+
+  async function handleDeslogar(){
+    await signOut({
+      redirect: false
     })
-    .catch(() => {
+
+    authenticationService.logout()?.catch(() => {
       toast.error("Erro ao tentar realizar o logout, tente novamente mais tarde...")
     })
+
+    setIsAutenticado(false)
+    router.replace("/")
   }
 
   React.useEffect(() => {
-    setAutenticado(Boolean(authenticataionService.isUserAuthenticated()))
-  }, [isAutenticado])
+    if (status === "authenticated"){
+      setIsAutenticado(true)
+    }
+  }, [status])
 
   return (
     <NavbarUI position="sticky" maxWidth="xl" className="bg-sakai-bg">
@@ -75,17 +82,17 @@ export function Navbar() {
                 isBordered
                 as="button"
                 className="transition-transform"
-                color="primary"
-                name="JH"
+                color="success"
+                name={session?.user.nome[0]}
                 size="sm"
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat" disabledKeys={["profile"]}>
-              <DropdownItem key="profile" className="h-14 gap-2">
+              <DropdownItem textValue="profile" key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Conectado como</p>
-                <p className="font-semibold">zoey@example.com</p>
+                <p className="font-semibold">{session?.user.email}</p>
               </DropdownItem>
-              <DropdownItem key="logout" color="danger" onClick={handleDeslogar}>
+              <DropdownItem textValue="logout" key="logout" color="danger" onClick={handleDeslogar}>
                 Deslogar
               </DropdownItem>
             </DropdownMenu>

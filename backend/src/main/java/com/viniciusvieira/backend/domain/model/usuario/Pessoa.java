@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Data
 @Entity
 @Table(name = "pessoa")
+@EqualsAndHashCode(callSuper = true)
 public class Pessoa extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -52,6 +53,7 @@ public class Pessoa extends BaseEntity implements UserDetails {
     )
     @Setter(AccessLevel.NONE)
     @JsonIgnore
+    @Builder.Default
     private List<Permissao> permissoes = new ArrayList<>();
 
     public void adicionarPermissao(Permissao permissao){

@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.api.representation.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,8 @@ public class AuthenticationResponse {
 
     @JsonProperty("refresh_token")
     private String refreshToken;
+
+    private PessoaResponse user;
+
+    private String roles;
 }

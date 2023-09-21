@@ -1,8 +1,10 @@
 package com.viniciusvieira.backend.domain.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.viniciusvieira.backend.api.mapper.usuario.PessoaMapper;
 import com.viniciusvieira.backend.api.representation.model.request.AuthenticationRequest;
 import com.viniciusvieira.backend.api.representation.model.response.AuthenticationResponse;
+import com.viniciusvieira.backend.api.representation.model.response.usuario.PessoaResponse;
 import com.viniciusvieira.backend.core.security.service.JwtService;
 import com.viniciusvieira.backend.domain.model.token.TokenModel;
 import com.viniciusvieira.backend.domain.model.token.TokenType;
@@ -31,6 +33,7 @@ public class AuthenticationService {
     private final CrudPessoaService crudPessoaService;
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
+    private final PessoaMapper pessoaMapper;
 
     public AuthenticationResponse login(AuthenticationRequest request) {
         Authentication authentication = authenticationManager.authenticate(
@@ -50,10 +53,13 @@ public class AuthenticationService {
 
         revokedAllPessoaTokens(pessoa);
         savingPessoaToken(jwtToken, pessoa);
+        PessoaResponse userResponse = pessoaMapper.toPessoaResponse(pessoa);
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .user(userResponse)
+                .roles(pessoa.getRolesString())
                 .build();
     }
 
@@ -106,10 +112,13 @@ public class AuthenticationService {
 
                 revokedAllPessoaTokens(pessoa);
                 savingPessoaToken(accessToken, pessoa);
+                PessoaResponse userResponse = pessoaMapper.toPessoaResponse(pessoa);
 
                 AuthenticationResponse authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
+                        .user(userResponse)
+                        .roles(pessoa.getRolesString())
                         .build();
 
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);

@@ -4,6 +4,7 @@ import com.viniciusvieira.backend.domain.model.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "carrinho_compra_produto")
+@EqualsAndHashCode(callSuper = true)
 public class CarrinhoDeCompraProduto extends BaseEntity {
     @Column(nullable = false)
     private BigDecimal valor;

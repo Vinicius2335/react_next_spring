@@ -1,13 +1,11 @@
 "use client"
 import { Toast } from "@/components/ToastContainer"
-import Footer from "@/components/layout/Footer"
-import { Navbar } from "@/components/layout/Navbar"
 import { NextUIProvider } from "@nextui-org/react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "./globals.css"
 import React from "react"
-import { MyGlobalContext } from "@/components/GlobalContext"
+import "./globals.css"
+import NextAuthSessionProvider from "@/providers/sessionProvider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,17 +15,13 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [isAutenticado, setAutenticado] = React.useState(false)
-
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.className} dark min-h-screen`}>
         <Toast />
 
         <NextUIProvider>
-          <MyGlobalContext.Provider value={{isAutenticado, setAutenticado }}>
-            {children}
-          </MyGlobalContext.Provider>
+          <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
         </NextUIProvider>
       </body>
     </html>

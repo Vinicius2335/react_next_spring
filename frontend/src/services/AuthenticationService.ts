@@ -55,7 +55,7 @@ export class AuthenticationService {
       headers: { Authorization: `Bearer ${token}` }
     }
 
-    return AXIOS.post(this.url + "/logout", config)
+    return AXIOS.post(this.url + "/logout", config).then(resp => resp.status)
   }
 
   public isUserAuthenticated() {
