@@ -2,7 +2,7 @@
 "use client"
 
 import { getSessionUtil } from "@/app/api/auth/[...nextauth]/utils"
-import { Button, Card, CardBody, CardFooter, CardHeader, Input, Spinner } from "@nextui-org/react"
+import { Button, Card, CardBody, CardFooter, CardHeader, Input, Link, Spinner } from "@nextui-org/react"
 import { Envelope, LockKey } from "@phosphor-icons/react"
 import { signIn } from "next-auth/react"
 import { redirect, useRouter } from "next/navigation"
@@ -59,7 +59,11 @@ export default function Login() {
             <CardHeader className="text-3xl !justify-center mx-auto">Login</CardHeader>
 
             <CardBody>
-              <form id="form-login" onSubmit={handleLogin} className="flex items-center flex-col gap-5">
+              <form
+                id="form-login"
+                onSubmit={handleLogin}
+                className="flex items-center flex-col gap-5"
+              >
                 <Input
                   autoFocus
                   endContent={
@@ -81,6 +85,12 @@ export default function Login() {
                   variant="bordered"
                   ref={senhaInputRef}
                 />
+
+                <div className="flex py-2 px-1 justify-end">
+                  <Link color="primary" href="/senha" size="sm">
+                    Esqueceu/Criar Senha?
+                  </Link>
+                </div>
               </form>
             </CardBody>
 
