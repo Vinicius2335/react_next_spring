@@ -89,51 +89,53 @@ export default function ProdutoImagens({ params }: ProdutoImagensProps) {
 
   return (
     <>
-      <div className="flex justify-between items-center bg-zinc-800 w-full p-4 rounded-md mb-4">
-        <h1 className="mb-4">Produto: {produto.descricaoCurta}</h1>
+      <div>
+        <div className="flex justify-between items-center bg-zinc-800 w-full p-4 rounded-md mb-4">
+          <h1 className="mb-4">Produto: {produto.descricaoCurta}</h1>
 
-        <div className="h-auto">
-          <Button
-            className="w-24"
-            onClick={handleUpload}
-            isIconOnly
-            color="primary"
-            variant="shadow"
-          >
-            <Upload size={25} />
-          </Button>
+          <div className="h-auto">
+            <Button
+              className="w-24"
+              onClick={handleUpload}
+              isIconOnly
+              color="primary"
+              variant="shadow"
+            >
+              <Upload size={25} />
+            </Button>
 
-          <Input
-            onChange={handleDisplayFileDetails}
-            ref={inputRef}
-            type="file"
-            className="hidden"
-          />
-        </div>
-      </div>
-
-      <div className="gap-4 grid grid-cols-4 mb-4">
-        {imagens.length > 0 ? (
-          imagens.map(image => (
-            <CardProdutoImagem
-              key={image.id}
-              src={`data:image/png;base64,${image.arquivo}`}
-              title={image.nome}
-              handleOnDelete={() => onDelete(image)}
+            <Input
+              onChange={handleDisplayFileDetails}
+              ref={inputRef}
+              type="file"
+              className="hidden"
             />
-          ))
-        ) : (
-          <p className="text-zinc-500 col-span-4">
-            Nenhuma imagem foi adicionada para o produto:{" "}
-            <span className="font-bold italic">{produto.descricaoCurta}</span>.
-          </p>
-        )}
-      </div>
+          </div>
+        </div>
 
-      <Link href="/cadastros/produtos">
-        <ArrowLeft size={32} className="mr-2" />
-        Voltar
-      </Link>
+        <div className="gap-4 grid grid-cols-4 mb-4">
+          {imagens.length > 0 ? (
+            imagens.map(image => (
+              <CardProdutoImagem
+                key={image.id}
+                src={`data:image/png;base64,${image.arquivo}`}
+                title={image.nome}
+                handleOnDelete={() => onDelete(image)}
+              />
+            ))
+          ) : (
+            <p className="text-zinc-500 col-span-4">
+              Nenhuma imagem foi adicionada para o produto:{" "}
+              <span className="font-bold italic">{produto.descricaoCurta}</span>.
+            </p>
+          )}
+        </div>
+
+        <Link href="/cadastros/produtos">
+          <ArrowLeft size={32} className="mr-2" />
+          Voltar
+        </Link>
+      </div>
 
       <ModalDeleteGeneric
         isOpen={deleteModal.isOpen}

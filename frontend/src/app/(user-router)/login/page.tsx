@@ -5,8 +5,9 @@ import { getSessionUtil } from "@/app/api/auth/[...nextauth]/utils"
 import { Button, Card, CardBody, CardFooter, CardHeader, Input, Link, Spinner } from "@nextui-org/react"
 import { Envelope, LockKey } from "@phosphor-icons/react"
 import { signIn } from "next-auth/react"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import React, { FormEvent } from "react"
+import { toast } from "react-toastify"
 
 export default function Login() {
   const emailInputRef = React.useRef<HTMLInputElement>(null)
@@ -28,11 +29,21 @@ export default function Login() {
     })
 
     if (result?.error) {
-      console.error(result)
+      toast.error("Login ou Senha inválidos. 😞")
       return
     }
 
-    router.replace("/")
+    getSessionUtil().then(session => {
+      
+      if (session) {
+        const isAdmin = session.roles.match("ROLE_ADMIN") != null
+        if (isAdmin){
+          router.replace("/dashboard")
+        } else {
+          router.replace("/")
+        }
+      }
+    })
   }
 
   function onCancel() {

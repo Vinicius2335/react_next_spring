@@ -36,7 +36,7 @@ export function Navbar() {
       redirect: false
     })
 
-    authenticationService.logout()?.catch(() => {
+    authenticationService.logout().catch(() => {
       toast.error("Erro ao tentar realizar o logout, tente novamente mais tarde...")
     })
 

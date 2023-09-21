@@ -1,4 +1,4 @@
-import { AXIOS } from "@/libs/axios"
+import { ApiClient } from "@/libs/axios"
 import { AxiosError } from "axios"
 import { toast } from "react-toastify"
 
@@ -28,7 +28,7 @@ export class AuthenticationService {
       password: senha
     }
 
-    return AXIOS.post<AuthenticationResponseType>(this.url + "/login", authenticationRequest)
+    return ApiClient().post<AuthenticationResponseType>(this.url + "/login", authenticationRequest)
       .then(resp => {
         localStorage.setItem("ACCESS_TOKEN", resp.data.access_token)
       })
@@ -43,19 +43,7 @@ export class AuthenticationService {
   }
 
   public logout() {
-    let token: string | null = ""
-
-    if(!this.isUserAuthenticated()){
-      return;
-    }
-
-    token = localStorage.getItem("ACCESS_TOKEN")
-
-    const config = {
-      headers: { Authorization: `Bearer ${token}` }
-    }
-
-    return AXIOS.post(this.url + "/logout", config).then(resp => resp.status)
+    return ApiClient().post(this.url + "/logout").then(resp => resp.status)
   }
 
   public isUserAuthenticated() {

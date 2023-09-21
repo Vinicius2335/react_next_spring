@@ -169,7 +169,7 @@ export default function TableProduto() {
             </Tooltip>
             <Tooltip content="Imagens do Produto">
               <Link href={`/cadastros/produtos/${item.id}/imagens`}>
-                <span className="text-lg text-default-400 hover:text-default-500 cursor-pointer active:opacity-50">
+                <span className="text-lg text-primary-400 hover:text-prinary-500 cursor-pointer active:opacity-50">
                   <Images size={25} />
                 </span>
               </Link>
