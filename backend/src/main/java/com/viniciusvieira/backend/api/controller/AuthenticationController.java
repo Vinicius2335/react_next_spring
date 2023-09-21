@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,7 +22,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authRequest){
+    public ResponseEntity<Map<String, Object>> authenticate(@RequestBody AuthenticationRequest authRequest){
         return ResponseEntity.ok(authenticationService.login(authRequest));
     }
 

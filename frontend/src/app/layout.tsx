@@ -8,6 +8,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import React from "react"
 import { MyGlobalContext } from "@/components/GlobalContext"
+import NextAuthSessionProvider from "../providers/sessionProvider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [isAutenticado, setAutenticado] = React.useState(false)
+  // const [isAutenticado, setAutenticado] = React.useState(false)
 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
@@ -25,9 +26,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Toast />
 
         <NextUIProvider>
-          <MyGlobalContext.Provider value={{isAutenticado, setAutenticado }}>
-            {children}
-          </MyGlobalContext.Provider>
+          {/* <MyGlobalContext.Provider value={{ isAutenticado, setAutenticado }}> */}
+          <NextAuthSessionProvider>
+            <div className="relative flex flex-col" id="app-container">
+              <Navbar />
+              {children}
+            </div>
+          </NextAuthSessionProvider>
+          {/* </MyGlobalContext.Provider> */}
         </NextUIProvider>
       </body>
     </html>

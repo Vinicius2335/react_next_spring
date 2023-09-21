@@ -17,8 +17,8 @@ export const NAVBAR_ITEMS: MenuItemType[] = [
       href: "/about",
     },
     {
-      label: "Contact",
-      href: "/contact",
+      label: "Dashboard",
+      href: "/dashboard",
     },
 ]
 

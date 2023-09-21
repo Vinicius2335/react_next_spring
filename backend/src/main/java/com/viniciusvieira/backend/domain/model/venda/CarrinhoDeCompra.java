@@ -5,6 +5,7 @@ import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -14,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @Entity
 @Table(name = "carrinho_compra")
+@EqualsAndHashCode(callSuper = true)
 public class CarrinhoDeCompra extends BaseEntity {
     @Column(nullable = false)
     private String situacao;

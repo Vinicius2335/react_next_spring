@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +24,11 @@ import java.util.stream.Collectors;
 @Data
 @Entity
 @Table(name = "pessoa")
+@EqualsAndHashCode(callSuper = true)
 public class Pessoa extends BaseEntity implements UserDetails {
+
+    @Serial
+    private static final long serialVersionUID = -8223683363491564192L;
 
     @Column(nullable = false)
     private String nome;
@@ -52,6 +57,7 @@ public class Pessoa extends BaseEntity implements UserDetails {
     )
     @Setter(AccessLevel.NONE)
     @JsonIgnore
+    @Builder.Default
     private List<Permissao> permissoes = new ArrayList<>();
 
     public void adicionarPermissao(Permissao permissao){

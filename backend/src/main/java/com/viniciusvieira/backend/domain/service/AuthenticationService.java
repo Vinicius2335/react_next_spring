@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
 
     @Transactional
-    public AuthenticationResponse login(AuthenticationRequest request) {
+    public Map<String, Object> login(AuthenticationRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -53,12 +54,14 @@ public class AuthenticationService {
         savingPessoaToken(jwtToken, pessoa);
 
         revokedAllPessoaTokens(pessoa);
-        savedUserToken(jwtToken, pessoa);
+        savingPessoaToken(jwtToken, pessoa);
 
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", pessoa);
+        response.put("access-token", jwtToken);
+        response.put("refresh-tokne", refreshToken);
+
+        return response;
     }
 
     // Salva o Token do usuário no banco de dados

@@ -21,27 +21,66 @@ import { AuthenticationService } from "@/services/AuthenticationService"
 import React from "react"
 import { toast } from "react-toastify"
 import { useGlobalContext } from "../GlobalContext"
+import { getSession, signOut, useSession } from "next-auth/react"
+import { SignOut } from "@phosphor-icons/react"
+import { useRouter } from "next/navigation"
+import { getFirstAndLastCaractereAtName } from "@/utils/utils"
+import { Session } from "next-auth"
 
 export function Navbar() {
   const menuItems: MenuItemType[] = NAVBAR_ITEMS
+  const { data: session, status } = useSession()
+  const [isAutenticado, setIsAutenticado] = React.useState(false)
+  const router = useRouter()
+  const [sessionUseState, setSessionUseState] = React.useState<Session>({} as Session)
 
   const authenticataionService = new AuthenticationService()
-  const { isAutenticado, setAutenticado } = useGlobalContext()
+  // const { isAutenticado, setAutenticado } = useGlobalContext()
 
-  function handleDeslogar(){
-    authenticataionService.logout()?.then(() => {
-      toast.success("Logout realizado com sucesso!")
-      localStorage.removeItem("ACCESS_TOKEN")
-      setAutenticado(false)
+  // function handleDeslogar(){
+  //   authenticataionService.logout()?.then(() => {
+  //     toast.success("Logout realizado com sucesso!")
+  //     localStorage.removeItem("ACCESS_TOKEN")
+  //     setAutenticado(false)
+  //   })
+  //   .catch(() => {
+  //     toast.error("Erro ao tentar realizar o logout, tente novamente mais tarde...")
+  //   })
+  // }
+
+  // React.useEffect(() => {
+  //   setAutenticado(Boolean(authenticataionService.isUserAuthenticated()))
+  // }, [isAutenticado])
+
+  async function myFunction() {
+    const session = await getSession()
+    if(session != null){
+      setSessionUseState(session)
+    }
+  }
+
+  async function logout(){
+    await signOut({
+      redirect: false
     })
-    .catch(() => {
-      toast.error("Erro ao tentar realizar o logout, tente novamente mais tarde...")
-    })
+    
+    authenticataionService.logout()
+    setIsAutenticado(false)
+    router.replace("/")
   }
 
   React.useEffect(() => {
-    setAutenticado(Boolean(authenticataionService.isUserAuthenticated()))
-  }, [isAutenticado])
+    // if (status === "authenticated"){
+    //   setIsAutenticado(true)
+    // }
+
+    if (sessionUseState){
+      setIsAutenticado(true)
+    }
+
+    myFunction()
+    console.log(sessionUseState)
+  }, []) // session
 
   return (
     <NavbarUI position="sticky" maxWidth="xl" className="bg-sakai-bg">
@@ -76,16 +115,16 @@ export function Navbar() {
                 as="button"
                 className="transition-transform"
                 color="primary"
-                name="JH"
+                name={getFirstAndLastCaractereAtName(session?.user.nome)}
                 size="sm"
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat" disabledKeys={["profile"]}>
               <DropdownItem key="profile" className="h-14 gap-2">
                 <p className="font-semibold">Conectado como</p>
-                <p className="font-semibold">zoey@example.com</p>
+                <p className="font-semibold">{session?.user.email}</p>
               </DropdownItem>
-              <DropdownItem key="logout" color="danger" onClick={handleDeslogar}>
+              <DropdownItem key="logout" color="danger" onClick={logout}>
                 Deslogar
               </DropdownItem>
             </DropdownMenu>

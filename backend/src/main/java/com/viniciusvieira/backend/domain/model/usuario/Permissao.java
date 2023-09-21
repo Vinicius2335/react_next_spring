@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "permissao")
+@EqualsAndHashCode(callSuper = true)
 public class Permissao extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String nome;
@@ -27,6 +28,7 @@ public class Permissao extends BaseEntity {
     @JsonIgnore
     @Setter(AccessLevel.NONE)
     @ToString.Exclude
+    @Builder.Default
     private List<Pessoa> pessoas = new ArrayList<>();
 
     public void addNewPessoa(Pessoa pessoa){
