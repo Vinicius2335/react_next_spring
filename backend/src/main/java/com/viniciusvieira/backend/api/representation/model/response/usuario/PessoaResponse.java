@@ -17,7 +17,6 @@ public class PessoaResponse {
     private String nome;
     private String cpf;
     private String email;
-    private String senha;
 
     private EnderecoResponse endereco;
 

@@ -1,7 +1,6 @@
 package com.viniciusvieira.backend.core.security.config;
 
 import com.viniciusvieira.backend.core.security.filter.JwtAuthenticationFilter;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -28,6 +25,9 @@ public class SecurityConfig {
     private final AuthenticationProvider authProvider;
     private final AuthEntryPointJwt authEntryPointJwt;
     private final LogoutHandler logoutHandler;
+
+    private static final String ROLE_ADMIN = "ADMIN";
+    private static final String ROLE_GERENTE = "GERENTE";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,6 +53,23 @@ public class SecurityConfig {
                         authorize -> authorize
                                 .requestMatchers("/api/gerenciamento/**", "/api/auth/**")
                                 .permitAll()
+
+                                .requestMatchers("/api/clientes/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/permissoes/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/pessoas/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/carrinhos/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/carrinho-produto/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/categorias/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/marcas/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/produtos/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
 
                                 .anyRequest()
                                 .authenticated()
