@@ -33,6 +33,6 @@ public class TokenModel {
     private boolean revoked;
 
     @ManyToOne
-    @JoinColumn(name = "pessoa_id")
+    @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;
 }

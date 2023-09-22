@@ -23,8 +23,9 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
-    private final AuthEntryPointJwt authEntryPointJwt;
+    private final AuthEntryPointConfig authEntryPointConfig;
     private final LogoutHandler logoutHandler;
+    private final AccessDeniedHandlerConfig accessDeniedHandlerConfig;
 
     private static final String ROLE_ADMIN = "ADMIN";
     private static final String ROLE_GERENTE = "GERENTE";
@@ -88,7 +89,8 @@ public class SecurityConfig {
         http
                 .exceptionHandling(
                         exception -> exception
-                                .authenticationEntryPoint(authEntryPointJwt)
+                                .authenticationEntryPoint(authEntryPointConfig)
+                                .accessDeniedHandler(accessDeniedHandlerConfig)
                 );
 
         http

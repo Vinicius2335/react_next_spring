@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class AuthEntryPointJwt implements AuthenticationEntryPoint {
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+public class AuthEntryPointConfig implements AuthenticationEntryPoint {
+    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointConfig.class);
 
     @Override
     public void commence(
@@ -39,7 +39,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         if (request.getAttribute("validacaoToken") != null) {
             body.put("message", request.getAttribute("validacaoToken"));
         } else {
-            body.put("message", authException.getMessage());
+            body.put("message", "Credenciais incorretas.");
         }
 
         body.put("path", request.getServletPath());

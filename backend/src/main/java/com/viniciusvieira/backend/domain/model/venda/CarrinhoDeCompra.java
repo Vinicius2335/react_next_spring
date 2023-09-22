@@ -25,6 +25,6 @@ public class CarrinhoDeCompra extends BaseEntity {
 
     // 1 pessoa possue 0 ou * carrinho de compra
     @ManyToOne
-    @JoinColumn(name = "pessoa_id")
+    @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;
 }
