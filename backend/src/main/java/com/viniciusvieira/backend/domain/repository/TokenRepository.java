@@ -24,4 +24,6 @@ public interface TokenRepository extends JpaRepository<TokenModel, Long> {
             WHERE NOT (t.id = :tokenId) AND (t.pessoa.id = :pessoaId)
             """)
     void deleteOthersTokens(Long tokenId, Long pessoaId);
+
+    void deleteByPessoaId(Long pessoaId);
 }

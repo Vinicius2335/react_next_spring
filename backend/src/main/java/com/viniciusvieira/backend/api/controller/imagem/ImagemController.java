@@ -1,4 +1,4 @@
-package com.viniciusvieira.backend.api.controller;
+package com.viniciusvieira.backend.api.controller.imagem;
 
 import com.viniciusvieira.backend.domain.service.CrudProdutoImagemService;
 import com.viniciusvieira.backend.domain.service.ImageService;

@@ -18,7 +18,7 @@ public abstract class PessoaCreator {
         return Pessoa.builder()
                 .id(1L)
                 .permissoes(new ArrayList<>())
-                .cpf("302.218.730-07")
+                .cpf("963.114.590-51")
                 .email(FAKER.internet().emailAddress())
                 .nome(FAKER.name().fullName())
                 .endereco(EnderecoCreator.createEndereco())
@@ -26,13 +26,12 @@ public abstract class PessoaCreator {
                 .dataCriacao(OffsetDateTime.now())
                 .dataAtualizacao(OffsetDateTime.now())
                 .build();
-
     }
 
     public static PessoaRequest createPessoaRequest(){
         return PessoaRequest.builder()
                 .nome(FAKER.name().fullName())
-                .cpf("302.218.730-07")
+                .cpf("451.993.190-86")
                 .nomePermissao("CLIENTE")
                 .email(FAKER.internet().emailAddress())
                 .endereco(EnderecoCreator.createEnderecoRequest())
@@ -57,7 +56,6 @@ public abstract class PessoaCreator {
                 .email(pessoa.getEmail())
                 .dataCriacao(pessoa.getDataCriacao())
                 .dataAtualizacao(pessoa.getDataAtualizacao())
-                .senha(pessoa.getSenha())
                 .build();
     }
 
@@ -65,7 +63,6 @@ public abstract class PessoaCreator {
         return PessoaGerenciamentoRequest.builder()
                 .codigoParaRecuperarSenha(pessoa.getCodigoRecuperacaoSenha())
                 .email(pessoa.getEmail())
-                .senha("TESTE")
                 .build();
     }
 }

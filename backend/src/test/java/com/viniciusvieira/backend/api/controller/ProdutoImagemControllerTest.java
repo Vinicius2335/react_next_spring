@@ -1,5 +1,6 @@
 package com.viniciusvieira.backend.api.controller;
 
+import com.viniciusvieira.backend.api.controller.imagem.ProdutoImagemController;
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
 import com.viniciusvieira.backend.domain.exception.venda.ProdutoNaoEncontradoException;
 import com.viniciusvieira.backend.domain.model.venda.Produto;

@@ -29,6 +29,7 @@ public class TokenModel {
 
     @Column(columnDefinition = "boolean")
     private boolean expired;
+
     @Column(columnDefinition = "boolean")
     private boolean revoked;
 

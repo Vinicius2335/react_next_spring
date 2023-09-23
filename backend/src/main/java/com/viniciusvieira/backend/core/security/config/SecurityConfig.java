@@ -71,6 +71,8 @@ public class SecurityConfig {
                                     .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
                                 .requestMatchers("/api/produtos/**")
                                     .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
+                                .requestMatchers("/api/imagens/**")
+                                    .hasAnyRole(ROLE_ADMIN, ROLE_GERENTE)
 
                                 .anyRequest()
                                 .authenticated()

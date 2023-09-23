@@ -1,4 +1,4 @@
-package com.viniciusvieira.backend.api.controller;
+package com.viniciusvieira.backend.api.controller.imagem;
 
 import com.viniciusvieira.backend.api.representation.model.response.ProdutoImagemResponse;
 import com.viniciusvieira.backend.domain.model.venda.Produto;
