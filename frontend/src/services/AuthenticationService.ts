@@ -45,12 +45,4 @@ export class AuthenticationService {
   public logout() {
     return ApiClient().post(this.url + "/logout").then(resp => resp.status)
   }
-
-  public isUserAuthenticated() {
-    if (typeof window !== "undefined" && localStorage.getItem("ACCESS_TOKEN") != null) {
-      return true
-    } else {
-      return false
-    }
-  }
 }

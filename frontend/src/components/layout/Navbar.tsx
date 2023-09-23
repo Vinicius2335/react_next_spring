@@ -32,12 +32,12 @@ export function Navbar() {
 
 
   async function handleDeslogar(){
-    await signOut({
-      redirect: false
-    })
-
     authenticationService.logout().catch(() => {
       toast.error("Erro ao tentar realizar o logout, tente novamente mais tarde...")
+    })
+
+    await signOut({
+      redirect: false
     })
 
     setIsAutenticado(false)
