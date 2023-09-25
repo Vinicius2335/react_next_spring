@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
@@ -58,6 +59,8 @@ public class BaseIT {
             .nome("user")
             .endereco(EnderecoCreator.createEndereco())
             .senha(passwordEncoder.encode("user"))
+            .codigoRecuperacaoSenha("teste")
+            .dataEnvioCodigo(LocalDateTime.now())
             .build();
 
     protected final PessoaRequest userConflict = PessoaRequest.builder()
@@ -78,6 +81,10 @@ public class BaseIT {
         return pessoaRepository.saveAndFlush(user);
     }
 
+    protected Pessoa getUser(){
+        return user;
+    }
+
     // ADMIN CONFIGS
     private final Pessoa admin = Pessoa.builder()
             .permissoes(new ArrayList<>())
@@ -86,6 +93,8 @@ public class BaseIT {
             .nome("admin")
             .endereco(EnderecoCreator.createEndereco())
             .senha(passwordEncoder.encode("admin"))
+            .codigoRecuperacaoSenha("teste")
+            .dataEnvioCodigo(LocalDateTime.now())
             .build();
 
     private final Permissao permissaoAdmin = Permissao.builder()
@@ -96,6 +105,10 @@ public class BaseIT {
     protected Pessoa inserirAdmin(){
         admin.adicionarPermissao(permissaoAdmin);
         return pessoaRepository.saveAndFlush(admin);
+    }
+
+    protected Pessoa getAdmin(){
+        return admin;
     }
 
     // ---

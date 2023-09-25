@@ -73,7 +73,7 @@ class ImagemControllerIT extends BaseIT {
 
     @Test
     @DisplayName("excluir() return status FORBIDDEN  when USER dont have access")
-    void givenIdProdutoAndUserAccess_whenExcluir_thenReturnStatusFORBIDDEN() throws IOException {
+    void givenIdProdutoWithUserRole_whenExcluir_thenReturnStatusFORBIDDEN() throws IOException {
         createFileIfNotExists();
         insertProdutoImagem();
 

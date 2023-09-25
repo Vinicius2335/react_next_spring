@@ -66,8 +66,8 @@ class PessoaControllerIT extends BaseIT {
     }
 
     @Test
-    @DisplayName("buscarTodos() return status FORBIDDEN  when USER dont have access")
-    void givenUserAccess_whenBuscarTodos_thenStatusFORBIDDEN() {
+    @DisplayName("buscarTodos() return status FORBIDDEN when USER dont have access")
+    void givenURIWithUserRole_whenBuscarTodos_thenStatusFORBIDDEN() {
 
         given()
                 .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
@@ -100,7 +100,7 @@ class PessoaControllerIT extends BaseIT {
 
     @Test
     @DisplayName("buscarPermissoes() return status FORBIDDEN when USER dont have access")
-    void givenIDAndUserAccess_whenBuscarPermissoes_thenStatusFORBIDDEN() {
+    void givenIDWithUserRole_whenBuscarPermissoes_thenStatusFORBIDDEN() {
 
         given()
                 .pathParam("id", 1)
@@ -151,7 +151,7 @@ class PessoaControllerIT extends BaseIT {
 
     @Test
     @DisplayName("inserir() return status FORBIDDEN when USER dont have access")
-    void givenPessoaRequestAndUserAccess_whenInserir_thenStatusFORBIDDEN() {
+    void givenPessoaRequestWithUserRole_whenInserir_thenStatusFORBIDDEN() {
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
 
         given()
@@ -222,7 +222,7 @@ class PessoaControllerIT extends BaseIT {
 
     @Test
     @DisplayName("alterar() return status FORBIDDEN when USER dont have access")
-    void givenPessoaRequestAndUserAccess_whenAlterar_thenStatusFORBIDDEN() {
+    void givenPessoaRequestWithUserRole_whenAlterar_thenStatusFORBIDDEN() {
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
         pessoaRequest.setCpf("011.173.038-45");
 
@@ -296,7 +296,7 @@ class PessoaControllerIT extends BaseIT {
 
     @Test
     @DisplayName("excluirPermissao() return status FORBIDDEN when USER dont have access")
-    void givenIdPessoaAndIdPermissaoAndUserAccess_whenExcluirPermissao_thenReturnStatusFORBIDDEN() {
+    void givenIdPessoaAndIdPermissaoWithUserRole_whenExcluirPermissao_thenReturnStatusFORBIDDEN() {
 
         given()
                 .pathParam("idPessoa", 1)
@@ -346,7 +346,7 @@ class PessoaControllerIT extends BaseIT {
 
     @Test
     @DisplayName("excluir() return status FORBIDDEN when USER dont have access")
-    void givenIdPessoaUserAccess_whenExcluir_thenReturnStatusFORBIDDEN() {
+    void givenIdPessoaWithUserRole_whenExcluir_thenReturnStatusFORBIDDEN() {
 
         given()
                 .pathParam("id", 1)

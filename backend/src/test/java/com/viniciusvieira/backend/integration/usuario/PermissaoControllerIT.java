@@ -44,7 +44,7 @@ class PermissaoControllerIT extends BaseIT {
 
     @Test
     @DisplayName("busucarTodos() return status FORBIDDEN  when USER dont have access")
-    void givenPermissoesURI_wheBuscarTodos_thenReturnStatusUNAUTHORIZED() {
+    void givenURIWithUserRole_wheBuscarTodos_thenReturnStatusUNAUTHORIZED() {
         given()
                 .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
                 .contentType(JSON)
@@ -72,7 +72,7 @@ class PermissaoControllerIT extends BaseIT {
 
     @Test
     @DisplayName("buscarPeloId()  return status FORBIDDEN  when any USER have expired token")
-    void givenId_whenBuscarPeloId__thenReturnStatusFORBIDDEN() {
+    void givenIdWithUserRole_whenBuscarPeloId__thenReturnStatusFORBIDDEN() {
         given()
                 .pathParam("id", 1)
                 .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
@@ -119,7 +119,7 @@ class PermissaoControllerIT extends BaseIT {
 
     @Test
     @DisplayName("inserir() return status FORBIDDEN  when USER dont have access")
-    void givenPermissaoRequest_whenInserir_thenStatusFORBIDDEN() {
+    void givenPermissaoRequestWithUserRole_whenInserir_thenStatusFORBIDDEN() {
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
         given()
                 .body(permissaoRequest)
@@ -188,7 +188,7 @@ class PermissaoControllerIT extends BaseIT {
 
     @Test
     @DisplayName("alterar() return status FORBIDDEN when USER dont have access")
-    void givenPermissaoRequest_whenAlterar_thenStatusFORBIDDEN() {
+    void givenPermissaoRequestWithUserRole_whenAlterar_thenStatusFORBIDDEN() {
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
         permissaoRequest.setNome("FUNCIONARIO");
 
@@ -261,7 +261,7 @@ class PermissaoControllerIT extends BaseIT {
 
     @Test
     @DisplayName("excluir() return status FORBIDDEN when USER dont have access")
-    void givenId_whenExcluir_thenStatusFORBIDDEN() {
+    void givenIdWithUserRole_whenExcluir_thenStatusFORBIDDEN() {
         given()
                 .pathParam("id",1)
                 .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))

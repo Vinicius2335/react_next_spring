@@ -63,6 +63,7 @@ public abstract class PessoaCreator {
         return PessoaGerenciamentoRequest.builder()
                 .codigoParaRecuperarSenha(pessoa.getCodigoRecuperacaoSenha())
                 .email(pessoa.getEmail())
+                .senha("teste")
                 .build();
     }
 }

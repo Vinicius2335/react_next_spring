@@ -1,6 +1,5 @@
 package com.viniciusvieira.backend.integration.imagem;
 
-import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.model.venda.Produto;
 import com.viniciusvieira.backend.domain.model.venda.ProdutoImagem;
 import com.viniciusvieira.backend.domain.repository.venda.CategoriaRepository;
@@ -16,15 +15,9 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +68,7 @@ class ProdutoImagemControllerIT extends BaseIT {
 
     @Test
     @DisplayName("buscarImagensPorProduto() return status FORBIDDEN  when USER dont have access")
-    void givenIdProduto_whenBuscarImagensPorProduto_thenReturnStatusFORBIDDEN() throws IOException {
+    void givenIdProdutoWithUserRole_whenBuscarImagensPorProduto_thenReturnStatusFORBIDDEN() throws IOException {
         createFileIfNotExists();
         insertProdutoImagem();
 
@@ -107,8 +100,8 @@ class ProdutoImagemControllerIT extends BaseIT {
     }
 
     @Test
-    @DisplayName("uploadFile()return status FORBIDDEN  when USER dont have access")
-    void givenIdProdutoAndImage_whenUploadFile_thenStatusFORBIDDEN(){
+    @DisplayName("uploadFile() return status FORBIDDEN  when USER dont have access")
+    void givenIdProdutoAndImageWithUserRole_whenUploadFile_thenStatusFORBIDDEN(){
         insertProdutos();
 
         given()

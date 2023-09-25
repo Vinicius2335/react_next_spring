@@ -65,7 +65,7 @@ class ClienteControllerIT extends BaseIT {
 
     @Test
     @DisplayName("inserir() return status FORBIDDEN  when USER dont have access")
-    void givenClienteRequest_whenInserir_thenReturnStatusFORBIDDEN() {
+    void givenClienteRequestWithUserRole_whenInserir_thenReturnStatusFORBIDDEN() {
         given()
                 .body(clienteRequest)
                 .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
