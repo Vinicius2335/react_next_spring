@@ -1,5 +1,6 @@
 package com.viniciusvieira.backend.core.security.service;
 
+import com.viniciusvieira.backend.domain.exception.TokenException;
 import com.viniciusvieira.backend.domain.model.token.TokenModel;
 import com.viniciusvieira.backend.domain.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +25,7 @@ public class LogoutService implements LogoutHandler {
         final String jwt;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")){
-            return;
+            throw new TokenException("Faltando o header Authorization ou token");
         }
 
         jwt = authHeader.substring(7);

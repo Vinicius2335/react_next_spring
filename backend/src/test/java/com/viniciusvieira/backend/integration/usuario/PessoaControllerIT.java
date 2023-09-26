@@ -1,10 +1,7 @@
 package com.viniciusvieira.backend.integration.usuario;
 
 import com.viniciusvieira.backend.api.representation.model.request.usuario.PessoaRequest;
-import com.viniciusvieira.backend.domain.model.usuario.Permissao;
-import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
-import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
-import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
+import com.viniciusvieira.backend.integration.BaseIT;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
 import io.restassured.RestAssured;
@@ -12,84 +9,123 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 
-@ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class PessoaControllerIT {
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private PessoaRepository pessoaRepository;
-    @Autowired
-    private PermissaoRepository permissaoRepository;
-
-    private final Pessoa pessoa = PessoaCreator.createPessoa();
-    private final Permissao permissao = PermissaoCreator.createPermissao();
+class PessoaControllerIT extends BaseIT {
+    private final String basePath = "/api/pessoas";
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        RestAssured.basePath = "/api/pessoas";
+        //RestAssured.basePath = "/api/pessoas";
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+        startTest();
+
+        permissaoRepository.saveAndFlush(PermissaoCreator.createPermissao());
     }
 
     @Test
-    @DisplayName("buscarTodos() return list pessoas")
-    void givenURI_whenBuscarTodos_thenReturnListPessoasAndStatusOK() {
-        Pessoa pessoaInserted = getPessoaInserted();
+    @DisplayName("buscarTodos() return list pessoas by ADMIN")
+    void givenAdminAcess_whenBuscarTodos_thenReturnListPessoasAndStatusOK() {
 
         given()
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .get()
+                .get(basePath)
         .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("$", Matchers.hasSize(1))
-                .body("[0].cpf", Matchers.equalTo(pessoaInserted.getCpf()));
-    }
-
-    @Test
-    @DisplayName("buscarPermissoes() return list permissoes")
-    void givenID_whenBuscarPermissoes_thenReturnListPermissoesAndStatusOK() {
-        getPessoaInserted();
-
-        given()
-                .pathParam("id", 1)
-                .contentType(JSON)
-                .accept(JSON)
-        .when()
-                .get("/{id}/permissoes")
-        .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("$", Matchers.hasSize(1))
-                .body("[0].nome", Matchers.equalTo(permissao.getNome()))
+                .body("$", Matchers.hasSize(2))
                 .log().all();
     }
 
     @Test
-    @DisplayName("buscarPermissoes() return status NOT_FOUND when pessoa not found")
-    void givenUnregisteredID_whenBuscarPermissoes_thenReturnStatusNOT_FOUND() {
+    @DisplayName("buscarTodos() return status UNAUTHORIZED  when any USER have expired token")
+    void givenAdminAcess_whenBuscarTodos_thenReturntatusUNAUTHORIZED() throws InterruptedException {
+
+        TimeUnit.SECONDS.sleep(30);
+
         given()
-                .pathParam("id", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .get("/{id}/permissoes")
+                .get(basePath)
+        .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .body("message", Matchers.equalTo("Token expirado..."))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("buscarTodos() return status FORBIDDEN when USER dont have access")
+    void givenURIWithUserRole_whenBuscarTodos_thenStatusFORBIDDEN() {
+
+        given()
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .get(basePath)
+        .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("message", Matchers.equalTo(forbiddenMessage))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("buscarPermissoes() return list permissoes by ADMIN")
+    void givenID_whenBuscarPermissoes_thenReturnListPermissoesAndStatusOK() {
+
+        given()
+                .pathParam("id", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .get(basePath + "/{id}/permissoes")
+        .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("$", Matchers.hasSize(1))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("buscarPermissoes() return status FORBIDDEN when USER dont have access")
+    void givenIDWithUserRole_whenBuscarPermissoes_thenStatusFORBIDDEN() {
+
+        given()
+                .pathParam("id", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .get(basePath + "/{id}/permissoes")
+        .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("message", Matchers.equalTo(forbiddenMessage))
+                .log().all();
+    }
+
+
+    @Test
+    @DisplayName("buscarPermissoes() return status NOT_FOUND when pessoa not found by ADMIN")
+    void givenUnregisteredID_whenBuscarPermissoes_thenReturnStatusNOT_FOUND() {
+        given()
+                .pathParam("id", 99)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .get(basePath + "/{id}/permissoes")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("title", Matchers.equalTo("Não existe nenhuma pessoa cadastrada com este ID"))
@@ -97,51 +133,67 @@ class PessoaControllerIT {
     }
 
     @Test
-    @DisplayName("inserir() return status CREATED")
+    @DisplayName("inserir() return status CREATED by ADMIN")
     void givenPessoaRequest_whenInserir_thenReturnPessoaResponseAndStatusCREATED() {
-        getPermissaoInserted();
+        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
 
         given()
-                .body(PessoaCreator.createPessoaRequest())
+                .body(pessoaRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
-                .log().all()
         .when()
-                .post()
+                .post(basePath)
         .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("cpf", Matchers.equalTo(pessoa.getCpf()));
+                .body("cpf", Matchers.equalTo(pessoaRequest.getCpf()));
     }
 
     @Test
-    @DisplayName("inserir() return status BAD_REQUEST when pessoa request have invalid fields")
+    @DisplayName("inserir() return status FORBIDDEN when USER dont have access")
+    void givenPessoaRequestWithUserRole_whenInserir_thenStatusFORBIDDEN() {
+        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
+
+        given()
+                .body(pessoaRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .post(basePath)
+        .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("message", Matchers.equalTo(forbiddenMessage));
+    }
+
+    @Test
+    @DisplayName("inserir() return status BAD_REQUEST when pessoa request have invalid fields by ADMIN")
     void givenInvalidPessoaRequest_whenInserir_thenReturnPessoaAndStatusBAD_REQUEST() {
-        getPermissaoInserted();
         PessoaRequest invalidPessoaRequest = PessoaCreator.createInvalidPessoaRequest();
 
         given()
                 .body(invalidPessoaRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post()
+                .post(basePath)
         .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .log().body();
     }
 
     @Test
-    @DisplayName("inserir() return status CONFLICT when cpf already exists")
+    @DisplayName("inserir() return status CONFLICT when cpf already exists by ADMIN")
     void givenPessoaRequestAlreadyRegistered_whenInserir_thenReturnStatusCONFLICT() {
-        getPessoaInserted();
-        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
 
         given()
-                .body(pessoaRequest)
+                .body(userConflict)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post()
+                .post(basePath)
         .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .body("title", Matchers.equalTo("Já existe uma pessoa cadastrada com esse CPF"))
@@ -149,38 +201,58 @@ class PessoaControllerIT {
     }
 
     @Test
-    @DisplayName("alterar() return status OK when update pessoa")
+    @DisplayName("alterar() return status OK when update pessoa by ADMIN")
     void givenPessoaRequest_whenAlterar_thenReturnPessoaResponseStatusOK() {
-        Pessoa pessoaInserted = getPessoaInserted();
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
         pessoaRequest.setCpf("011.173.038-45");
 
         given()
                 .body(pessoaRequest)
+<<<<<<< HEAD
                 .pathParam("id", pessoaInserted.getId())
                 .contentType(JSON)
                 .accept(JSON)
                 .log().all()
         .when()
-                .put("/{id}")
+>>>>>>> 86317af (tentando corrigir um erro de Git error broken link from tree)
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("nome", Matchers.equalTo(pessoaRequest.getNome()))
                 .log().body();
     }
-
     @Test
-    @DisplayName("alterar() return NOT_FOUND when pessoa not found by id")
-    void givenUntegisteredId_whenAlterar_thenReturnStatusNOT_FOUND() {
+    @DisplayName("alterar() return status FORBIDDEN when USER dont have access")
+    void givenPessoaRequestWithUserRole_whenAlterar_thenStatusFORBIDDEN() {
         PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
+        pessoaRequest.setCpf("011.173.038-45");
 
         given()
                 .body(pessoaRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
                 .pathParam("id", 1)
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .put("/{id}")
+                .put(basePath + "/{id}")
+        .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("message", Matchers.equalTo(forbiddenMessage))
+                .log().body();
+    }
+
+    @Test
+    @DisplayName("alterar() return NOT_FOUND when pessoa not found by id by ADMIN")
+    void givenUnregisteredId_whenAlterar_thenReturnStatusNOT_FOUND() {
+        PessoaRequest pessoaRequest = PessoaCreator.createPessoaRequest();
+
+        given()
+                .body(pessoaRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
+                .pathParam("id", 99)
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .put(basePath + "/{id}")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("title", Matchers.equalTo("Não existe nenhuma pessoa cadastrada com este ID"))
@@ -188,52 +260,69 @@ class PessoaControllerIT {
     }
 
     @Test
-    @DisplayName("alterar() return BAD_REQUEST when pessoaRequest have invalid fields")
+    @DisplayName("alterar() return BAD_REQUEST when pessoaRequest have invalid fields by ADMIN")
     void givenInvalidPessoaRequest_whenAlterar_thenReturnStatusBAD_REQUEST() {
-        Pessoa pessoaInserted = getPessoaInserted();
         PessoaRequest invalidPessoaRequest = PessoaCreator.createInvalidPessoaRequest();
 
         given()
                 .body(invalidPessoaRequest)
-                .pathParam("id", pessoaInserted.getId())
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
+                .pathParam("id", 1)
                 .contentType(JSON)
                 .accept(JSON)
                 .log().all()
         .when()
-                .put("/{id}")
+                .put(basePath + "/{id}")
         .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .log().body();
     }
 
     @Test
-    @DisplayName("excluirPermissao() return status NO_CONTENT when the pessoa relationship is deleted")
+    @DisplayName("excluirPermissao() return status NO_CONTENT when the pessoa relationship is deleted by ADMIN")
     void givenIdPessoaAndIdPermissao_whenExcluirPermissao_thenReturnStatusNO_CONTENT() {
-        Pessoa pessoaInserted = getPessoaInserted();
 
         given()
-                .pathParam("idPessoa", pessoaInserted.getId())
+                .pathParam("idPessoa", 1)
                 .pathParam("idPermissao", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .delete("/{idPessoa}/permissoes/{idPermissao}")
+                .delete(basePath + "/{idPessoa}/permissoes/{idPermissao}")
         .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
-    @DisplayName("excluirPermissao() return status NOT_FOUND when pessoa not found")
+    @DisplayName("excluirPermissao() return status FORBIDDEN when USER dont have access")
+    void givenIdPessoaAndIdPermissaoWithUserRole_whenExcluirPermissao_thenReturnStatusFORBIDDEN() {
+
+        given()
+                .pathParam("idPessoa", 1)
+                .pathParam("idPermissao", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .delete(basePath + "/{idPessoa}/permissoes/{idPermissao}")
+        .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("message", Matchers.equalTo(forbiddenMessage));
+    }
+
+    @Test
+    @DisplayName("excluirPermissao() return status NOT_FOUND when pessoa not found by ADMIN")
     void givenUnregisteredIdPessoaAndIdPermissao_whenExcluirPermissao_thenReturnStatusNOT_FOUND() {
-        getPessoaInserted();
 
         given()
                 .pathParam("idPessoa", 99)
                 .pathParam("idPermissao", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .delete("/{idPessoa}/permissoes/{idPermissao}")
+                .delete(basePath + "/{idPessoa}/permissoes/{idPermissao}")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("title", Matchers.equalTo("Não existe nenhuma pessoa cadastrada com este ID"))
@@ -241,43 +330,49 @@ class PessoaControllerIT {
     }
 
     @Test
-    @DisplayName("excluir() return status NO_CONTENT when pessoa is removed")
+    @DisplayName("excluir() return status NO_CONTENT when pessoa is removed by ADMIN")
     void givenIdPessoa_whenExcluir_thenReturnStatusNO_CONTENT() {
-        Pessoa pessoaInserted = getPessoaInserted();
 
         given()
-                .pathParam("id", pessoaInserted.getId())
+                .pathParam("id", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .delete("/{id}")
+                .delete(basePath + "/{id}")
         .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
-    @DisplayName("excluir() return status NOT_FOUND when pessoa not found")
-    void givenUnregisteredIdPessoa_whenExcluir_thenReturnStatusNOT_FOUND() {
-        getPessoaInserted();
+    @DisplayName("excluir() return status FORBIDDEN when USER dont have access")
+    void givenIdPessoaWithUserRole_whenExcluir_thenReturnStatusFORBIDDEN() {
 
         given()
-                .pathParam("id", 99)
+                .pathParam("id", 1)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .delete("/{id}")
+                .delete(basePath + "/{id}")
+        .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("message", Matchers.equalTo(forbiddenMessage));
+    }
+
+    @Test
+    @DisplayName("excluir() return status NOT_FOUND when pessoa not found by ADMIN")
+    void givenUnregisteredIdPessoa_whenExcluir_thenReturnStatusNOT_FOUND() {
+
+        given()
+                .pathParam("id", 99)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .delete(basePath + "/{id}")
         .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .body("title", Matchers.equalTo("Não existe nenhuma pessoa cadastrada com este ID"));
-    }
-
-    private Pessoa getPessoaInserted(){
-        Permissao permissaoInserted = getPermissaoInserted();
-        pessoa.adicionarPermissao(permissaoInserted);
-        return pessoaRepository.saveAndFlush(pessoa);
-    }
-
-    private Permissao getPermissaoInserted(){
-        return permissaoRepository.saveAndFlush(permissao);
     }
 }

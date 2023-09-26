@@ -29,10 +29,11 @@ public class TokenModel {
 
     @Column(columnDefinition = "boolean")
     private boolean expired;
+
     @Column(columnDefinition = "boolean")
     private boolean revoked;
 
-    @ManyToOne
-    @JoinColumn(name = "pessoa_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;
 }

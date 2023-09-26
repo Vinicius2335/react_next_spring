@@ -16,14 +16,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   React.useEffect(() => {
     getSessionUtil().then(session => {
-      const isAdmin = session?.roles.match("ROLE_ADMIN") != null
-
-      if (session == null || !isAdmin) {
-        toast.error("O usuário não possui acesso 😁 ou não está logado 😴")
-        router.replace("/")
-      } else {
-        setIsLoading(false)
+      if (session){
+        const possuiPermissao = session.roles.match("ROLE_ADMIN") != null || session.roles.match("ROLE_GERENTE") != null
+        
+        if (!possuiPermissao){
+          toast.error("O usuário não possui acesso. 😁")
+          router.replace("/")
+        } else {
+          setIsLoading(false)
+        }
       }
+
+      if (session == null) {
+        toast.error("O usuário não está logado. 😴")
+        router.replace("/")
+      } 
     })
   }, [])
 

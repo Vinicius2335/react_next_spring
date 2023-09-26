@@ -17,10 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RandomTests {
     private static final String PATH_DIRECTORY = "src/main/resources/static/image";
@@ -94,7 +96,6 @@ class RandomTests {
     }
 
     @Test
-    @Disabled
     void passwordEncode(){
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         System.out.println(encoder.encode("senha"));

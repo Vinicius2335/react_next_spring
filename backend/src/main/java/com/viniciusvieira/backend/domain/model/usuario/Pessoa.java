@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,14 +27,16 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 public class Pessoa extends BaseEntity implements UserDetails {
 
+    @Serial
+    private static final long serialVersionUID = -8223683363491564192L;
+
     @Column(nullable = false)
     private String nome;
 
     @Column(nullable = false, unique = true)
     private String cpf;
 
-    // TODO - Unique dps
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String senha;
@@ -45,15 +48,16 @@ public class Pessoa extends BaseEntity implements UserDetails {
     @Embedded
     private Endereco endereco;
 
+
+    @JsonIgnore
+    @Builder.Default
+    @Setter(AccessLevel.NONE)
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "pessoa_permissao",
             joinColumns = @JoinColumn(name = "id_pessoa"),
             inverseJoinColumns = @JoinColumn(name = "id_permissao")
     )
-    @Setter(AccessLevel.NONE)
-    @JsonIgnore
-    @Builder.Default
     private List<Permissao> permissoes = new ArrayList<>();
 
     public void adicionarPermissao(Permissao permissao){

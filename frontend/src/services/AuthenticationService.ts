@@ -22,35 +22,7 @@ export type ExceptionType = {
 export class AuthenticationService {
   readonly url = "/auth"
 
-  public login(email: string, senha: string) {
-    let authenticationRequest: AuthenticationRequestType = {
-      email: email,
-      password: senha
-    }
-
-    return ApiClient().post<AuthenticationResponseType>(this.url + "/login", authenticationRequest)
-      .then(resp => {
-        localStorage.setItem("ACCESS_TOKEN", resp.data.access_token)
-      })
-      .catch((error: AxiosError<ExceptionType>) => {
-        const errorMessage = error.response?.data.message
-        if (errorMessage === "Bad credentials") {
-          toast.error("Email ou Senha Inválido")
-        } else {
-          toast.error(errorMessage)
-        }
-      })
-  }
-
   public logout() {
     return ApiClient().post(this.url + "/logout").then(resp => resp.status)
-  }
-
-  public isUserAuthenticated() {
-    if (typeof window !== "undefined" && localStorage.getItem("ACCESS_TOKEN") != null) {
-      return true
-    } else {
-      return false
-    }
   }
 }

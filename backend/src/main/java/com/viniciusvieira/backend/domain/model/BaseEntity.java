@@ -3,6 +3,7 @@ package com.viniciusvieira.backend.domain.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,9 +16,11 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @SuperBuilder
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @CreationTimestamp

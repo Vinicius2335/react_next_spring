@@ -7,6 +7,7 @@ import com.viniciusvieira.backend.api.representation.model.request.usuario.Clien
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import com.viniciusvieira.backend.domain.repository.usuario.PermissaoRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
+import com.viniciusvieira.backend.integration.BaseIT;
 import com.viniciusvieira.backend.util.ClienteCreator;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
@@ -15,34 +16,20 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 
-@ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ClienteControllerIT {
-    @LocalServerPort
-    private int port;
 
-    @Autowired
-    private PermissaoRepository permissaoRepository;
-    @Autowired
-    private PessoaRepository pessoaRepository;
-
+class ClienteControllerIT extends BaseIT {
     private final Pessoa cliente = PessoaCreator.createPessoa();
     private final ClienteRequest clienteRequest = ClienteCreator.createClienteRequest();
+
+    private final String basepath = "/api/clientes";
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP)
@@ -52,21 +39,24 @@ class ClienteControllerIT {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        RestAssured.basePath = "/api/clientes";
+        //RestAssured.basePath = "/api/clientes";
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
         permissaoRepository.saveAndFlush(PermissaoCreator.createPermissao());
+
+        startTest();
     }
 
     @Test
-    @DisplayName("inserir() inset cliente")
+    @DisplayName("inserir() inset cliente by ADMIN")
     void givenClienteRequest_whenInserir_thenClienteInsertedAndStatusCREATED() {
         given()
                 .body(clienteRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post()
+                .post(basepath)
         .then()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("cpf", Matchers.equalTo(clienteRequest.getCpf()))
@@ -74,15 +64,32 @@ class ClienteControllerIT {
     }
 
     @Test
-    @DisplayName("inserir() Throws CpfAlreadyExistsException when cpf already exists")
+    @DisplayName("inserir() return status FORBIDDEN  when USER dont have access")
+    void givenClienteRequestWithUserRole_whenInserir_thenReturnStatusFORBIDDEN() {
+        given()
+                .body(clienteRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
+                .contentType(JSON)
+                .accept(JSON)
+        .when()
+                .post(basepath)
+        .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .body("message", Matchers.equalTo(forbiddenMessage))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("inserir() Throws CpfAlreadyExistsException when cpf already exists by ADMIN")
     void givenRegisteredClienteRequest_whenInserir_thenStatusCONFLICT() {
         insertCliente();
         given()
                 .body(clienteRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post()
+                .post(basepath)
         .then()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .body("title", Matchers.equalTo("Já existe uma pessoa cadastrada com esse CPF"))
@@ -90,15 +97,16 @@ class ClienteControllerIT {
     }
 
     @Test
-    @DisplayName("inserir() return BAD_REQUEST when clienteRequest have invalid fields")
+    @DisplayName("inserir() return BAD_REQUEST when clienteRequest have invalid fields by ADMIN")
     void givenInvalidClienteRequest_whenInserir_thenStatusBAD_REQUEST() {
         ClienteRequest invalidClienteRequest = ClienteCreator.createInvalidClienteRequest();
         given()
                 .body(invalidClienteRequest)
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(adminLogin.getAccessToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post()
+                .post(basepath)
         .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .log().all();

@@ -1,6 +1,7 @@
 package com.viniciusvieira.backend.api.controller;
 
 
+import com.viniciusvieira.backend.api.controller.imagem.ImagemController;
 import com.viniciusvieira.backend.domain.exception.NegocioException;
 import com.viniciusvieira.backend.domain.exception.ProdutoImagemNaoEncontradoException;
 import com.viniciusvieira.backend.domain.service.CrudProdutoImagemService;

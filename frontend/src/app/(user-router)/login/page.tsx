@@ -36,8 +36,8 @@ export default function Login() {
     getSessionUtil().then(session => {
       
       if (session) {
-        const isAdmin = session.roles.match("ROLE_ADMIN") != null
-        if (isAdmin){
+        const possuiPermissao = session.roles.match("ROLE_ADMIN") != null || session.roles.match("ROLE_GERENTE") != null  
+        if (possuiPermissao){
           router.replace("/dashboard")
         } else {
           router.replace("/")

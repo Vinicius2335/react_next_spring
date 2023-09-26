@@ -13,7 +13,6 @@ interface User {
 	nome: string;
 	cpf: string;
 	email: string;
-	senha: string;
 	endereco: Endereco;
 	dataCriacao: string;
 	dataAtualizacao: string;

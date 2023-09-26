@@ -7,6 +7,7 @@ import com.viniciusvieira.backend.domain.exception.usuario.CpfAlreadyExistsExcep
 import com.viniciusvieira.backend.domain.exception.usuario.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
+import com.viniciusvieira.backend.domain.repository.TokenRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class CrudPessoaService {
     private final PessoaRepository pessoaRepository;
     private final PessoaMapper pessoaMapper;
     private final CrudPermissaoService permissaoService;
+    private final TokenRepository tokenRepository;
 
     public List<Pessoa> buscarTodos() {
         return pessoaRepository.findAll();
@@ -89,6 +91,9 @@ public class CrudPessoaService {
     @Transactional
     public void excluir(Long id) {
         Pessoa pessoa = buscarPorId(id);
+
+        tokenRepository.deleteByPessoaId(pessoa.getId());
+
         pessoaRepository.delete(pessoa);
     }
 

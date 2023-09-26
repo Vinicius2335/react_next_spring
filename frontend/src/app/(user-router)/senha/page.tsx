@@ -106,7 +106,7 @@ export default function Senha() {
                     <Envelope className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                   }
                   label="Email"
-                  placeholder="Digite o seu email"
+                  placeholder="Digite o seu email..."
                   variant="bordered"
                   ref={emailInputRef}
                 />
