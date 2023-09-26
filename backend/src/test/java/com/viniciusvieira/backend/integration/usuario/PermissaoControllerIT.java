@@ -187,27 +187,9 @@ class PermissaoControllerIT extends BaseIT {
     }
 
     @Test
-<<<<<<< HEAD
     @DisplayName("alterar() return status CONFLICT when permissao already registered")
     void givenPermissaoRequestAlreadyRegistered_whenAlterar_thenStatusCONFLICT() {
         getPermissaoInserted();
-
-        given()
-                .body(permissaoRequest)
-                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getAccessToken()))
->>>>>>> 86317af (tentando corrigir um erro de Git error broken link from tree)
-                .pathParam("id", 1)
-                .contentType(JSON)
-                .accept(JSON)
-                .put(basePath + "/{id}")
-        .then()
-                .statusCode(HttpStatus.FORBIDDEN.value())
-                .body("message", Matchers.equalTo(forbiddenMessage));
-    }
-
-    @Test
-    @DisplayName("alterar() return status CONFLICT when permissao already registered by ADMIN")
-    void givenPermissaoRequestAlreadyRegistered_whenAlterar_thenStatusCONFLICT() {
         PermissaoRequest permissaoRequest = PermissaoCreator.createPermissaoRequest();
         permissaoRequest.setNome("USER");
 

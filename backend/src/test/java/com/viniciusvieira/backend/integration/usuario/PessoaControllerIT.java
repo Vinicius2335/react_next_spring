@@ -208,13 +208,11 @@ class PessoaControllerIT extends BaseIT {
 
         given()
                 .body(pessoaRequest)
-<<<<<<< HEAD
                 .pathParam("id", pessoaInserted.getId())
                 .contentType(JSON)
                 .accept(JSON)
-                .log().all()
         .when()
->>>>>>> 86317af (tentando corrigir um erro de Git error broken link from tree)
+                .put("/{id}")
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("nome", Matchers.equalTo(pessoaRequest.getNome()))
