@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +33,8 @@ class PessoaGerenciamentoServiceTest {
     private CrudPessoaService crudPessoaServiceMock;
     @Mock
     private EmailService emailServiceMock;
+    @Mock
+    private PasswordEncoder passwordEncoderMock;
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
 
@@ -50,11 +53,12 @@ class PessoaGerenciamentoServiceTest {
         // given
         given(crudPessoaServiceMock.buscarPeloEmail(anyString())).willReturn(pessoa);
         doNothing().when(crudPessoaServiceMock).alterarParaGerenciamento(any(Pessoa.class));
-        doNothing().when(emailServiceMock).sendEmailSimples(anyString(), anyString(), anyString());
+        doNothing().when(emailServiceMock).sendEmailTemplateRecuperacaoCodigo(anyString(), anyString(), anyMap());
         // when
         underTest.solicitarCodigo(pessoa.getEmail());
         // then
-        verify(emailServiceMock, times(1)).sendEmailSimples(anyString(), anyString(), anyString());
+        verify(emailServiceMock, times(1))
+                .sendEmailTemplateRecuperacaoCodigo(anyString(), anyString(), anyMap());
     }
 
     @Test
@@ -79,14 +83,15 @@ class PessoaGerenciamentoServiceTest {
         given(crudPessoaServiceMock.buscarPeloEmail(anyString())).willReturn(pessoa);
         doNothing().when(crudPessoaServiceMock).alterarParaGerenciamento(any(Pessoa.class));
         doThrow(new NegocioException("Erro ao tentar enviar um email ao cliente cadastrado"))
-                .when(emailServiceMock).sendEmailSimples(anyString(), anyString(), anyString());
+                .when(emailServiceMock).sendEmailTemplateRecuperacaoCodigo(anyString(), anyString(), anyMap());
         String email = pessoa.getEmail();
         // when
         assertThatThrownBy(() -> underTest.solicitarCodigo(email))
                 .isInstanceOf(NegocioException.class)
                         .hasMessageContaining("Erro ao tentar enviar um email ao cliente cadastrado");
         // then
-        verify(emailServiceMock, times(1)).sendEmailSimples(anyString(), anyString(), anyString());
+        verify(emailServiceMock, times(1))
+                .sendEmailTemplateRecuperacaoCodigo(anyString(), anyString(), anyMap());
     }
 
     @Test
@@ -94,6 +99,7 @@ class PessoaGerenciamentoServiceTest {
     void givenPessoaGerencioamentoRequest_whenAlterarSenha_thenPessoaShouldBeUpdate() {
         // given
         given(crudPessoaServiceMock.buscarPeloEmailECodigo(anyString(), anyString())).willReturn(pessoa);
+        given(passwordEncoderMock.encode(any(CharSequence.class))).willReturn("teste");
         doNothing().when(crudPessoaServiceMock).alterarParaGerenciamento(any(Pessoa.class));
         pessoa.setDataEnvioCodigo(data);
         pessoa.setCodigoRecuperacaoSenha("teste");

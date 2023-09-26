@@ -8,6 +8,7 @@ import com.viniciusvieira.backend.domain.exception.usuario.PermissaoNaoEncontrad
 import com.viniciusvieira.backend.domain.exception.usuario.PessoaNaoEncontradaException;
 import com.viniciusvieira.backend.domain.model.usuario.Permissao;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
+import com.viniciusvieira.backend.domain.repository.TokenRepository;
 import com.viniciusvieira.backend.domain.repository.usuario.PessoaRepository;
 import com.viniciusvieira.backend.util.PermissaoCreator;
 import com.viniciusvieira.backend.util.PessoaCreator;
@@ -40,6 +41,8 @@ class CrudPessoaServiceTest {
     private PessoaMapper pessoaMapperMock;
     @Mock
     private CrudPermissaoService permissaoServiceMock;
+    @Mock
+    private TokenRepository tokenRepositoryMock;
 
     private final Pessoa pessoa = PessoaCreator.createPessoa();
     private final Permissao permissao = PermissaoCreator.createPermissao();
@@ -358,6 +361,7 @@ class CrudPessoaServiceTest {
 
     private void excluirConfig() {
         findByIdConfig();
+        doNothing().when(tokenRepositoryMock).deleteByPessoaId(anyLong());
         doNothing().when(pessoaRepositoryMock).delete(any(Pessoa.class));
     }
 

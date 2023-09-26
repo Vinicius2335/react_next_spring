@@ -33,7 +33,7 @@ public class TokenModel {
     @Column(columnDefinition = "boolean")
     private boolean revoked;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;
 }

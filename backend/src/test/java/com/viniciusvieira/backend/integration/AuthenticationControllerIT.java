@@ -4,27 +4,23 @@ import com.viniciusvieira.backend.api.representation.model.request.Authenticatio
 import com.viniciusvieira.backend.api.representation.model.response.AuthenticationResponse;
 import com.viniciusvieira.backend.domain.model.usuario.Pessoa;
 import io.restassured.RestAssured;
-import io.restassured.http.Header;
-import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import java.util.Optional;
-
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 
 class AuthenticationControllerIT extends BaseIT{
+    private final String basePath = "/api/auth";
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        RestAssured.basePath = "/api/auth";
+        //RestAssured.basePath = "/api/auth";
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
@@ -43,7 +39,7 @@ class AuthenticationControllerIT extends BaseIT{
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post("/login")
+                .post(basePath + "/login")
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .log().all();
@@ -64,7 +60,7 @@ class AuthenticationControllerIT extends BaseIT{
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post("/login")
+                .post(basePath + "/login")
         .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .body("message", Matchers.equalTo("Credenciais incorretas."))
@@ -74,14 +70,15 @@ class AuthenticationControllerIT extends BaseIT{
     @Test
     @DisplayName("refreshToken() return new valid accessToken")
     void givenRefreshToken_whenRefreshToken_thenStatusOK() {
-        AuthenticationResponse login = login();
+        Pessoa user = inserirUser();
+        AuthenticationResponse userLogin = realizarLogin(user);
 
         given()
-                .header(HttpHeaders.AUTHORIZATION, setAuthorization(login.getRefreshToken()))
+                .header(HttpHeaders.AUTHORIZATION, setAuthorization(userLogin.getRefreshToken()))
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post("/refresh-token")
+                .post(basePath + "/refresh-token")
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .log().all();
@@ -96,29 +93,11 @@ class AuthenticationControllerIT extends BaseIT{
                 .contentType(JSON)
                 .accept(JSON)
         .when()
-                .post("/refresh-token")
+                .post(basePath + "/refresh-token")
         .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
                 .body("message", Matchers.equalTo("JWT token inválido..."))
                 .log().all();
-    }
-
-    private AuthenticationResponse login(){
-        Pessoa user = inserirUser();
-
-        AuthenticationRequest userCredentials = AuthenticationRequest.builder()
-                .email(user.getEmail())
-                .password(user.getNome())
-                .build();
-
-        return given()
-                .body(userCredentials)
-                .contentType(JSON)
-                .accept(JSON)
-        .when()
-                .post("/login")
-        .then()
-                .extract().response().as(AuthenticationResponse.class);
     }
 
 }
