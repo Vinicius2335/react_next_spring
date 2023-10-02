@@ -35,3 +35,13 @@ Loja Virtual API oferece um conjunto de endpoints para o gerenciamento de uma lo
 - Phosphor icons biblioteca de icones
 
 ## Screenshots
+
+<img width="960" alt="Home Page" src="./github/print3.jpeg">
+
+---
+
+<img width="960" alt="Tela de Login" src="./github/print2.jpeg">
+
+---
+
+<img width="960" alt="Tela de Cadastro de Categoria" src="./github/print1.jpeg">
