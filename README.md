@@ -15,6 +15,8 @@ Loja Virtual API oferece um conjunto de endpoints para o gerenciamento de uma lo
 - Spring Security para autenticação
 - JWT (JSON Web Token) para autenticação segura da API
 - MySQL para armazenamento de dados
+- Spring Email para criar o serviço de email
+- Freemarker para criar o template de email
 - ModelMapper para converter as entidades em dto
 - Hibernate para o mapeamento object-relational 
 - Maven para gerenciamento de projetos
